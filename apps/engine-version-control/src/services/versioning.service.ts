@@ -1,9 +1,4 @@
-import EngineConfig, {
-  encodeVersion,
-  EngineVersion,
-  isConfig,
-  VersionIncrement,
-} from '../model/EngineConfig'
+import { EngineConfig, encodeVersion, EngineVersion, isConfig, VersionIncrement } from 'model'
 import { listBuckets, put, take } from './storage.service'
 
 const configKey = 'config.json'

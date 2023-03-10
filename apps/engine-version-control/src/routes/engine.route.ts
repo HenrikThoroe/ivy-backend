@@ -5,7 +5,7 @@ import {
   handleFetchConfig,
   handleFetchVersion,
 } from '../controller/engine.controller'
-import { exceptionWrapper } from '../middleware/exceptions'
+import { exceptionWrapper } from 'express-util'
 
 export const engineRouter = Router()
 
