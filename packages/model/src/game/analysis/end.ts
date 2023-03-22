@@ -2,7 +2,7 @@ import { Board } from '../model/Board'
 import { isValidMove, moves } from './moves'
 import { hasThreat } from './threats'
 
-export type GameResult = 'checkmate' | 'stalemate' | '50-move-draw'
+export type GameResult = 'checkmate' | 'stalemate' | '50-move-draw' | '3-fold-repetition'
 
 function hasMoves(board: Board) {
   const color = board.next

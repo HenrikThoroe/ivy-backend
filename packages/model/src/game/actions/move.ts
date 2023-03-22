@@ -1,7 +1,7 @@
 import { gameResult, isChecked } from '../analysis/end'
 import { isValidMove } from '../analysis/moves'
 import { parseFENMove, parseFENPiece } from '../coding/fen'
-import { Board, Piece } from '../model/Board'
+import { Board, hash, Piece } from '../model/Board'
 import { Game, Move } from '../model/Game'
 
 function getEnemy(board: Board) {
@@ -123,6 +123,7 @@ function validateMove(game: Game, move: Move) {
   performMove(game.board, move)
 
   game.history.push({ source, target })
+  game.positionHistory.push(hash(game.board))
 
   return true
 }
@@ -144,6 +145,13 @@ function parseMove(game: Game, code: string): Move {
   }
 
   return { source: move[0], target: move[1], promotion: piece }
+}
+
+function hasRepitition(game: Game) {
+  const current = hash(game.board)
+  const history = game.positionHistory
+
+  return history.filter((h) => h === current).length >= 3
 }
 
 export function move(game: Game, code: string) {
@@ -177,13 +185,17 @@ export function move(game: Game, code: string) {
     return
   }
 
-  const result = gameResult(game.board)
+  let result = gameResult(game.board)
+
+  if (hasRepitition(game)) {
+    result = '3-fold-repetition'
+  }
 
   if (result) {
     game.state = 'expired'
     game.reason = result
 
-    if (result === 'stalemate') {
+    if (result === 'stalemate' || result === '3-fold-repetition') {
       game.winner = 'draw'
     } else {
       game.winner = getEnemy(game.board)

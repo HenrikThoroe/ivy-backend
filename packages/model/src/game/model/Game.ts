@@ -23,6 +23,7 @@ export interface Game {
   readonly time: ColorMap<number>
   readonly history: Move[]
   readonly start: number
+  readonly positionHistory: string[]
   winner?: Color | 'draw'
   board: Board
   state: GameState

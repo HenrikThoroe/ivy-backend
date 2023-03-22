@@ -26,6 +26,28 @@ export interface Board {
   fullMoveCounter: number
 }
 
+export function hash(board: Board) {
+  return board.positions
+    .map((pos) => {
+      if (pos.piece) {
+        let id = pos.piece.type[0].toLowerCase()
+
+        if (pos.piece.type === 'knight') {
+          id = 'n'
+        }
+
+        if (pos.piece.color === 'black') {
+          id = id.toUpperCase()
+        }
+
+        return id
+      }
+
+      return '0'
+    })
+    .join('')
+}
+
 export function decode(fen: string): Board {
   const components = fen.split(' ')
   const compCount = 6
