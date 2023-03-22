@@ -3,6 +3,7 @@ declare namespace NodeJS {
     readonly NODE_ENV: 'production' | 'test' | 'development'
     readonly EVC_PORT: string
     readonly GM_PORT: string
+    readonly GM_WSS_PORT: string
     readonly S3_SECRET_KEY: string
     readonly S3_ACCESS_ID: string
     readonly S3_ENDPOINT: string
