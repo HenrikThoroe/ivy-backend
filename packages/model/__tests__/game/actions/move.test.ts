@@ -14,7 +14,7 @@ const validateMove = (
   validation?: (game: Game) => void
 ) => {
   const board = decode(start)
-  const game = create(1000)
+  const game = create({ timeout: 1000 })
 
   register(game)
   register(game)
@@ -39,7 +39,7 @@ const validateMove = (
 
 describe('Game Move Action', () => {
   it('performs valid moves', () => {
-    const game = create(1000)
+    const game = create({ timeout: 1000 })
     let index = 0
     const moves = [
       'g1f3',
@@ -110,6 +110,7 @@ describe('Game Move Action', () => {
 
       expect(() => move(game, mv)).not.toThrow()
       expect(game.history).toHaveLength(index + 1)
+      expect(game.positionHistory).toHaveLength(index + 2)
       expect(game.history[index]).toEqual({ source, target })
       expect(game.board).toEqual(decode(fen[index]))
 
@@ -171,7 +172,7 @@ describe('Game Move Action', () => {
   })
 
   it('performs time control', () => {
-    const game = create(1)
+    const game = create({ timeout: 1 })
 
     register(game)
     register(game)
@@ -186,7 +187,7 @@ describe('Game Move Action', () => {
   })
 
   it('allows nullmoves', () => {
-    const game = create(1000)
+    const game = create({ timeout: 1000 })
 
     register(game)
     register(game)
@@ -240,7 +241,7 @@ describe('Game Move Action', () => {
       const start = decode(mate[0])
       const expected = decode(mate[1])
       const mv = mate[2]
-      const game = create(1000)
+      const game = create({ timeout: 1000 })
 
       register(game)
       register(game)
@@ -253,5 +254,27 @@ describe('Game Move Action', () => {
       expect(game.winner).toBe(mate[3])
       expect(game.board).toEqual(expected)
     }
+  })
+
+  it('detects 3-fold repetition', () => {
+    const game = create({ timeout: 1000 })
+
+    register(game)
+    register(game)
+
+    expect(() => move(game, 'd2d4')).not.toThrow()
+    expect(() => move(game, 'd7d5')).not.toThrow()
+    expect(() => move(game, 'd1d2')).not.toThrow()
+    expect(() => move(game, 'd8d7')).not.toThrow()
+    expect(() => move(game, 'd2d1')).not.toThrow()
+    expect(() => move(game, 'd7d8')).not.toThrow()
+    expect(() => move(game, 'd1d2')).not.toThrow()
+    expect(() => move(game, 'd8d7')).not.toThrow()
+    expect(() => move(game, 'd2d1')).not.toThrow()
+    expect(() => move(game, 'd7d8')).not.toThrow()
+
+    expect(game.state).toBe('expired')
+    expect(game.reason).toBe('3-fold-repetition')
+    expect(game.winner).toBe('draw')
   })
 })
