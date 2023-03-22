@@ -1,4 +1,5 @@
 export * from './configs/GameConfig'
+export * from './configs/EngineConfig'
 export * from './game/model/Game'
 export * from './game/model/Board'
 export * from './game/actions/create'
