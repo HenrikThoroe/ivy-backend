@@ -1,5 +1,13 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "conventionalCommits.scopes": ["tsconfig", "global", "evc"]
+  "conventionalCommits.scopes": [
+    "tsconfig",
+    "global",
+    "evc",
+    "env-util",
+    "express-util",
+    "model",
+    "gm"
+  ]
 }
