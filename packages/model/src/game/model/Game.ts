@@ -21,6 +21,7 @@ export interface Game {
   readonly id: string
   readonly players: ColorMap<string | undefined>
   readonly time: ColorMap<number>
+  readonly timeback: ColorMap<number>
   readonly history: Move[]
   readonly start: number
   readonly positionHistory: string[]
@@ -29,4 +30,18 @@ export interface Game {
   state: GameState
   lastRequest: number
   reason?: TerminationReason
+}
+
+export function encodeMove(move: Move) {
+  const encodeIdx = (idx: number) => {
+    const row = idx % 8
+    const col = Math.floor(idx / 8)
+
+    return `${String.fromCharCode(97 + row)}${8 - col}`
+  }
+
+  const source = encodeIdx(move.source)
+  const target = encodeIdx(move.target)
+
+  return `${source}${target}${move.promotion || ''}`
 }
