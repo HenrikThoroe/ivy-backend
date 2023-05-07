@@ -1,9 +1,18 @@
-import { Color, Game } from 'model'
+import { Color, ColorMap, encodeMove, Game, GameState } from 'model'
 import { getPlayerColor } from '../game.service'
 
-export interface GameStateMessage extends Omit<Game, 'players'> {
+export interface PongMessage {
+  key: 'pong'
+}
+
+export interface GameStateMessage {
   key: 'game-state'
   playerColor: Color
+  moves: string[]
+  time: ColorMap<number>
+  state: GameState
+  winner?: Color | 'draw'
+  reason?: string
 }
 
 export interface PlayerInfoMessage {
@@ -13,8 +22,11 @@ export interface PlayerInfoMessage {
   color: Color
 }
 
-export interface MoveRequestMessage extends Omit<GameStateMessage, 'key'> {
+export interface MoveRequestMessage {
   key: 'move-request'
+  playerColor: Color
+  moves: string[]
+  time: ColorMap<number>
 }
 
 export interface ErrorMessage {
@@ -22,14 +34,25 @@ export interface ErrorMessage {
   message: string
 }
 
-export function buildGameStateMessage(game: Game, player: string) {
-  const message: GameStateMessage = {
-    ...game,
-    playerColor: getPlayerColor(game, player),
-    key: 'game-state',
+export function buildPongMessage() {
+  const message: PongMessage = {
+    key: 'pong',
   }
 
-  delete (message as any).players
+  return message
+}
+
+export function buildGameStateMessage(game: Game, player: string) {
+  const message: GameStateMessage = {
+    key: 'game-state',
+    playerColor: getPlayerColor(game, player),
+    moves: game.history.map(encodeMove),
+    time: game.time,
+    state: game.state,
+    winner: game.winner,
+    reason: game.reason,
+  }
+
   return message
 }
 
@@ -46,7 +69,9 @@ export function buildPlayerInfoMessage(game: Game, player: string) {
 
 export function buildMoveRequestMessage(game: Game, player: string) {
   const message: MoveRequestMessage = {
-    ...buildGameStateMessage(game, player),
+    playerColor: getPlayerColor(game, player),
+    moves: game.history.map(encodeMove),
+    time: game.time,
     key: 'move-request',
   }
 

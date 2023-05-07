@@ -4,9 +4,15 @@ import {
   GameStateMessage,
   MoveRequestMessage,
   PlayerInfoMessage,
+  PongMessage,
 } from './message.service'
 
-type Message = GameStateMessage | PlayerInfoMessage | MoveRequestMessage | ErrorMessage
+type Message =
+  | GameStateMessage
+  | PlayerInfoMessage
+  | MoveRequestMessage
+  | ErrorMessage
+  | PongMessage
 
 export async function send(socket: WebSocket, message: Message) {
   return new Promise<void>((res, rej) => {

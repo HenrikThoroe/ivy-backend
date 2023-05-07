@@ -1,6 +1,6 @@
 import { Record, Literal, Static, String, Union, Optional } from 'runtypes'
 
-type CommandKey = 'game-state' | 'register' | 'check-in' | 'move' | 'resign'
+type CommandKey = 'game-state' | 'register' | 'check-in' | 'move' | 'resign' | 'ping'
 
 const GameStateCommandBody = Record({
   game: String,
@@ -33,6 +33,10 @@ const ResignCommandBody = Record({
   command: Literal('resign'),
 })
 
+const PingCommandBody = Record({
+  command: Literal('ping'),
+})
+
 type Command<T extends CommandKey> = T extends 'game-state'
   ? GameStateCommand
   : T extends 'register'
@@ -43,7 +47,11 @@ type Command<T extends CommandKey> = T extends 'game-state'
   ? MoveCommand
   : T extends 'resign'
   ? ResignCommand
+  : T extends 'ping'
+  ? PingCommand
   : never
+
+export type PingCommand = Static<typeof PingCommandBody>
 
 export type ResignCommand = Static<typeof ResignCommandBody>
 
@@ -67,6 +75,8 @@ export function isCommand<T extends CommandKey>(type: T, command: any): command 
       return GameStateCommandBody.validate(command).success
     case 'resign':
       return ResignCommandBody.validate(command).success
+    case 'ping':
+      return PingCommandBody.validate(command).success
   }
 
   return false
