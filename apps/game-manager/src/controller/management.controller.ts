@@ -4,7 +4,7 @@ import { CreateBody } from './management.types'
 
 export async function handleGameCreation(request: Request, response: Response) {
   const data = CreateBody.check(request.body)
-  const game = await createGame({ timeout: data.timeout })
+  const game = await createGame({ timeout: data.timeout, timeback: data.timeback })
 
   response.json({ id: game.id })
 }
