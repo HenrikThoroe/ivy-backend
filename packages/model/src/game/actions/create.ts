@@ -15,10 +15,11 @@ export function create(config: GameConfig): Game {
     players: { white: undefined, black: undefined },
     time: { white: config.timeout, black: config.timeout },
     start: now,
-    lastRequest: now,
+    lastRequest: -1,
     history: [],
     state: 'waiting',
     board: board,
     positionHistory: [hash(board)],
+    timeback: { white: config.timeback, black: config.timeback },
   }
 }
