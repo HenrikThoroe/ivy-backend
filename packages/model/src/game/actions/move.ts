@@ -91,7 +91,7 @@ function performMove(board: Board, move: Move) {
 function validateTime(game: Game) {
   const arrival = Date.now()
   const color = game.board.next
-  const delta = arrival - game.lastRequest
+  let delta = game.lastRequest > 0 ? arrival - game.lastRequest : 0
   const enemy = getEnemy(game.board)
 
   game.time[color] -= delta
@@ -101,9 +101,10 @@ function validateTime(game: Game) {
     game.reason = 'time'
     game.winner = enemy
     return false
+  } else {
+    game.time[color] += game.timeback[color]
+    return true
   }
-
-  return true
 }
 
 function validateMove(game: Game, move: Move) {
@@ -195,7 +196,7 @@ export function move(game: Game, code: string) {
     game.state = 'expired'
     game.reason = result
 
-    if (result === 'stalemate' || result === '3-fold-repetition') {
+    if (result === 'stalemate' || result === '3-fold-repetition' || result === '50-move-draw') {
       game.winner = 'draw'
     } else {
       game.winner = getEnemy(game.board)
