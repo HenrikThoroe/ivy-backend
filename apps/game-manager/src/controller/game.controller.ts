@@ -12,6 +12,7 @@ import {
   buildGameStateMessage,
   buildMoveRequestMessage,
   buildPlayerInfoMessage,
+  buildPongMessage,
 } from '../services/communication/message.service'
 import { get, put } from '../services/distribution.service'
 import {
@@ -24,7 +25,16 @@ import {
 
 async function handleRegisterCommand(socket: WebSocket, cmd: RegisterCommand) {
   const resp = await registerPlayer(cmd.game, cmd.color)
+  put(resp.id, socket)
   await send(socket, buildPlayerInfoMessage(resp.game, resp.id))
+
+  if (resp.game.players.black && resp.game.players.white) {
+    const whiteSocket = get(resp.game.players.white)
+
+    if (whiteSocket) {
+      await send(whiteSocket, buildMoveRequestMessage(resp.game, resp.game.players.white))
+    }
+  }
 }
 
 async function handleMoveCommand(socket: WebSocket, cmd: MoveCommand) {
@@ -37,7 +47,11 @@ async function handleMoveCommand(socket: WebSocket, cmd: MoveCommand) {
     const socket = get(enemy)
 
     if (socket) {
-      await send(socket, buildMoveRequestMessage(game, enemy))
+      await send(socket, buildGameStateMessage(game, enemy))
+
+      if (game.state === 'active') {
+        await send(socket, buildMoveRequestMessage(game, enemy))
+      }
     }
   }
 }
@@ -59,12 +73,14 @@ async function handleResignCommand(socket: WebSocket, cmd: ResignCommand) {
 }
 
 export async function handleSocketMessage(socket: WebSocket, message: RawData) {
-  const cmd = JSON.parse(message.toString('utf-8'))
+  const str = message.toString('utf-8')
+  const cmd = JSON.parse(str)
 
   if (isCommand('register', cmd)) await handleRegisterCommand(socket, cmd)
   else if (isCommand('move', cmd)) await handleMoveCommand(socket, cmd)
   else if (isCommand('check-in', cmd)) await handleCheckInCommand(socket, cmd)
   else if (isCommand('game-state', cmd)) await handleGameStateCommand(socket, cmd)
   else if (isCommand('resign', cmd)) await handleResignCommand(socket, cmd)
+  else if (isCommand('ping', cmd)) await send(socket, buildPongMessage())
   else await send(socket, { key: 'error', message: 'Unknown Command' })
 }
