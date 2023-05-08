@@ -46,8 +46,8 @@ export async function createGame(config: GameConfig) {
   }
 
   const game = create(config)
-  const offset = 1000 * 60 * 60 * 24
-  const expiration = config.timeout * 6 + offset
+  const offset = 60 * 60 * 24
+  const expiration = (config.timeout / 1000) * 6 + offset
 
   await save(game, expiration)
 
