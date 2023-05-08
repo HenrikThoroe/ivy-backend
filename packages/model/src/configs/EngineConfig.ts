@@ -54,7 +54,7 @@ export interface EngineVersion {
   patch: number
 }
 
-export default interface EngineConfig {
+export interface EngineConfig {
   name: string
   versions: EngineVersion[]
 }

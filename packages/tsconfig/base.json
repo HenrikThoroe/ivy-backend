@@ -15,6 +15,7 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
+    "downlevelIteration": true,
     "lib": ["es2021"]
   },
   "exclude": ["node_modules"]

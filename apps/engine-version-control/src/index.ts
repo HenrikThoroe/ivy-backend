@@ -1,4 +1,4 @@
-import loadenv from './util/loadenv'
+import { loadenv } from 'env-util'
 
 loadenv()
 

@@ -10,8 +10,8 @@ import path from 'path'
  * @param options Custom options for the loader
  * @returns Output of the loader
  */
-export default function loadenv() {
-  const projectDir = path.resolve(__dirname, '../../../../')
+export function loadenv() {
+  const projectDir = path.resolve(__dirname, '../../../')
   const env = process.env.NODE_ENV
 
   loadEnvConfig(projectDir, env !== 'production')

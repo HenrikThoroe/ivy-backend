@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import EngineConfig, { encodeVersion, getVersionPath } from '../model/EngineConfig'
+import { EngineConfig, encodeVersion, getVersionPath } from 'model'
 import { pipe } from '../services/storage.service'
 import { pushVersion, retrieveAllConfigs, retrieveConfig } from '../services/versioning.service'
 import { CreateBody, DownloadBody } from './engine.types'
