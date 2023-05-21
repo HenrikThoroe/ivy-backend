@@ -58,3 +58,8 @@ export interface EngineConfig {
   name: string
   versions: EngineVersion[]
 }
+
+export interface EngineInstance {
+  name: string
+  version: EngineVersion
+}
