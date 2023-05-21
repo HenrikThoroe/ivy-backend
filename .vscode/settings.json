@@ -8,6 +8,9 @@
     "env-util",
     "express-util",
     "model",
-    "gm"
+    "gm",
+    "wss",
+    "kv-store",
+    "test-driver"
   ]
 }
