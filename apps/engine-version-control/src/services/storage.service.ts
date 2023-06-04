@@ -10,6 +10,8 @@ import {
 } from '@aws-sdk/client-s3'
 import { Response } from 'express'
 
+export type ContentType = 'data/octet-stream' | 'text/json'
+
 const client = new S3Client({
   credentials: {
     accessKeyId: process.env.S3_ACCESS_ID!,
@@ -22,30 +24,36 @@ const client = new S3Client({
 
 export async function createBucket(bucket: string) {
   try {
-    await client.send(new HeadBucketCommand({ Bucket: bucket }))
+    await client.send(new HeadBucketCommand({ Bucket: bucket.toLowerCase() }))
   } catch (e) {
     const cmd = new CreateBucketCommand({
-      Bucket: bucket,
+      Bucket: bucket.toLowerCase(),
     })
 
     await client.send(cmd)
   }
 }
 
-export async function put(bucket: string, name: string, content: PutObjectCommandInput['Body']) {
+export async function put(
+  bucket: string,
+  name: string,
+  content: PutObjectCommandInput['Body'],
+  type?: ContentType
+) {
   await createBucket(bucket)
 
   const cmd = new PutObjectCommand({
-    Bucket: bucket,
+    Bucket: bucket.toLowerCase(),
     Key: name,
     Body: content,
+    ContentType: type,
   })
 
   await client.send(cmd)
 }
 
 export async function take(bucket: string, name: string) {
-  const cmd = new GetObjectCommand({ Bucket: bucket, Key: name })
+  const cmd = new GetObjectCommand({ Bucket: bucket.toLowerCase(), Key: name })
   const resp = await client.send(cmd)
   const bytes = await resp.Body?.transformToByteArray()
 
@@ -57,7 +65,7 @@ export async function take(bucket: string, name: string) {
 }
 
 export async function pipe(bucket: string, name: string, response: Response) {
-  const cmd = new GetObjectCommand({ Bucket: bucket, Key: name })
+  const cmd = new GetObjectCommand({ Bucket: bucket.toLowerCase(), Key: name })
   const resp = await client.send(cmd)
   const stream = resp.Body
 

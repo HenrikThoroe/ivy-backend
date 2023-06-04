@@ -1,6 +1,7 @@
 import Router from 'express'
 import {
   handleCreate,
+  handleDownload,
   handleFetchAll,
   handleFetchConfig,
   handleFetchVersion,
@@ -10,6 +11,7 @@ import { exceptionWrapper } from 'express-util'
 export const engineRouter = Router()
 
 engineRouter.get('/', exceptionWrapper(handleFetchAll))
+engineRouter.get('/bin/:engine/:id', exceptionWrapper(handleDownload))
 engineRouter.get('/:id', exceptionWrapper(handleFetchConfig))
 engineRouter.get('/:name/:version', exceptionWrapper(handleFetchVersion))
 

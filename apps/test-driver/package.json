@@ -1,0 +1,29 @@
+{
+  "name": "test-driver",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "Henrik Thoroe",
+  "license": "GPLv3",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.1",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "env-util": "*",
+    "express": "^4.18.2",
+    "express-util": "*",
+    "helmet": "^7.0.0",
+    "model": "*",
+    "redis": "^4.6.6",
+    "runtypes": "^6.6.0",
+    "uuid": "^9.0.0",
+    "wss": "*",
+    "kv-store": "*"
+  }
+}
