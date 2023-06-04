@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
-import { TestClient } from '../services/session.service'
+import { Session, TestClient } from '../services/session.service'
 import { TestDriver } from 'model'
+import { WSClient } from 'wss'
+import { ClientState } from '../router/driver.routes'
+import { RegisterBody, ReportBody } from './driver.types'
 
 export async function handleDriverList(req: Request, res: Response) {
   const clients = TestClient.store.list()
@@ -18,4 +21,45 @@ export async function handleDriverFetch(req: Request, res: Response) {
   } catch {
     res.status(404).json({ reason: `Test driver with id ${id} does not exist.` })
   }
+}
+
+export async function handleDriverConnection(client: WSClient<ClientState>) {
+  client.on(RegisterBody, async (data) => {
+    let deviceId = data.deviceId ?? client.state.id
+
+    if (deviceId.length === 0) {
+      deviceId = client.state.id
+    }
+
+    const testClient = new TestClient(client, {
+      name: data.name,
+      hardware: data.hardware,
+      id: deviceId,
+    })
+
+    client.send({ key: 'registered', id: testClient.id })
+  })
+
+  client.on(ReportBody, async (data) => {
+    const session = Session.store.fetch(data.session)
+    const testClient = TestClient.store.fetch(client.state.id)
+
+    if (session && testClient) {
+      const isFinished = session.report(testClient, data.moves)
+
+      if (isFinished) {
+        session.delete()
+      }
+    } else if (testClient) {
+      testClient.session = undefined
+    }
+  })
+
+  client.on('close', async () => {
+    const testClient = TestClient.store.fetch(client.state.id)
+
+    if (testClient) {
+      testClient.delete()
+    }
+  })
 }
