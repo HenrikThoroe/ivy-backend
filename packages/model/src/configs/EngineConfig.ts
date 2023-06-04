@@ -46,7 +46,39 @@ export function encodeVersion(version: EngineVersion, isURL: boolean = true) {
   return `v${version.major}.${version.minor}.${version.patch}`
 }
 
-export type VersionIncrement = keyof EngineVersion
+export function decodeVersion(str: string): EngineVersion {
+  if (str.startsWith('v')) {
+    str = str.substring(1)
+  }
+
+  const comps = str.split('-').map((comp) => parseInt(comp))
+
+  if (comps.length !== 3) {
+    throw new Error('Invalid version format')
+  }
+
+  return {
+    major: comps[0],
+    minor: comps[1],
+    patch: comps[2],
+  }
+}
+
+export interface EngineFlavour {
+  capabilities: string[]
+  os: string
+  arch: string
+  id: string
+}
+
+export function compareVersions(a: EngineVersion, b: EngineVersion): boolean {
+  return a.major === b.major && a.minor === b.minor && a.patch === b.patch
+}
+
+export interface EngineVariation {
+  version: EngineVersion
+  flavours: EngineFlavour[]
+}
 
 export interface EngineVersion {
   major: number
@@ -56,7 +88,7 @@ export interface EngineVersion {
 
 export interface EngineConfig {
   name: string
-  versions: EngineVersion[]
+  variations: EngineVariation[]
 }
 
 export interface EngineInstance {
