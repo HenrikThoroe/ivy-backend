@@ -1,10 +1,20 @@
 export interface TestDriverHardware {
-  cpu?: string
-  cores?: number
+  cpu?: {
+    model?: string
+    vendor?: string
+    cores?: number
+    threads?: number
+    capabilities?: string[]
+  }[]
   memory?: number
-  gpu?: string
-  frequency?: number
+  gpu?: {
+    model?: string
+    vendor?: string
+    memory?: number
+  }[]
   model?: string
+  os?: string
+  arch?: string
 }
 
 export interface TestDriver {
