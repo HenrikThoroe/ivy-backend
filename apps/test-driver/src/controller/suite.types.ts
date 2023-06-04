@@ -11,6 +11,10 @@ const EngineConfigBody = Record({
     type: Union(Literal('depth'), Literal('movetime')),
     value: Number.withConstraint((value) => value > 0),
   }),
+  options: Record({
+    hash: Number.withConstraint((n) => n > 0),
+    threads: Number.withConstraint((n) => n >= 1),
+  }),
 })
 
 export const CreateBody = Record({
