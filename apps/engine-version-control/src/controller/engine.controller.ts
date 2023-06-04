@@ -1,24 +1,13 @@
 import { Request, Response } from 'express'
-import { EngineConfig, encodeVersion, getVersionPath } from 'model'
+import { compareVersions, decodeVersion } from 'model'
 import { pipe } from '../services/storage.service'
-import { pushVersion, retrieveAllConfigs, retrieveConfig } from '../services/versioning.service'
-import { CreateBody, DownloadBody } from './engine.types'
-
-function stripEngineConfig(config: EngineConfig) {
-  return {
-    name: config.name,
-    versions: config.versions.map((v) => ({
-      id: encodeVersion(v, false),
-      path: getVersionPath(v, config.name),
-    })),
-  }
-}
+import { addFlavour, retrieveAllConfigs, retrieveConfig } from '../services/versioning.service'
+import { CreateBody, VersionFetchBody } from './engine.types'
 
 export async function handleFetchAll(request: Request, response: Response) {
   const configs = await retrieveAllConfigs()
-  const body = configs.map(stripEngineConfig)
 
-  response.json(body)
+  response.json(configs)
 }
 
 export async function handleFetchConfig(request: Request, response: Response) {
@@ -27,7 +16,7 @@ export async function handleFetchConfig(request: Request, response: Response) {
   try {
     const config = await retrieveConfig(id)
 
-    response.json(stripEngineConfig(config))
+    response.json(config)
   } catch {
     response.status(404).send('Requested engine is not available.')
   }
@@ -56,26 +45,30 @@ export async function handleCreate(request: Request, response: Response) {
     data = upload.data
   }
 
-  await pushVersion(body.name, body.increment, data)
+  const flavour = {
+    os: body.os,
+    arch: body.arch,
+    capabilities: body.capabilities ?? [],
+  }
+
+  const version = decodeVersion(body.version)
+  await addFlavour(body.name, version, flavour, data)
+
   response.send()
 }
 
 export async function handleFetchVersion(request: Request, response: Response) {
-  const body = DownloadBody.check(request.params)
-  let key = body.version
+  const body = VersionFetchBody.check(request.params)
+  const config = await retrieveConfig(body.name)
+  const version = decodeVersion(body.version)
+  const variation = config.variations.find((v) => compareVersions(v.version, version))
 
-  if (body.version === 'latest') {
-    const config = await retrieveConfig(body.name)
+  response.json(variation)
+}
 
-    if (config.versions.length === 0) {
-      response.status(404).send('The requested engine has no uploaded versions yet.')
-      return
-    }
+export async function handleDownload(request: Request, response: Response) {
+  const id = request.params.id
+  const engine = request.params.engine
 
-    const latest = config.versions[config.versions.length - 1]
-
-    key = encodeVersion(latest)
-  }
-
-  await pipe(body.name, key, response)
+  await pipe(engine, id, response)
 }
