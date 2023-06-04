@@ -5,6 +5,10 @@ export interface EngineTestConfig extends EngineInstance {
     type: 'depth' | 'movetime'
     value: number
   }
+  options: {
+    threads: number
+    hash: number
+  }
 }
 
 export interface TestSuite {
