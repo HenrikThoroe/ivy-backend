@@ -39,7 +39,7 @@ export class Session extends CRUD {
   }
 
   public start() {
-    const clients = this.selectDrivers(this.driverCount)
+    const clients = this.selectDrivers(this.driverCount, this.driverCount)
     clients.forEach((c) => this.requestGame(c))
   }
 
@@ -52,8 +52,8 @@ export class Session extends CRUD {
     }
   }
 
-  public report(client: TestClient) {
-    this.remaining -= 1
+  public report(client: TestClient, moves: any[]) {
+    this.remaining -= moves.length
 
     if (this.remaining <= 0) {
       client.session = undefined
@@ -66,10 +66,13 @@ export class Session extends CRUD {
   }
 
   private requestGame(client: TestClient) {
+    const batch = Math.max(100, Math.ceil(this.suite.iterations / (10 * this.driverCount)))
+
     client.ws.send({
-      command: 'start',
+      key: 'start',
       session: this.id,
       suite: this.suite,
+      recommendedBatchSize: batch,
     })
   }
 
@@ -88,8 +91,9 @@ export class Session extends CRUD {
     }
 
     if (clients.length < min) {
+      clients.forEach((c) => (c.session = undefined))
       throw new Error(
-        `Not enough drivers available. Requested ${count}, available ${clients.length}.`
+        `Not enough drivers available. Requested ${count}, available ${clients.length}`
       )
     }
 
