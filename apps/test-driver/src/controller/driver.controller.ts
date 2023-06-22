@@ -57,9 +57,16 @@ export async function handleDriverConnection(client: WSClient<ClientState>) {
 
   client.on('close', async () => {
     const testClient = TestClient.store.fetch(client.state.id)
+    const session = testClient?.session
 
-    if (testClient) {
-      testClient.delete()
+    testClient?.delete()
+
+    if (testClient && session) {
+      const didTerminate = session.remove(testClient)
+
+      if (didTerminate) {
+        session.delete()
+      }
     }
   })
 }
