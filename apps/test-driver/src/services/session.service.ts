@@ -48,8 +48,17 @@ export class Session extends CRUD {
 
     if (this.remaining > 0) {
       const min = this.driverCount === 1 ? 1 : 0
-      this.selectDrivers(1, min).forEach((c) => this.requestGame(c))
+
+      try {
+        this.selectDrivers(1, min).forEach((c) => this.requestGame(c))
+      } catch {
+        return true
+      }
+
+      return this.driverCount === 0
     }
+
+    return true
   }
 
   public report(client: TestClient, moves: any[]) {
@@ -66,7 +75,7 @@ export class Session extends CRUD {
   }
 
   private requestGame(client: TestClient) {
-    const batch = Math.max(100, Math.ceil(this.suite.iterations / (10 * this.driverCount)))
+    const batch = Math.min(100, Math.ceil(this.suite.iterations / (10 * this.driverCount)))
 
     client.ws.send({
       key: 'start',
