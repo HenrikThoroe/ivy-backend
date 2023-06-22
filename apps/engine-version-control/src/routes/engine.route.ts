@@ -1,6 +1,7 @@
 import Router from 'express'
 import {
   handleCreate,
+  handleDelete,
   handleDownload,
   handleFetchAll,
   handleFetchConfig,
@@ -16,3 +17,5 @@ engineRouter.get('/:id', exceptionWrapper(handleFetchConfig))
 engineRouter.get('/:name/:version', exceptionWrapper(handleFetchVersion))
 
 engineRouter.post('/', exceptionWrapper(handleCreate))
+
+engineRouter.delete('/:engine/:id', exceptionWrapper(handleDelete))

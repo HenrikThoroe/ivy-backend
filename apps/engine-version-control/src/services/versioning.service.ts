@@ -6,7 +6,7 @@ import {
   EngineFlavour,
   compareVersions,
 } from 'model'
-import { listBuckets, put, take } from './storage.service'
+import { deleteBucket, deleteKey, listBuckets, listKeys, put, take } from './storage.service'
 import crypto from 'crypto'
 
 const configKey = 'config.json'
@@ -97,4 +97,45 @@ export async function retrieveAllConfigs(): Promise<EngineConfig[]> {
   }
 
   return configs
+}
+
+export async function removeInstance(engine: string, id: string) {
+  const config = await retrieveConfig(engine, true)
+  const variation = config.variations.find((v) => v.flavours.find((f) => f.id === id))
+
+  if (!variation) {
+    throw new Error(`Could not find flavour with id ${id} for engine ${engine}`)
+  }
+
+  variation.flavours = variation.flavours.filter((f) => f.id !== id)
+
+  if (variation.flavours.length === 0) {
+    config.variations = config.variations.filter(
+      (v) => !compareVersions(v.version, variation.version)
+    )
+  }
+
+  await put(engine, configKey, JSON.stringify(config, undefined, 4), 'text/json')
+  await deleteKey(engine, id)
+  return await removeEmptyConfig(engine)
+}
+
+export async function removeEmptyConfig(id: string) {
+  const keys = await listKeys(id)
+
+  if (keys.length > 1) {
+    return false
+  }
+
+  if (keys.length === 1 && keys[0] !== configKey) {
+    return false
+  }
+
+  if (keys.length === 1 && keys[0] === configKey) {
+    await deleteKey(id, configKey)
+  }
+
+  await deleteBucket(id)
+
+  return true
 }

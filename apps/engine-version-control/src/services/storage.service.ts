@@ -1,5 +1,7 @@
 import {
   CreateBucketCommand,
+  DeleteBucketCommand,
+  DeleteObjectCommand,
   GetObjectCommand,
   HeadBucketCommand,
   ListBucketsCommand,
@@ -79,7 +81,7 @@ export async function pipe(bucket: string, name: string, response: Response) {
 }
 
 export async function listKeys(bucket: string) {
-  const cmd = new ListObjectsCommand({ Bucket: bucket })
+  const cmd = new ListObjectsCommand({ Bucket: bucket.toLowerCase() })
   const resp = await client.send(cmd)
 
   return (
@@ -94,4 +96,20 @@ export async function listBuckets() {
   return (
     resp.Buckets?.map((obj) => obj.Name).filter((key): key is string => key !== undefined) ?? []
   )
+}
+
+export async function deleteKey(bucket: string, key: string) {
+  const cmd = new DeleteObjectCommand({ Bucket: bucket.toLowerCase(), Key: key })
+  await client.send(cmd)
+}
+
+export async function deleteBucket(bucket: string) {
+  const keys = await listKeys(bucket)
+
+  for (const key of keys) {
+    await deleteKey(bucket, key)
+  }
+
+  const cmd = new DeleteBucketCommand({ Bucket: bucket.toLowerCase() })
+  await client.send(cmd)
 }
