@@ -16,8 +16,6 @@ export async function handleSessionCreate(req: Request, resp: Response) {
   } catch (e) {
     session.delete()
 
-    console.error(e)
-
     if (e instanceof Error) {
       resp.status(400).json({ reason: e.message })
     } else {
