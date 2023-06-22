@@ -9,7 +9,7 @@ const Version = String.withConstraint((s) => /^v[0-9]+\-[0-9]+\-[0-9]+$/.test(s)
 export const CreateBody = Record({
   name: Name,
   version: Version,
-  capabilities: Optional(Array(String)),
+  capabilities: Optional(String),
   os: String,
   arch: String,
 })

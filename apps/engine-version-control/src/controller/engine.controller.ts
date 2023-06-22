@@ -1,7 +1,12 @@
 import { Request, Response } from 'express'
 import { compareVersions, decodeVersion } from 'model'
 import { pipe } from '../services/storage.service'
-import { addFlavour, retrieveAllConfigs, retrieveConfig } from '../services/versioning.service'
+import {
+  addFlavour,
+  removeInstance,
+  retrieveAllConfigs,
+  retrieveConfig,
+} from '../services/versioning.service'
 import { CreateBody, VersionFetchBody } from './engine.types'
 
 export async function handleFetchAll(request: Request, response: Response) {
@@ -48,7 +53,7 @@ export async function handleCreate(request: Request, response: Response) {
   const flavour = {
     os: body.os,
     arch: body.arch,
-    capabilities: body.capabilities ?? [],
+    capabilities: body.capabilities?.split(',').map((c) => c.trim().toLowerCase()) ?? [],
   }
 
   const version = decodeVersion(body.version)
@@ -71,4 +76,14 @@ export async function handleDownload(request: Request, response: Response) {
   const engine = request.params.engine
 
   await pipe(engine, id, response)
+}
+
+export async function handleDelete(request: Request, response: Response) {
+  const id = request.params.id
+  const engine = request.params.engine
+  const removedEngine = await removeInstance(engine, id)
+
+  response.json({
+    removedEngine,
+  })
 }
