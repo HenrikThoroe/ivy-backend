@@ -1,4 +1,5 @@
-import { parseFENBoard, parseFENCastle, parseFENColor, parseFENTarget } from '../coding/fen'
+import { encodeFEN } from '../coding/fen_encoding'
+import { parseFENBoard, parseFENCastle, parseFENColor, parseFENTarget } from '../coding/fen_parsing'
 import { Color, ColorMap } from './Game'
 
 export type PieceType = 'rook' | 'bishop' | 'knight' | 'queen' | 'king' | 'pawn'
@@ -81,4 +82,8 @@ export function decode(fen: string): Board {
     fullMoveCounter,
     enPassant,
   }
+}
+
+export function encode(board: Board): string {
+  return encodeFEN(board)
 }
