@@ -2,6 +2,7 @@ import { EngineInstance } from '../../configs/EngineConfig'
 import { GameResult } from '../../game/analysis/end'
 import { Color, Move } from '../../game/model/Game'
 import { TestDriver } from '../../test/TestDriver'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface UCIMessage {
   type: 'recv' | 'send'
@@ -58,4 +59,12 @@ export interface Replay {
     reason: GameResult | 'rule-violation'
   }
   history: MoveInfo[]
+}
+
+export function createReplay(data: Omit<Replay, 'id' | 'date' | 'version'>): Replay {
+  return {
+    id: uuidv4(),
+    date: new Date(),
+    ...data,
+  }
 }
