@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import { Session, TestClient } from '../services/session.service'
-import { TestDriver } from 'model'
+import { MoveInfo, TestDriver } from '@ivy-chess/model'
 import { WSClient } from 'wss'
 import { ClientState } from '../router/driver.routes'
-import { RegisterBody, ReportBody } from './driver.types'
+import { MoveInfoBody, RegisterBody, ReportBody } from './driver.types'
+import { Static } from 'runtypes'
 
 export async function handleDriverList(req: Request, res: Response) {
   const clients = TestClient.store.list()

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { CreateBody } from './session.types'
 import { redis } from 'kv-store'
-import { TestSuite } from 'model'
+import { TestSuite } from '@ivy-chess/model'
 import { Session } from '../services/session.service'
 
 const suiteScope = redis.sub('test').sub('suite')

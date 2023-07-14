@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { compareVersions, decodeVersion } from 'model'
+import { compareVersions, decodeVersion } from '@ivy-chess/model'
 import { pipe } from '../services/storage.service'
 import {
   addFlavour,

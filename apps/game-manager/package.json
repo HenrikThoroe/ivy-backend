@@ -15,7 +15,7 @@
     "express-util": "*",
     "helmet": "^6.0.1",
     "http": "^0.0.1-security",
-    "model": "*",
+    "@ivy-chess/model": "*",
     "redis": "^4.6.5",
     "runtypes": "^6.6.0",
     "uuid": "^9.0.0",

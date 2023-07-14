@@ -16,13 +16,15 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "bullmq": "^4.1.0",
     "cors": "^2.8.5",
     "env-util": "*",
     "express": "^4.18.2",
     "express-util": "*",
     "helmet": "^7.0.0",
     "kv-store": "*",
-    "model": "*",
+    "@ivy-chess/model": "*",
+    "com": "*",
     "redis": "^4.6.6",
     "runtypes": "^6.6.0",
     "uuid": "^9.0.0",
