@@ -1,0 +1,8 @@
+{
+  "name": "com",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "author": "Henrik Thoroe",
+  "license": "GPLv3",
+  "private": true
+}
