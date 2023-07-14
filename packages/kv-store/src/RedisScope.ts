@@ -1,6 +1,11 @@
+import { loadenv } from 'env-util'
 import { SetOptions, createClient } from 'redis'
 
-const client = createClient()
+loadenv()
+
+const client = createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+})
 
 export interface SaveOptions {
   expiration?: number
