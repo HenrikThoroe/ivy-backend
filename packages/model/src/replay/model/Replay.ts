@@ -42,6 +42,12 @@ export interface MoveInfo {
   }>
 }
 
+export interface ReplayLog {
+  replay: string
+  white: UCILog
+  black: UCILog
+}
+
 export interface Replay {
   id: string
   date: Date
@@ -49,10 +55,6 @@ export interface Replay {
   engines: {
     white: EngineInstance
     black: EngineInstance
-  }
-  uci: {
-    white: UCILog
-    black: UCILog
   }
   result: {
     winner: Color | 'draw'
