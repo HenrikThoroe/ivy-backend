@@ -1,6 +1,6 @@
 import express from 'express'
-import { analysisScope, dataScope } from './db'
-import { Replay, analyseReplay } from '@ivy-chess/model'
+import { analysisScope, dataScope, logScope } from './db'
+import { Replay, ReplayLog, analyseReplay } from '@ivy-chess/model'
 
 export const router = express.Router()
 
@@ -38,5 +38,17 @@ router.get('/:id/analysis', async (req, res) => {
     } else {
       res.status(404).json({ reason: `Replay with id ${id} does not exist.` })
     }
+  }
+})
+
+router.get('/:id/logs', async (req, res) => {
+  const id = req.params.id
+  const exists = await logScope.has(id)
+
+  if (exists) {
+    const logs: ReplayLog = await logScope.fetch(id)
+    res.json(logs)
+  } else {
+    res.status(404).json({ reason: `Replay with id ${id} has no logs.` })
   }
 })
