@@ -62,8 +62,16 @@ export const RegisterBody = Record({
   }),
 })
 
+const LogEntry = Record({
+  type: Union(Literal('recv'), Literal('send')),
+  value: String,
+})
+
+export const LogDataBody = Tuple(Array(LogEntry), Array(LogEntry))
+
 export const ReportBody = Record({
   command: Literal('report'),
   session: String,
   moves: Array(GameDataBody),
+  logs: Array(LogDataBody),
 })
