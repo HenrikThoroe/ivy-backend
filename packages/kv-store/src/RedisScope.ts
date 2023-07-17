@@ -1,9 +1,10 @@
 import { loadenv } from 'env-util'
-import { SetOptions, createClient } from 'redis'
+import { RedisClientType, SetOptions, createClient } from 'redis'
+import { RedisSet } from './RedisSet'
 
 loadenv()
 
-const client = createClient({
+const client: RedisClientType = createClient({
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 })
 
@@ -97,6 +98,10 @@ export class RedisScope {
   public async has(key: string) {
     await this.isReady()
     return client.exists(this.build(key))
+  }
+
+  public asSet(key: string) {
+    return new RedisSet(client, this.build(key))
   }
 }
 
