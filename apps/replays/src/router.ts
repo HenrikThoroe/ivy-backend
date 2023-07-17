@@ -1,12 +1,19 @@
 import express from 'express'
 import { analysisScope, dataScope, logScope } from './db'
 import { Replay, ReplayLog, analyseReplay } from '@ivy-chess/model'
+import { FilterOptionsBody, fetchIds } from './service'
 
 export const router = express.Router()
 
 router.get('/', async (req, res) => {
-  const replays = await dataScope.list()
-  res.json(replays)
+  try {
+    const options = FilterOptionsBody.check(req.query)
+    const replays = await fetchIds(options)
+
+    res.json(replays)
+  } catch (e) {
+    res.status(400).send()
+  }
 })
 
 router.get('/:id', async (req, res) => {
