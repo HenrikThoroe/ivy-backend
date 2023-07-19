@@ -5,7 +5,7 @@ import {
   parseFENMove,
   parseFENPiece,
   parseFENTarget,
-} from '../../../src/game/coding/fen'
+} from '../../../src/game/coding/fen_parsing'
 import { Position } from '../../../src/game/model/Board'
 
 describe('FEN', () => {

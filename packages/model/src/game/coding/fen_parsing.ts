@@ -1,7 +1,7 @@
 import { CastleRights, Piece, PieceType, Position } from '../model/Board'
 import { Color, ColorMap } from '../model/Game'
 
-const pieceMapping: Map<string, PieceType> = new Map([
+const fenPieceMapping: Map<string, PieceType> = new Map([
   ['r', 'rook'],
   ['b', 'bishop'],
   ['n', 'knight'],
@@ -46,7 +46,7 @@ export function parseFENTarget(move: string): number {
 export function parseFENPiece(char: string): Piece {
   const normal = char.toLowerCase()
   const color: Color = normal === char ? 'black' : 'white'
-  const type = pieceMapping.get(normal)
+  const type = fenPieceMapping.get(normal)
 
   if (type) {
     return { type, color }

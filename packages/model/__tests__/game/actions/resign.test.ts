@@ -4,14 +4,14 @@ import { register } from '../../../src/game/actions/register'
 
 describe('Game Resignation', () => {
   it('throws when resigning an inactive game', () => {
-    const game = create({ timeout: 1000 })
+    const game = create({ timeout: 1000, timeback: 0 })
 
     expect(() => resign(game, 'black')).toThrow()
     expect(() => resign(game, 'white')).toThrow()
   })
 
   it('sets the winner', () => {
-    const game = create({ timeout: 1000 })
+    const game = create({ timeout: 1000, timeback: 0 })
 
     register(game, 'black')
     register(game, 'white')

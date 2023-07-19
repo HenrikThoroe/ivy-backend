@@ -10,5 +10,8 @@ declare namespace NodeJS {
     readonly S3_REGION: string
     readonly TEST_PORT: string
     readonly TEST_WSS_PORT: string
+    readonly REDIS_PORT: string
+    readonly REDIS_HOST: string
+    readonly REPLAYS_PORT: string
   }
 }

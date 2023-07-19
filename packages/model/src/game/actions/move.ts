@@ -1,6 +1,6 @@
 import { gameResult, isChecked } from '../analysis/end'
 import { isValidMove } from '../analysis/moves'
-import { parseFENMove, parseFENPiece } from '../coding/fen'
+import { parseFENMove, parseFENPiece } from '../coding/fen_parsing'
 import { Board, hash, Piece } from '../model/Board'
 import { Game, Move } from '../model/Game'
 
@@ -73,6 +73,13 @@ function performMove(board: Board, move: Move) {
     const start = board.positions[source]
     const end = board.positions[target]
     const step = Math.abs(start.row - end.row)
+
+    if (target === board.enPassant) {
+      const dir = color === 'white' ? 1 : -1
+      const captured = target + dir * 8
+
+      board.positions[captured].piece = undefined
+    }
 
     if (step === 2) {
       const dist = target - source

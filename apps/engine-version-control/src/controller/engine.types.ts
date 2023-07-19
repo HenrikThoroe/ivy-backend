@@ -1,4 +1,4 @@
-import { Literal, Optional, Record, String, Union, Array } from 'runtypes'
+import { Optional, Record, String } from 'runtypes'
 
 const Name = String.withConstraint(
   (s) => s.length > 0 && s.length < 100 && /^[a-zA-Z0-9\-]+$/.test(s)

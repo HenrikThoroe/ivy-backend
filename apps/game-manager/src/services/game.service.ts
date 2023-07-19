@@ -1,4 +1,4 @@
-import { Color, create, Game, GameConfig, move, register, resign } from 'model'
+import { Color, create, Game, GameConfig, move, register, resign } from '@ivy-chess/model'
 import { createClient } from 'redis'
 
 const client = createClient()

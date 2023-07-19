@@ -1,4 +1,4 @@
-import { Color, ColorMap, encodeMove, Game, GameState } from 'model'
+import { Color, ColorMap, encodeMove, Game, GameState } from '@ivy-chess/model'
 import { getPlayerColor } from '../game.service'
 
 export interface PongMessage {

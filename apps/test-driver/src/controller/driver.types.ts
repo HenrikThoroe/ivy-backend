@@ -1,7 +1,7 @@
 import { Literal, Record, Number, String, Optional, Array, Boolean, Union, Tuple } from 'runtypes'
 
-const MoveInfoBody = Record({
-  move: Optional(String),
+export const MoveInfoBody = Record({
+  move: String,
   depth: Optional(Number),
   selDepth: Optional(Number),
   time: Optional(Number),
@@ -17,7 +17,7 @@ const MoveInfoBody = Record({
     })
   ),
   currentMove: Optional(String),
-  currentMoveNumber: Optional(String),
+  currentMoveNumber: Optional(Number),
   hashFull: Optional(Number),
   nps: Optional(Number),
   tbhits: Optional(Number),
@@ -27,6 +27,8 @@ const MoveInfoBody = Record({
   refutation: Optional(Array(String)),
   currline: Optional(Array(String)),
 })
+
+export const GameDataBody = Tuple(Array(MoveInfoBody), Array(MoveInfoBody))
 
 export const RegisterBody = Record({
   command: Literal('register'),
@@ -60,8 +62,16 @@ export const RegisterBody = Record({
   }),
 })
 
+const LogEntry = Record({
+  type: Union(Literal('recv'), Literal('send')),
+  value: String,
+})
+
+export const LogDataBody = Tuple(Array(LogEntry), Array(LogEntry))
+
 export const ReportBody = Record({
   command: Literal('report'),
   session: String,
-  moves: Array(Tuple(Array(MoveInfoBody), Array(MoveInfoBody))),
+  moves: Array(GameDataBody),
+  logs: Array(LogDataBody),
 })

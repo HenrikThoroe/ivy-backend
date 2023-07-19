@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Session, TestClient } from '../services/session.service'
-import { TestDriver } from 'model'
+import { TestDriver } from '@ivy-chess/model'
 import { WSClient } from 'wss'
 import { ClientState } from '../router/driver.routes'
 import { RegisterBody, ReportBody } from './driver.types'
@@ -45,7 +45,7 @@ export async function handleDriverConnection(client: WSClient<ClientState>) {
     const testClient = TestClient.store.fetch(client.state.id)
 
     if (session && testClient) {
-      const isFinished = session.report(testClient, data.moves)
+      const isFinished = session.report(testClient, data.moves, data.logs)
 
       if (isFinished) {
         session.delete()

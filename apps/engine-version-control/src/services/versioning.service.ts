@@ -5,7 +5,7 @@ import {
   isConfig,
   EngineFlavour,
   compareVersions,
-} from 'model'
+} from '@ivy-chess/model'
 import { deleteBucket, deleteKey, listBuckets, listKeys, put, take } from './storage.service'
 import crypto from 'crypto'
 

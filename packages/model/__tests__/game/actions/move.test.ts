@@ -3,7 +3,7 @@ import { create } from '../../../src/game/actions/create'
 import { move } from '../../../src/game/actions/move'
 import { register } from '../../../src/game/actions/register'
 import { GameResult } from '../../../src/game/analysis/end'
-import { parseFENMove } from '../../../src/game/coding/fen'
+import { parseFENMove } from '../../../src/game/coding/fen_parsing'
 import { decode } from '../../../src/game/model/Board'
 
 const validateMove = (
@@ -14,7 +14,7 @@ const validateMove = (
   validation?: (game: Game) => void
 ) => {
   const board = decode(start)
-  const game = create({ timeout: 1000 })
+  const game = create({ timeout: 1000, timeback: 0 })
 
   register(game)
   register(game)
@@ -39,7 +39,7 @@ const validateMove = (
 
 describe('Game Move Action', () => {
   it('performs valid moves', () => {
-    const game = create({ timeout: 1000 })
+    const game = create({ timeout: 1000, timeback: 0 })
     let index = 0
     const moves = [
       'g1f3',
@@ -172,7 +172,7 @@ describe('Game Move Action', () => {
   })
 
   it('performs time control', () => {
-    const game = create({ timeout: 1 })
+    const game = create({ timeout: 1, timeback: 0 })
 
     register(game)
     register(game)
@@ -187,7 +187,7 @@ describe('Game Move Action', () => {
   })
 
   it('allows nullmoves', () => {
-    const game = create({ timeout: 1000 })
+    const game = create({ timeout: 1000, timeback: 0 })
 
     register(game)
     register(game)
@@ -241,7 +241,7 @@ describe('Game Move Action', () => {
       const start = decode(mate[0])
       const expected = decode(mate[1])
       const mv = mate[2]
-      const game = create({ timeout: 1000 })
+      const game = create({ timeout: 1000, timeback: 0 })
 
       register(game)
       register(game)
@@ -257,7 +257,7 @@ describe('Game Move Action', () => {
   })
 
   it('detects 3-fold repetition', () => {
-    const game = create({ timeout: 1000 })
+    const game = create({ timeout: 1000, timeback: 0 })
 
     register(game)
     register(game)
@@ -276,5 +276,22 @@ describe('Game Move Action', () => {
     expect(game.state).toBe('expired')
     expect(game.reason).toBe('3-fold-repetition')
     expect(game.winner).toBe('draw')
+  })
+
+  it('removes en passant target', () => {
+    const game = create({ timeout: 1000, timeback: 0 })
+
+    register(game)
+    register(game)
+
+    expect(() => move(game, 'd2d4')).not.toThrow()
+    expect(() => move(game, 'a7a6')).not.toThrow()
+    expect(() => move(game, 'd4d5')).not.toThrow()
+    expect(() => move(game, 'e7e5')).not.toThrow()
+    expect(() => move(game, 'd5e6')).not.toThrow()
+
+    expect(game.board.enPassant).toBe(undefined)
+    expect(game.board.positions[20].piece?.type).toBe('pawn')
+    expect(game.board.positions[28].piece).toBe(undefined)
   })
 })

@@ -11,6 +11,8 @@
     "gm",
     "wss",
     "kv-store",
-    "test-driver"
+    "test-driver",
+    "com",
+    "replays"
   ]
 }

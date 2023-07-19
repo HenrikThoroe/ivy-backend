@@ -1,0 +1,26 @@
+{
+  "name": "replays",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "Henrik Thoroe",
+  "license": "GPLv3",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./src/index.ts"
+  },
+  "dependencies": {
+    "@ivy-chess/model": "*",
+    "bullmq": "^4.0.0",
+    "com": "*",
+    "cors": "^2.8.5",
+    "env-util": "*",
+    "express": "^4.18.2",
+    "kv-store": "*",
+    "moment": "^2.29.4",
+    "runtypes": "^6.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1"
+  }
+}

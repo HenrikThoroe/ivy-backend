@@ -10,6 +10,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "redis": "^4.6.6"
+    "redis": "^4.6.6",
+    "env-util": "*"
   }
 }

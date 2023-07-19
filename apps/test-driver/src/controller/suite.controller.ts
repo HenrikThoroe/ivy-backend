@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { CreateBody } from './suite.types'
 import { v4 as uuid } from 'uuid'
-import { TestSuite } from 'model'
+import { TestSuite } from '@ivy-chess/model'
 import { redis } from 'kv-store'
 
 const scope = redis.sub('test').sub('suite')
