@@ -1,8 +1,8 @@
-import { EngineInstance } from '../../configs/EngineConfig'
 import { GameResult } from '../../game/analysis/end'
 import { Color, Move } from '../../game/model/Game'
 import { TestDriver } from '../../test/TestDriver'
 import { v4 as uuidv4 } from 'uuid'
+import { EngineTestConfig } from '../../test/TestSuite'
 
 export interface UCIMessage {
   type: 'recv' | 'send'
@@ -53,8 +53,8 @@ export interface Replay {
   date: Date
   driver: TestDriver
   engines: {
-    white: EngineInstance
-    black: EngineInstance
+    white: EngineTestConfig
+    black: EngineTestConfig
   }
   result: {
     winner: Color | 'draw'
