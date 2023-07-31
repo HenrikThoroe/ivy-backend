@@ -21,6 +21,10 @@ export class RedisSet extends RedisType {
     return await this.client.sCard(this.key)
   }
 
+  public async intersect(other: RedisSet) {
+    return await this.client.sInter([this.key, other.key])
+  }
+
   public async values() {
     return await this.client.sMembers(this.key)
   }
