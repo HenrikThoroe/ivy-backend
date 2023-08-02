@@ -10,6 +10,7 @@ export async function handleGroupCreation(req: Request, res: Response) {
     ...body,
   })
 
+  await verifier.requestReplays()
   res.json(verifier.verificationGroup)
 }
 
