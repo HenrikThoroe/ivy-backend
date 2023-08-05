@@ -104,6 +104,27 @@ export class Node {
       black: { ...empty },
     }
 
+    const wr = (wins: number, draws: number, defeats: number): number => {
+      const total = wins + draws + defeats
+      return total > 0 ? wins / total : 0
+    }
+
+    const w2dr = (wins: number, defeats: number): number => {
+      if (wins === 0 && defeats === 0) {
+        return 1
+      }
+
+      if (wins === 0) {
+        return 1 / defeats
+      }
+
+      if (defeats === 0) {
+        return wins
+      }
+
+      return wins / defeats
+    }
+
     for (const color of ['white', 'black'] as const) {
       const wins = await this.counter[color].get('win')
       const draws = await this.counter[color].get('draw')
@@ -115,8 +136,24 @@ export class Node {
         draws,
         defeats,
         total,
-        winRatio: total > 0 ? wins / total : 0,
-        win2DefeatRatio: defeats > 0 ? wins / defeats : 0,
+        winRatio: wr(wins, draws, defeats),
+        win2DefeatRatio: w2dr(wins, defeats),
+      }
+    }
+
+    const sum = (a: Performance, b: Performance): Performance => {
+      const total = a.total + b.total
+      const defeats = a.defeats + b.defeats
+      const draws = a.draws + b.draws
+      const wins = a.wins + b.wins
+
+      return {
+        wins,
+        draws,
+        defeats,
+        total,
+        winRatio: wr(wins, draws, defeats),
+        win2DefeatRatio: w2dr(wins, defeats),
       }
     }
 
@@ -125,18 +162,7 @@ export class Node {
       performance: {
         white: performance.white,
         black: performance.black,
-        accumulated: {
-          wins: performance.white.wins + performance.black.wins,
-          draws: performance.white.draws + performance.black.draws,
-          defeats: performance.white.defeats + performance.black.defeats,
-          total: performance.white.total + performance.black.total,
-          winRatio:
-            (performance.white.wins + performance.black.wins) /
-            (performance.white.total + performance.black.total),
-          win2DefeatRatio:
-            (performance.white.wins + performance.black.wins) /
-            (performance.white.defeats + performance.black.defeats),
-        },
+        accumulated: sum(performance.white, performance.black),
       },
     }
   }

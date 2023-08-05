@@ -39,10 +39,10 @@ export async function handleGroupResultFetch(req: Request, res: Response) {
 }
 
 export async function handleGroupNodeAdd(req: Request, res: Response) {
-  const verifier = await Verifier.for(req.params.id)
   const body = AddNodeBody.check(req.body)
+  const verifier = await Verifier.for(req.params.id)
 
   await verifier.addNode(body.node)
   await verifier.requestReplays()
-  res.json(await verifier.getState())
+  res.json(verifier.verificationGroup)
 }
