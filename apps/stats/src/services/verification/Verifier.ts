@@ -73,6 +73,17 @@ export class Verifier {
     return { ...this.group }
   }
 
+  public async delete(): Promise<void> {
+    await Promise.all(Array.from(this.nodes.values()).map((n) => n.delete()))
+
+    const scope = dataScope.sub(this.group.id)
+    const keys = await scope.list()
+
+    for (const key of keys) {
+      await scope.delete(key)
+    }
+  }
+
   public async addNode(config: EngineTestConfig): Promise<void> {
     const confHash = hashEngineTestConfig(config)
     const exists = this.group.nodes.map(hashEngineTestConfig).some((hash) => hash === confHash)

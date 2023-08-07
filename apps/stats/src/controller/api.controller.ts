@@ -26,6 +26,12 @@ export async function handleGroupFetch(req: Request, res: Response) {
   res.json(verifier.verificationGroup)
 }
 
+export async function handleGroupDelete(req: Request, res: Response) {
+  const verifier = await Verifier.for(req.params.id)
+  await verifier.delete()
+  res.json({ id: verifier.verificationGroup.id })
+}
+
 export async function handleGroupStateFetch(req: Request, res: Response) {
   const verifier = await Verifier.for(req.params.id)
   await verifier.requestReplays()
