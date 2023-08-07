@@ -88,6 +88,27 @@ export class Verifier {
     await this.update({ nodes: [...this.group.nodes, config] })
   }
 
+  public async deleteNode(config: EngineTestConfig): Promise<void> {
+    const confHash = hashEngineTestConfig(config)
+    const exists = this.group.nodes.map(hashEngineTestConfig).some((hash) => hash === confHash)
+    const isBase = hashEngineTestConfig(this.group.base) === confHash
+    const node = this.nodes.get(confHash)
+
+    if (!exists || isBase || !node) {
+      throw new Error('Cannot delete non-existent node.')
+    }
+
+    if (this.nodes.size === 1) {
+      throw new Error('Cannot delete last node.')
+    }
+
+    this.nodes.delete(confHash)
+    await node.delete()
+    await this.update({
+      nodes: this.group.nodes.filter((node) => hashEngineTestConfig(node) !== confHash),
+    })
+  }
+
   public async addReplay(replay: Replay): Promise<void> {
     const data = this.parseReplay(replay)
 

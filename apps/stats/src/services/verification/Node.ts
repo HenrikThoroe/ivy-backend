@@ -22,18 +22,21 @@ export class Node {
   private readonly counter: Record<Color, Counter>
   private readonly games: RedisSet
   private readonly config: EngineTestConfig
+  private readonly scope: RedisScope
   public readonly hash: string
 
   private constructor(
     counter: Record<Color, Counter>,
     games: RedisSet,
     hash: string,
-    config: EngineTestConfig
+    config: EngineTestConfig,
+    scope: RedisScope
   ) {
     this.counter = counter
     this.games = games
     this.hash = hash
     this.config = config
+    this.scope = scope
   }
 
   public static async create(groupScope: RedisScope, config: EngineTestConfig): Promise<Node> {
@@ -48,8 +51,14 @@ export class Node {
       { white: new Counter(whiteCounter), black: new Counter(blackCounter) },
       games,
       key,
-      config
+      config,
+      scope
     )
+  }
+
+  public async delete(): Promise<void> {
+    const keys = await this.scope.list()
+    await Promise.all(keys.map((key) => this.scope.delete(key)))
   }
 
   public async accepts(data: ReplayNodeData): Promise<boolean> {

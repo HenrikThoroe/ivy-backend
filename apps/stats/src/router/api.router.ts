@@ -4,6 +4,7 @@ import {
   handleGroupCreation,
   handleGroupFetch,
   handleGroupNodeAdd,
+  handleGroupNodeDelete,
   handleGroupResultFetch,
   handleGroupStateFetch,
   handleGroupsFetch,
@@ -17,3 +18,4 @@ verificationGroupRouter.get('/groups/:id', exceptionWrapper(handleGroupFetch))
 verificationGroupRouter.get('/groups/:id/state', exceptionWrapper(handleGroupStateFetch))
 verificationGroupRouter.get('/groups/:id/result', exceptionWrapper(handleGroupResultFetch))
 verificationGroupRouter.post('/groups/:id/nodes', exceptionWrapper(handleGroupNodeAdd))
+verificationGroupRouter.delete('/groups/:id/nodes', exceptionWrapper(handleGroupNodeDelete))

@@ -27,3 +27,7 @@ export const GroupCreateBody = Record({
 export const AddNodeBody = Record({
   node: EngineConfigBody,
 })
+
+export const DeleteNodeBody = Record({
+  node: EngineConfigBody,
+})
