@@ -4,5 +4,8 @@
   "main": "src/index.ts",
   "author": "Henrik Thoroe",
   "license": "GPLv3",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@ivy-chess/model": "*"
+  }
 }

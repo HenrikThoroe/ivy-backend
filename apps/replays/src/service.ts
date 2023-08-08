@@ -1,8 +1,23 @@
-import { Replay, ReplayLog, analyseReplay } from '@ivy-chess/model'
-import { analysisScope, createReplayIndex, dataScope, indexScope, logScope } from './db'
+import {
+  EngineTestConfig,
+  Replay,
+  ReplayLog,
+  analyseReplay,
+  hashEngineTestConfig,
+} from '@ivy-chess/model'
+import {
+  analysisScope,
+  configIndexScope,
+  createReplayDateIndex,
+  dataScope,
+  dateIndexScope,
+  logScope,
+} from './db'
 import { Record, String, Union, Literal, Optional, Static } from 'runtypes'
 import moment from 'moment'
 import { createDayTimestamp } from './util'
+import { ReplayByConfigFetchPayload } from 'com'
+import { Queue } from 'bullmq'
 
 export const FilterOptionsBody = Record({
   limit: Optional(String.withConstraint((n) => !Number.isNaN(parseInt(n)) && parseInt(n) >= 0)),
@@ -18,8 +33,9 @@ export type FilterOptions = Static<typeof FilterOptionsBody>
 const retrieveIdx = async (idx: number) => {
   const key = idx.toString()
 
-  if (await indexScope.has(key)) {
-    return await indexScope.asSet(key).values()
+  if (await dateIndexScope.has(key)) {
+    const indexSet = await dateIndexScope.asSet(key)
+    return await indexSet.values()
   }
 
   return []
@@ -42,7 +58,7 @@ const getFromDate = async (dateStr: string) => {
     return []
   }
 
-  const available = await indexScope.list()
+  const available = await dateIndexScope.list()
   const intersect = available.map((a) => parseInt(a)).filter((a) => start <= a && end >= a)
   const result: string[] = []
 
@@ -68,7 +84,7 @@ async function loadIds(options: FilterOptions, limit: number): Promise<Set<strin
     const ids = await getFromDate(since)
     ids.forEach((id) => result.add(id))
   } else {
-    let keys = await indexScope.list()
+    let keys = await dateIndexScope.list()
     keys = keys.sort().reverse()
 
     while (result.size < limit && keys.length > 0) {
@@ -103,13 +119,26 @@ async function filterIds(options: FilterOptions, ids: Set<string>) {
   return ids
 }
 
-export async function fetchIds(options: FilterOptions): Promise<string[]> {
+export async function fetch(options: FilterOptions): Promise<string[]> {
   const limit = Math.min(1_000, (options.limit && parseInt(options.limit)) || 100)
   let ids = await loadIds(options, limit)
   ids = await filterIds(options, ids)
   const result = Array.from(ids).slice(0, limit > ids.size ? undefined : limit)
 
   return result
+}
+
+export async function fetchByEngines(engines: [EngineTestConfig, EngineTestConfig]) {
+  const hash = engines.map((e) => hashEngineTestConfig(e))
+
+  if ((await configIndexScope.has(hash[0])) && (await configIndexScope.has(hash[1]))) {
+    const engineSet0 = await configIndexScope.asSet(hash[0])
+    const engineSet1 = await configIndexScope.asSet(hash[1])
+
+    return await engineSet0.intersect(engineSet1)
+  }
+
+  return []
 }
 
 export async function saveLog(log: ReplayLog) {
@@ -127,9 +156,33 @@ export async function saveReplay(replay: Replay) {
     await dataScope.save(replay.id, replay)
     await analysisScope.save(replay.id, analyseReplay(replay))
 
-    const idx = createReplayIndex(replay)
+    const idx = createReplayDateIndex(replay)
     const key = idx.toString()
+    const whiteHash = hashEngineTestConfig(replay.engines.white)
+    const blackHash = hashEngineTestConfig(replay.engines.black)
+    const indexSet = await dateIndexScope.asSet(key)
+    const whiteSet = await configIndexScope.asSet(whiteHash)
+    const blackSet = await configIndexScope.asSet(blackHash)
 
-    await indexScope.asSet(key).add(replay.id)
+    await indexSet.add(replay.id)
+    await whiteSet.add(replay.id)
+    await blackSet.add(replay.id)
   }
+}
+
+export async function handleFetchRequest(payload: ReplayByConfigFetchPayload) {
+  const ids = await fetchByEngines(payload.engines)
+  const queue = new Queue(payload.target, {
+    connection: {
+      host: process.env.REDIS_HOST!,
+      port: +process.env.REDIS_PORT!,
+    },
+  })
+
+  for (const id of ids) {
+    const replay = await dataScope.fetch<Replay>(id)
+    await queue.add('response', replay)
+  }
+
+  await queue.close()
 }

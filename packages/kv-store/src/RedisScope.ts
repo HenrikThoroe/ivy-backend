@@ -1,6 +1,7 @@
 import { loadenv } from 'env-util'
 import { RedisClientType, SetOptions, createClient } from 'redis'
 import { RedisSet } from './RedisSet'
+import { RedisBitfield } from './RedisBitfield'
 
 loadenv()
 
@@ -83,7 +84,9 @@ export class RedisScope {
     await this.isReady()
 
     const keys = await client.keys(this.build('*'))
-    return keys.map((key) => key.split(':')[this.scope.length])
+    const inScope = keys.map((key) => key.split(':')[this.scope.length])
+
+    return Array.from(new Set(inScope))
   }
 
   public async clear() {
@@ -100,8 +103,14 @@ export class RedisScope {
     return client.exists(this.build(key))
   }
 
-  public asSet(key: string) {
+  public async asSet(key: string) {
+    await this.isReady()
     return new RedisSet(client, this.build(key))
+  }
+
+  public async asBitfield(key: string) {
+    await this.isReady()
+    return new RedisBitfield(client, this.build(key))
   }
 }
 

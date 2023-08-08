@@ -168,14 +168,8 @@ export class Session extends CRUD {
     const replay = createReplay({
       driver,
       engines: {
-        white: {
-          name: this.suite.engines[whiteIndex].name,
-          version: this.suite.engines[whiteIndex].version,
-        },
-        black: {
-          name: this.suite.engines[blackIndex].name,
-          version: this.suite.engines[blackIndex].version,
-        },
+        white: this.suite.engines[whiteIndex],
+        black: this.suite.engines[blackIndex],
       },
       result: {
         winner: game.winner!,
