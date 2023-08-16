@@ -12,8 +12,8 @@
     "dev": "turbo run dev"
   },
   "devDependencies": {
-    "prettier": "latest",
-    "turbo": "latest"
+    "prettier": "^3.0.2",
+    "turbo": "^1.10.12"
   },
   "engines": {
     "node": ">=14.0.0"
