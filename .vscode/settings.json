@@ -14,6 +14,8 @@
     "test-driver",
     "com",
     "replays",
-    "stats"
+    "stats",
+    "schema",
+    "rest"
   ]
 }
