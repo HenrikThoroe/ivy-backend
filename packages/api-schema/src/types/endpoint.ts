@@ -71,7 +71,7 @@ export function endpoint(path: string, method: Method) {
 }
 
 /**
- * And endpoint represents the schema of a single API endpoint.
+ * An endpoint represents the schema of a single API endpoint.
  * It defines which input the endpoint accepts and which output it returns.
  * The input consists of query parameters, a body and path parameters aka params.
  * Each input and output is defined by a Zod schema and can be validated at runtime
