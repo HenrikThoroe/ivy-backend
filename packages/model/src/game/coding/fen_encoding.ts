@@ -1,4 +1,5 @@
 import { Board, CastleRights, PieceType } from '../model/Board'
+import { Move } from '../model/Game'
 
 const fenPieceMapping: Map<PieceType, string> = new Map([
   ['rook', 'r'],
@@ -25,6 +26,12 @@ function encodeCastleRights(rights: CastleRights) {
   return '-'
 }
 
+/**
+ * Encode the board positions as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFENPositions(board: Board) {
   const base = board.positions.map((pos) => {
     if (pos.piece) {
@@ -56,6 +63,12 @@ export function encodeFENPositions(board: Board) {
   return rows.join('/')
 }
 
+/**
+ * Encode the castle rights as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFENCastle(board: Board) {
   if (board.castleRights.white === 'none' && board.castleRights.black === 'none') {
     return '-'
@@ -69,6 +82,12 @@ export function encodeFENCastle(board: Board) {
   return fen.replaceAll('-', '')
 }
 
+/**
+ * Encode the en passant target as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFENEnPassant(board: Board) {
   if (board.enPassant === undefined) {
     return '-'
@@ -80,18 +99,42 @@ export function encodeFENEnPassant(board: Board) {
   return `${String.fromCharCode(97 + column)}${8 - row}`
 }
 
+/**
+ * Encode the half move counter as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFENHalfMoves(board: Board) {
   return board.halfMoveCounter.toString()
 }
 
+/**
+ * Encode the full move counter as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFENFullMoves(board: Board) {
   return board.fullMoveCounter.toString()
 }
 
+/**
+ * Encodes a player color as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFENColor(board: Board) {
   return board.next === 'white' ? 'w' : 'b'
 }
 
+/**
+ * Encodes a board as a FEN string.
+ *
+ * @param board The board to encode.
+ * @returns The FEN string.
+ */
 export function encodeFEN(board: Board) {
   return [
     encodeFENPositions(board),
@@ -101,4 +144,25 @@ export function encodeFEN(board: Board) {
     encodeFENHalfMoves(board),
     encodeFENFullMoves(board),
   ].join(' ')
+}
+
+/**
+ * Encodes a move as a FEN string.
+ * A move in FEN notation is in the format: a1b2(promotion?)
+ *
+ * @param move The move to encode.
+ * @returns The FEN string.
+ */
+export function encodeMove(move: Move) {
+  const encodeIdx = (idx: number) => {
+    const row = idx % 8
+    const col = Math.floor(idx / 8)
+
+    return `${String.fromCharCode(97 + row)}${8 - col}`
+  }
+
+  const source = encodeIdx(move.source)
+  const target = encodeIdx(move.target)
+
+  return `${source}${target}${move.promotion || ''}`
 }
