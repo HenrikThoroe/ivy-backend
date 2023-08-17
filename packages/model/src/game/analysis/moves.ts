@@ -232,6 +232,16 @@ function kingMoves(board: Board, index: number) {
   return result
 }
 
+/**
+ * Calculates all moves for the piece on the given index.
+ * Replaces the current piece on index with the given one and reverts it afterwards.
+ *
+ * @param board The board to calculate the moves on.
+ * @param index The index of the piece to calculate the moves for.
+ * @param replace The piece to replace the current piece with.
+ * @returns An array of indices that the piece on the given index can move to.
+ * @throws If the index does not contain a piece.
+ */
 export function movesWithReplacement(board: Board, index: number, replace: Piece) {
   const current = board.positions[index].piece ? { ...board.positions[index].piece! } : undefined
   let available: number[]
@@ -248,6 +258,15 @@ export function movesWithReplacement(board: Board, index: number, replace: Piece
   return available
 }
 
+/**
+ * Calculates all moves for the piece on the given index.
+ * Also includes moves that would put the king in check.
+ *
+ * @param board The board to calculate the moves on.
+ * @param index The index of the piece to calculate the moves for.
+ * @returns An array of indices that the piece on the given index can move to.
+ * @throws If the index does not contain a piece.
+ */
 export function moves(board: Board, index: number) {
   if (!board.positions[index].piece) {
     throw Error(`Expected to find a piece at index ${index}`)
@@ -287,6 +306,14 @@ export function moves(board: Board, index: number) {
   throw Error(`'${piece.type}' is not supported`)
 }
 
+/**
+ * Checks if the move from source to target index is valid on the given board.
+ *
+ * @param board The board to check the move on.
+ * @param source The starting index
+ * @param target The target index
+ * @returns True if the move is valid, false otherwise.
+ */
 export function isValidMove(board: Board, source: number, target: number): boolean {
   const piece = board.positions[source].piece
 
@@ -311,7 +338,7 @@ export function isValidMove(board: Board, source: number, target: number): boole
     board.positions[target].piece = prev[0]
 
     const king = board.positions.findIndex(
-      (pos) => pos.piece?.type === 'king' && pos.piece?.color === board.next
+      (pos) => pos.piece?.type === 'king' && pos.piece?.color === board.next,
     )
 
     if (hasThreat(board, board.next, king)) {

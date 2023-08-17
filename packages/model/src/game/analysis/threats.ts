@@ -3,6 +3,14 @@ import { Color } from '../model/Game'
 import { movesWithReplacement } from './moves'
 import { next } from './position'
 
+/**
+ * Checks if a piece on a given index is threatened by any piece of the given color.
+ *
+ * @param board The board on which to check for threats.
+ * @param color The color of the piece on the position that could be threatened.
+ * @param index The index of the position that could be threatened.
+ * @returns True if the position is threatened, false otherwise.
+ */
 export function hasThreat(board: Board, color: Color, index: number) {
   const diagonalSteps = [-7, 7, 9, -9]
   const straightSteps = [1, -1, 8, -8]

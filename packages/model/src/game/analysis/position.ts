@@ -1,17 +1,42 @@
 import { Board } from '../model/Board'
 import { Color } from '../model/Game'
 
+/**
+ * The result of a scan.
+ * Contains the index and the distance from the starting index.
+ */
 interface Result {
   index: number
   distance: number
 }
 
+/**
+ * The axis on which to scan.
+ */
 type Axis = 'horizontal' | 'vertical'
 
+/**
+ * The diagonal on which to scan.
+ */
 type Diagonal = 'ascending' | 'descending'
 
+/**
+ * The direction in which to scan.
+ * Forward is towards the end of the board.
+ * Backward is towards the start of the board.
+ * The direction is relative to the color.
+ */
 type Direction = 'forward' | 'backward'
 
+/**
+ * Scans an axis on the board in the given direction.
+ *
+ * @param board The board to scan.
+ * @param index The starting index.
+ * @param axis Either horizontal or vertical.
+ * @param direction Either forward or backward relative to the allowed pawn direction.
+ * @returns A `Generator` of {@link Result} objects. Result contains the index and the distance from the starting index.
+ */
 export function scanAxis(board: Board, index: number, axis: Axis, direction: Direction) {
   const factor = direction === 'backward' ? -1 : 1
 
@@ -22,11 +47,20 @@ export function scanAxis(board: Board, index: number, axis: Axis, direction: Dir
   }
 }
 
+/**
+ * Scans a diagonal on the board in the given direction.
+ *
+ * @param board The board to scan.
+ * @param index The starting index.
+ * @param diagonal Either ascending or descending. Ascending is a line that would go from a1 to h8. Descending is a line that would go from a8 to h1.
+ * @param direction Either forward or backward relative to the allowed pawn direction.
+ * @returns A `Generator` of {@link Result} objects. Result contains the index and the distance from the starting index.
+ */
 export function scanDiagonal(
   board: Board,
   index: number,
   diagonal: Diagonal,
-  direction: Direction
+  direction: Direction,
 ) {
   const factor =
     diagonal === 'ascending'
@@ -44,11 +78,20 @@ export function scanDiagonal(
   }
 }
 
+/**
+ * Scans the board using the given step distance applied to the indecies.
+ *
+ * @param board The board to scan.
+ * @param index The starting index.
+ * @param step The step distance. It is applied to each index to get the next index.
+ * @param verify Verify is used to determine if the next index is still on the same rank, file or diagonal.
+ * @returns A `Generator` of {@link Result} objects. Result contains the index and the distance from the starting index.
+ */
 export function* scan(
   board: Board,
   index: number,
   step: number,
-  verify: 'diagonal' | 'rank' | 'file'
+  verify: 'diagonal' | 'rank' | 'file',
 ): Generator<Result> {
   let current = index
   let distance = 0
@@ -88,12 +131,23 @@ export function* scan(
   } while (true)
 }
 
+/**
+ * Returns the position of the next piece on the board in the given direction.
+ *
+ * @param board The board to scan.
+ * @param color The opposite color of which piece color to find.
+ * @param index The starting index.
+ * @param step The step distance. It is applied to each index to get the next index.
+ * @param verify Verify is used to determine if the next index is still on the same rank, file or diagonal.
+ * @returns The {@link Result} object. Result contains the index and the distance from the starting index.
+ *          If no piece is found, the index is -1 and the distance is -1.
+ */
 export function next(
   board: Board,
   color: Color,
   index: number,
   step: number,
-  verify: 'diagonal' | 'rank' | 'file'
+  verify: 'diagonal' | 'rank' | 'file',
 ): Result {
   const empty = {
     index: -1,
