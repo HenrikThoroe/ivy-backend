@@ -162,6 +162,23 @@ function hasRepitition(game: Game) {
   return history.filter((h) => h === current).length >= 3
 }
 
+/**
+ * Parses the given FEN move and applies it to the game.
+ * The move is checked for validity before being applied.
+ * If the move results in a game termination, the game state will be
+ * adjusted accordingly.
+ *
+ * The game is also validated for outside factors like time
+ * constraints on the current player. The remaining time will be updated
+ * after the move has been successfully applied.
+ *
+ * The move function takes the context of the game into account,
+ * to detect termination reasons like 3-fold-repetition or 50-move-draw.
+ *
+ * @param game The game to apply the move to.
+ * @param code The FEN encoded move.
+ * @throws If the move is not valid or the game is not active.
+ */
 export function move(game: Game, code: string) {
   if (game.state !== 'active') {
     throw Error(`Cannot perform move on inactive game.`)
