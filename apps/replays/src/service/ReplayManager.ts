@@ -55,9 +55,7 @@ export class ReplayManager {
    */
   public async filter(options: FilterOptions) {
     const ids = await this.load(options)
-    console.log(`Loaded ${ids.size} replays. Limit is ${this.limit(options)}.`)
     const filtered = await this.restrict(options, ids)
-    console.log(`Filtered ${filtered.size} replays.`)
 
     return Array.from(filtered)
   }
