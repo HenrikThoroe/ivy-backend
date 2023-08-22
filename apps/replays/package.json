@@ -6,9 +6,13 @@
   "license": "GPLv3",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./src/index.ts"
+    "build:dev": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "build": "esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/index-prod.js",
+    "start": "yarn build:dev && node ./dist/index.js",
+    "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json"
   },
   "dependencies": {
+    "@ivy-chess/api-schema": "*",
     "@ivy-chess/model": "*",
     "bullmq": "^4.0.0",
     "com": "*",
@@ -17,9 +21,11 @@
     "express": "^4.18.2",
     "kv-store": "*",
     "moment": "^2.29.4",
-    "runtypes": "^6.7.0"
+    "rest": "*",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
+    "esbuild": "^0.19.2",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1"
   }
