@@ -1,4 +1,10 @@
 import { z } from 'zod'
+import {
+  BitSetField,
+  BitSetFieldConfig,
+  MemBitSetField,
+  RedisBitSetField,
+} from '../fields/BitSetField'
 import { MemoryField } from '../fields/Field'
 import { JSONField, MemJSONField, RedisJSONField } from '../fields/JSONField'
 import { MemSetField, RedisSetField, SetField } from '../fields/SetField'
@@ -14,7 +20,13 @@ export type Persistence = 'memory' | 'redis'
 /**
  * The type of a field in a store.
  */
-export type FieldType = 'string' | 'set' | z.ZodType | DynamicStore<FieldType> | StaticStore<Schema>
+export type FieldType =
+  | 'string'
+  | 'set'
+  | z.ZodType
+  | DynamicStore<FieldType>
+  | StaticStore<Schema>
+  | BitSetFieldConfig
 
 /**
  * The schema of a static store.
@@ -36,6 +48,8 @@ export type Value<T extends FieldType> = T extends 'string'
   ? StaticStore<U>
   : T extends 'set'
   ? SetField
+  : T extends BitSetFieldConfig
+  ? BitSetField
   : never
 
 /**
@@ -106,6 +120,14 @@ export abstract class Store {
     return new MemJSONField(this.buildKey(name), schema)
   }
 
+  protected readBitSet(name: string, config: BitSetFieldConfig): BitSetField {
+    if (this.persistence === 'redis') {
+      return new RedisBitSetField(this.buildKey(name), config)
+    }
+
+    return new MemBitSetField(this.buildKey(name), config)
+  }
+
   protected readDynamicStore<T extends FieldType>(name: string, fieldType: T): DynamicStore<T> {
     return new DynamicStore(name, fieldType, this.persistence, [...this.path, this.name])
   }
@@ -121,6 +143,10 @@ export abstract class Store {
 
     if (type === 'set') {
       return this.readSet(name) as Value<T>
+    }
+
+    if (type instanceof BitSetFieldConfig) {
+      return this.readBitSet(name, type) as Value<T>
     }
 
     if (type instanceof DynamicStore) {
