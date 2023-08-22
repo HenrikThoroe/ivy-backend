@@ -1,7 +1,7 @@
 import { loadenv } from 'env-util'
 import { RedisClientType, SetOptions, createClient } from 'redis'
-import { RedisSet } from './RedisSet'
 import { RedisBitfield } from './RedisBitfield'
+import { RedisSet } from './RedisSet'
 
 loadenv()
 
@@ -114,4 +114,7 @@ export class RedisScope {
   }
 }
 
+/**
+ * @deprecated Use `store` instead.
+ */
 export const redis = new RedisScope()
