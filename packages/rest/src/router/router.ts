@@ -1,5 +1,6 @@
-import { Route, RouteConfig } from '@ivy-chess/api-schema'
+import { Route, RouteConfig, shared } from '@ivy-chess/api-schema'
 import { Router as ExpressRouter, Request, Response } from 'express'
+import stream from 'stream'
 import * as z from 'zod'
 import { Result, RouteImpl } from './types'
 
@@ -126,6 +127,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
         try {
           await handler(req, res)
         } catch (e) {
+          console.log(e)
           if (e instanceof z.ZodError) {
             res.status(500).json({ message: e.message })
           } else if (e instanceof Error) {
@@ -143,17 +145,49 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
     handler: Impl[Extract<keyof Impl, string>],
   ) {
     return async (req: Request, res: Response) => {
-      const { query: q, body: b, params: p } = req
+      const { query: q, body: b, params: p, files: f } = req
+
+      const parseFiles = () => {
+        const files: Record<string, Buffer> = {}
+
+        if (!f) {
+          return files
+        }
+
+        for (const key of Object.keys(f)) {
+          const file = f[key]
+
+          if (Array.isArray(file) && file.length === 1) {
+            files[key] = file[0].data
+          } else if (!Array.isArray(file)) {
+            files[key] = file.data
+          }
+        }
+
+        return files
+      }
+
       const query = endpoint.validateQuery(q)
       const body = endpoint.validateBody(b)
       const params = endpoint.validateParams(p)
+      const files = endpoint.validateFiles(parseFiles())
 
-      const result = await handler({ query, body, params }, success, failure)
+      const result = await handler({ query, body, params, files }, success, failure)
 
       if (result.ok) {
         const { code, value } = result
         const payload = endpoint.validateSuccess(value)
-        res.status(code).json(payload)
+        const download = shared.generic.downloadSchema.safeParse(payload)
+
+        if (download.success) {
+          const readStream = new stream.PassThrough()
+          readStream.end(download.data.data)
+          res.set('Content-disposition', 'attachment;filename=' + download.data.name)
+          res.set('Content-Type', 'data/octet-stream')
+          readStream.pipe(res)
+        } else {
+          res.status(code).json(payload)
+        }
       } else {
         const { code, error } = result
         const payload = endpoint.validateFailure(error)
