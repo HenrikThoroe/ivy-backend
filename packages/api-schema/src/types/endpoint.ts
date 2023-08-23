@@ -8,10 +8,11 @@ type Method = 'GET' | 'POST' | 'PUT' | 'DELETE'
 /**
  * Input schema for an endpoint.
  */
-interface Input<Q extends z.ZodType, B extends z.ZodType, P extends z.ZodType> {
+interface Input<Q extends z.ZodType, B extends z.ZodType, P extends z.ZodType, F extends string> {
   query: Q
   body: B
   params: P
+  files: F[]
 }
 
 /**
@@ -64,6 +65,7 @@ export function endpoint(path: string, method: Method) {
         invalid_type_error: 'Expected undefined body',
       }),
       params: z.object({}),
+      files: [],
     },
     {
       success: z.undefined({ invalid_type_error: 'Expected undefined success response' }),
@@ -75,7 +77,7 @@ export function endpoint(path: string, method: Method) {
 /**
  * An endpoint represents the schema of a single API endpoint.
  * It defines which input the endpoint accepts and which output it returns.
- * The input consists of query parameters, a body and path parameters aka params.
+ * The input consists of query parameters, a body, attached files, and path parameters aka params.
  * Each input and output is defined by a Zod schema and can be validated at runtime
  * when data is received over an untrusted network.
  */
@@ -83,6 +85,7 @@ export class Endpoint<
   Q extends z.ZodType,
   B extends z.ZodType,
   P extends z.ZodType,
+  U extends string,
   S extends z.ZodType,
   F extends z.ZodType = typeof defaultFailureSchema,
 > {
@@ -100,14 +103,14 @@ export class Endpoint<
   /**
    * The input schema of the endpoint.
    */
-  protected readonly input: Input<Q, B, P>
+  protected readonly input: Input<Q, B, P, U>
 
   /**
    * The output schema of the endpoint.
    */
   protected readonly output: Output<S, F>
 
-  constructor(path: string, method: Method, input: Input<Q, B, P>, output: Output<S, F>) {
+  constructor(path: string, method: Method, input: Input<Q, B, P, U>, output: Output<S, F>) {
     this.path = path
     this.method = method
     this.input = input
@@ -120,7 +123,7 @@ export class Endpoint<
    * @param query The new query schema.
    * @returns A new endpoint with updated query schema.
    */
-  public query<T extends z.ZodType>(query: T): Endpoint<T, B, P, S, F> {
+  public query<T extends z.ZodType>(query: T): Endpoint<T, B, P, U, S, F> {
     return new Endpoint(this.path, this.method, { ...this.input, query }, this.output)
   }
 
@@ -130,7 +133,7 @@ export class Endpoint<
    * @param body The new body schema.
    * @returns A new endpoint with updated body schema.
    */
-  public body<T extends z.ZodType>(body: T): Endpoint<Q, T, P, S, F> {
+  public body<T extends z.ZodType>(body: T): Endpoint<Q, T, P, U, S, F> {
     return new Endpoint(this.path, this.method, { ...this.input, body }, this.output)
   }
 
@@ -140,8 +143,18 @@ export class Endpoint<
    * @param params The new params schema.
    * @returns A new endpoint with updated params schema.
    */
-  public params<T extends z.ZodType>(params: T): Endpoint<Q, B, T, S, F> {
+  public params<T extends z.ZodType>(params: T): Endpoint<Q, B, T, U, S, F> {
     return new Endpoint(this.path, this.method, { ...this.input, params }, this.output)
+  }
+
+  /**
+   * Creates a new endpoint with the same path and method but a different input schema.
+   *
+   * @param files The new files list of expected files.
+   * @returns A new endpoint with updated files list.
+   */
+  public files<T extends string>(files: T[]): Endpoint<Q, B, P, T, S, F> {
+    return new Endpoint(this.path, this.method, { ...this.input, files }, this.output)
   }
 
   /**
@@ -150,7 +163,7 @@ export class Endpoint<
    * @param success The new success schema.
    * @returns A new endpoint with updated success schema.
    */
-  public success<T extends z.ZodType>(success: T): Endpoint<Q, B, P, T, F> {
+  public success<T extends z.ZodType>(success: T): Endpoint<Q, B, P, U, T, F> {
     return new Endpoint(this.path, this.method, this.input, { ...this.output, success })
   }
 
@@ -160,7 +173,7 @@ export class Endpoint<
    * @param failure The new failure schema.
    * @returns A new endpoint with updated failure schema.
    */
-  public failure<T extends z.ZodType>(failure: T): Endpoint<Q, B, P, S, T> {
+  public failure<T extends z.ZodType>(failure: T): Endpoint<Q, B, P, U, S, T> {
     return new Endpoint(this.path, this.method, this.input, { ...this.output, failure })
   }
 
@@ -184,6 +197,29 @@ export class Endpoint<
    */
   public validateBody(body: unknown): z.infer<B> {
     return this.input.body.parse(body)
+  }
+
+  /**
+   * Validates the files of a request.
+   *
+   * @param files A record of filenames and their associated data buffer.
+   * @returns A record where all required keys are present.
+   */
+  public validateFiles(files: Record<string, Buffer>): Record<U, Buffer> {
+    const hasAllKeys = this.input.files.every((key) => key in files)
+    const hasEqualLength = this.input.files.length === Object.keys(files).length
+
+    if (!hasAllKeys || !hasEqualLength) {
+      throw new z.ZodError([
+        {
+          code: z.ZodIssueCode.custom,
+          path: [],
+          message: 'Expected exactly these files: ' + this.input.files.join(', '),
+        },
+      ])
+    }
+
+    return files as Record<U, Buffer>
   }
 
   /**
