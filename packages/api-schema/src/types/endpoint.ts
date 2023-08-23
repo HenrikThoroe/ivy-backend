@@ -60,13 +60,15 @@ export function endpoint(path: string, method: Method) {
     method,
     {
       query: z.object({}, { invalid_type_error: 'Expected empty query' }),
-      body: z.undefined({ invalid_type_error: 'Expected undefined body' }),
+      body: z.union([z.undefined(), z.object({})], {
+        invalid_type_error: 'Expected undefined body',
+      }),
       params: z.object({}),
     },
     {
       success: z.undefined({ invalid_type_error: 'Expected undefined success response' }),
       failure: defaultFailureSchema,
-    }
+    },
   )
 }
 
@@ -82,7 +84,7 @@ export class Endpoint<
   B extends z.ZodType,
   P extends z.ZodType,
   S extends z.ZodType,
-  F extends z.ZodType = typeof defaultFailureSchema
+  F extends z.ZodType = typeof defaultFailureSchema,
 > {
   /**
    * The path of the endpoint.
