@@ -81,6 +81,9 @@ export abstract class Store {
    * Field keys have commonly the format `group1:group2:...:name`.
    * From these keys only `name` would be returned.
    *
+   * Keys that do not refer to a field directly but rather create
+   * a scope for nested stores are returned as well.
+   *
    * @returns A duplicate free list of keys in the store.
    */
   public async keys(): Promise<string[]> {
@@ -170,7 +173,7 @@ export abstract class Store {
     const prefix = this.buildKey('')
     const inScope = all.filter((key) => key.startsWith(prefix))
     const withoutScope = inScope.map((key) => key.replace(prefix, ''))
-    const withoutSubScope = withoutScope.filter((key) => !key.includes(':'))
+    const withoutSubScope = withoutScope.map((key) => (key.includes(':') ? key.split(':')[0] : key))
     const withoutDuplicates = [...new Set(withoutSubScope)]
 
     return withoutDuplicates
