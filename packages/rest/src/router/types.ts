@@ -50,8 +50,9 @@ interface GenericHandler<
   Query extends z.ZodType,
   Body extends z.ZodType,
   Params extends z.ZodType,
+  Files extends string,
   Success extends z.ZodType,
-  Failure extends z.ZodType
+  Failure extends z.ZodType,
 > {
   /**
    * The call signature of the handler.
@@ -66,9 +67,10 @@ interface GenericHandler<
       query: z.infer<Query>
       body: z.infer<Body>
       params: z.infer<Params>
+      files: Record<Files, Buffer>
     },
     success: SuccessHandler<z.infer<Success>>,
-    failure: FailureHandler<z.infer<Failure>>
+    failure: FailureHandler<z.infer<Failure>>,
   ): Promise<Result<boolean, z.infer<Success>, z.infer<Failure>>>
 }
 
@@ -92,7 +94,7 @@ export type Result<OK extends boolean, T, E> = OK extends true ? SuccessResult<T
  */
 export type SuccessHandler<Success> = (
   value: Success,
-  code?: number
+  code?: number,
 ) => Result<true, Success, never>
 
 /**
@@ -104,7 +106,7 @@ export type SuccessHandler<Success> = (
  */
 export type FailureHandler<Failure> = (
   error: Failure,
-  code?: number
+  code?: number,
 ) => Result<false, never, Failure>
 
 /**
@@ -119,10 +121,11 @@ export type Handler<EP> = EP extends Endpoint<
   infer Query,
   infer Body,
   infer Params,
+  infer Files,
   infer Success,
   infer Failure
 >
-  ? GenericHandler<Query, Body, Params, Success, Failure>
+  ? GenericHandler<Query, Body, Params, Files, Success, Failure>
   : never
 
 /**
