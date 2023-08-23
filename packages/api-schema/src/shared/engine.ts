@@ -1,4 +1,11 @@
-import { EngineTestConfig, EngineVersion } from '@ivy-chess/model'
+import {
+  EngineConfig,
+  EngineFlavour,
+  EngineInstance,
+  EngineTestConfig,
+  EngineVariation,
+  EngineVersion,
+} from '@ivy-chess/model'
 import * as z from 'zod'
 
 /**
@@ -36,3 +43,37 @@ export const engineTestConfigSchema = z.object({
     threads: z.number().int().positive(),
   }),
 }) satisfies z.ZodType<EngineTestConfig>
+
+/**
+ * Schema for {@link EngineInstance}
+ */
+export const engineInstanceSchema = z.object({
+  name: engineNameSchema,
+  version: versionSchema,
+}) satisfies z.ZodType<EngineInstance>
+
+/**
+ * Schema for {@link EngineFlavour}
+ */
+export const engineFlavourSchema = z.object({
+  id: z.string().nonempty(),
+  os: z.string().nonempty(),
+  arch: z.string().nonempty(),
+  capabilities: z.array(z.string().nonempty().toLowerCase()),
+}) satisfies z.ZodType<EngineFlavour>
+
+/**
+ * Schema for {@link EngineVariation}
+ */
+export const engineVariationSchema = z.object({
+  version: versionSchema,
+  flavours: z.array(engineFlavourSchema),
+}) satisfies z.ZodType<EngineVariation>
+
+/**
+ * Schema for {@link EngineConfig}
+ */
+export const engineConfigSchema = z.object({
+  name: engineNameSchema,
+  variations: z.array(engineVariationSchema),
+}) satisfies z.ZodType<EngineConfig>
