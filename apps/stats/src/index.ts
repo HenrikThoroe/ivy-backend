@@ -1,9 +1,9 @@
 import cors from 'cors'
+import { loadenv } from 'env-util'
 import express from 'express'
 import helmet from 'helmet'
-import { loadenv } from 'env-util'
-import { verificationGroupRouter } from './router/api.router'
-import { replayWorker } from './services/messaging.service'
+import { setupMessageQueue } from './api/messages'
+import { verificationRouter } from './api/router'
 
 loadenv()
 
@@ -13,6 +13,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(helmet())
-app.use('/verification', verificationGroupRouter)
+verificationRouter.mount(app)
 app.listen(process.env.STATS_PORT)
-replayWorker.run()
+
+setupMessageQueue()
