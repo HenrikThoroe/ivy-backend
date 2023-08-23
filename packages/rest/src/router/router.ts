@@ -1,7 +1,7 @@
-import { RouteConfig, Route } from '@ivy-chess/api-schema'
-import { Result, RouteImpl } from './types'
+import { Route, RouteConfig } from '@ivy-chess/api-schema'
 import { Router as ExpressRouter, Request, Response } from 'express'
 import * as z from 'zod'
+import { Result, RouteImpl } from './types'
 
 /**
  * Creates a successful result for the given value.
@@ -140,7 +140,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
 
   private buildExpressHandler(
     endpoint: T[Extract<keyof T, string>],
-    handler: Impl[Extract<keyof Impl, string>]
+    handler: Impl[Extract<keyof Impl, string>],
   ) {
     return async (req: Request, res: Response) => {
       const { query: q, body: b, params: p } = req
