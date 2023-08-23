@@ -1,4 +1,4 @@
-import { MemoryField, RedisField } from './Field'
+import { Field, MemoryField, RedisField } from './Field'
 
 type Length = 2 | 4 | 8 | 16 | 32 | 64
 
@@ -14,7 +14,7 @@ export class BitSetFieldConfig {
 /**
  * A field that stores a set of bit strings.
  */
-export interface BitSetField {
+export interface BitSetField extends Field {
   /**
    * Reads the value at the given offset.
    *
@@ -46,6 +46,14 @@ export interface BitSetField {
    * @param value The value to increment by.
    */
   increment(offset: number, value: number): Promise<number | undefined>
+
+  /**
+   * Returns the sum of all values in the given range.
+   *
+   * @param start The inclusive start of the range.
+   * @param end The exclusive end of the range.
+   */
+  sum(start: number, end: number): Promise<number>
 }
 
 /**
@@ -85,6 +93,21 @@ export class MemBitSetField extends MemoryField<number[]> implements BitSetField
 
     await this.write(offset, next)
     return next
+  }
+
+  public async sum(start: number, end: number): Promise<number> {
+    if (start >= end || start < 0) {
+      return 0
+    }
+
+    let sum = 0
+
+    for (let i = start; i < end; i++) {
+      const val = await this.read(i)
+      sum += val ? val : 0
+    }
+
+    return sum
   }
 }
 
@@ -145,5 +168,20 @@ export class RedisBitSetField extends RedisField implements BitSetField {
     }
 
     return res[0]
+  }
+
+  public async sum(start: number, end: number): Promise<number> {
+    if (start >= end || start < 0) {
+      return 0
+    }
+
+    let sum = 0
+
+    for (let i = start; i < end; i++) {
+      const val = await this.read(i)
+      sum += val ? val : 0
+    }
+
+    return sum
   }
 }
