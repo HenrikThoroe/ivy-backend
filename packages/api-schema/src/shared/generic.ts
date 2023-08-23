@@ -17,3 +17,12 @@ export const nameSchema = z
   .regex(/^[a-zA-Z]+[a-zA-Z0-9\- \.]+$/)
   .min(1)
   .max(100)
+
+/**
+ * Schema used when a success response should be
+ * treated as file download.
+ */
+export const downloadSchema = z.object({
+  name: z.string().nonempty(),
+  data: z.instanceof(Buffer),
+})
