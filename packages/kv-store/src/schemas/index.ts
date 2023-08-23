@@ -1,5 +1,6 @@
 import { StaticStore } from '../stores'
 import { replayStore } from './replays'
+import { statsStore } from './stats'
 
 /**
  * Store utilizing Redis for persistence.
@@ -7,4 +8,5 @@ import { replayStore } from './replays'
  */
 export const store = StaticStore.redis('store', {
   replays: replayStore,
+  stats: statsStore,
 })
