@@ -12,10 +12,10 @@ import { nameSchema, withIdSchema } from './generic'
  * Schema for {@link Performance}.
  */
 export const performanceSchema = z.object({
-  wins: z.number().int().positive(),
-  draws: z.number().int().positive(),
-  defeats: z.number().int().positive(),
-  total: z.number().int().positive(),
+  wins: z.number().int().nonnegative(),
+  draws: z.number().int().nonnegative(),
+  defeats: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
   winRatio: z.number(),
   win2DefeatRatio: z.number(),
 }) satisfies z.ZodType<Performance>
@@ -44,7 +44,7 @@ export const verificationGroupStateSchema = z.object({
   hasResult: z.boolean(),
   nodes: z.array(
     z.object({
-      progress: z.number().int().positive(),
+      progress: z.number().nonnegative(),
       node: engineTestConfigSchema,
     }),
   ),
