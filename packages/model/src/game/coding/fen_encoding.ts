@@ -163,6 +163,11 @@ export function encodeMove(move: Move) {
 
   const source = encodeIdx(move.source)
   const target = encodeIdx(move.target)
+  let promotion = move.promotion ? fenPieceMapping.get(move.promotion.type) : undefined
 
-  return `${source}${target}${move.promotion || ''}`
+  if (move.promotion && move.promotion.color === 'white') {
+    promotion = promotion?.toUpperCase()
+  }
+
+  return `${source}${target}${promotion ?? ''}`
 }

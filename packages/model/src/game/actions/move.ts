@@ -1,7 +1,7 @@
 import { gameResult, isChecked } from '../analysis/end'
 import { isValidMove } from '../analysis/moves'
 import { parseFENMove, parseFENPiece } from '../coding/fen_parsing'
-import { Board, hash, Piece } from '../model/Board'
+import { Board, Piece, hash } from '../model/Board'
 import { Game, Move } from '../model/Game'
 
 function getEnemy(board: Board) {
@@ -116,7 +116,7 @@ function validateTime(game: Game) {
 
 function validateMove(game: Game, move: Move) {
   const enemy = getEnemy(game.board)
-  const { source, target } = move
+  const { source, target, promotion } = move
   const valid = isValidMove(game.board, source, target)
   const isInvalidPromotionTarget = move.promotion && !(target >= 56 || target <= 7)
   const isInvalidPromotionPiece = move.promotion?.type === 'king' || move.promotion?.type === 'pawn'
@@ -130,7 +130,7 @@ function validateMove(game: Game, move: Move) {
 
   performMove(game.board, move)
 
-  game.history.push({ source, target })
+  game.history.push({ source, target, promotion })
   game.positionHistory.push(hash(game.board))
 
   return true
