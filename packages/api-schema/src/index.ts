@@ -1,4 +1,5 @@
 export * as api from './schema'
-export * from './types/endpoint'
-export * from './types/route'
 export * as shared from './shared'
+export * from './types/endpoint'
+export * from './types/io'
+export * from './types/route'
