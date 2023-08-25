@@ -127,7 +127,8 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
         try {
           await handler(req, res)
         } catch (e) {
-          console.log(e)
+          console.error(`Failed to handle request to '${req.path}'`)
+          console.error(e)
           if (e instanceof z.ZodError) {
             res.status(500).json({ message: e.message })
           } else if (e instanceof Error) {
