@@ -36,7 +36,7 @@ export class Sender<T extends ChannelSchema> {
    * @param job The name of the job to send.
    * @param data The data to send.
    */
-  public async send(job: Extract<keyof T, string>, data: z.infer<T[typeof job]>) {
+  public async send<K extends Extract<keyof T, string>>(job: K, data: z.infer<T[K]>) {
     const validated = this.schema[job].safeParse(data)
 
     if (validated.success) {
