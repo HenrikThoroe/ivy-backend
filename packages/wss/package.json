@@ -10,8 +10,9 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "typescript": "^4.9.5",
-    "eslint-config-custom": "*"
+    "@types/ws": "^8.5.5",
+    "eslint-config-custom": "*",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "@ivy-chess/api-schema": "*",
