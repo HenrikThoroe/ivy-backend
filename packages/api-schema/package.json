@@ -7,6 +7,11 @@
   "author": "Henrik Thoroe",
   "license": "GPTv3",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HenrikThoroe/ivy-backend.git",
+    "directory": "packages/api-schema"
+  },
   "files": [
     "dist/**"
   ],
