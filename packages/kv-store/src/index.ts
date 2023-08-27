@@ -1,6 +1,3 @@
-export * from './RedisBitfield'
-export * from './RedisScope'
-export * from './RedisSet'
 export * from './fields'
 export * from './schemas'
 export * from './stores'

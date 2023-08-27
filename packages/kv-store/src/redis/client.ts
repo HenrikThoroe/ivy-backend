@@ -1,4 +1,7 @@
+import { loadenv } from 'env-util'
 import { createClient } from 'redis'
+
+loadenv()
 
 const client = createClient({
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
