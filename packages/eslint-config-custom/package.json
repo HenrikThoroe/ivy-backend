@@ -1,0 +1,13 @@
+{
+  "name": "eslint-config-custom",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "Henrik Thoroe",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-config-turbo": "latest"
+  }
+}
