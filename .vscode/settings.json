@@ -9,7 +9,6 @@
     "global",
     "evc",
     "env-util",
-    "express-util",
     "model",
     "gm",
     "wss",
