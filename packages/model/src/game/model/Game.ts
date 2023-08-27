@@ -42,9 +42,7 @@ export interface Move {
 /**
  * A map of colors to values.
  */
-export type ColorMap<T> = {
-  [key in Color]: T
-}
+export type ColorMap<T> = Record<Color, T>
 
 /**
  * The reason a game has ended.
@@ -70,7 +68,7 @@ export interface Game {
    * Ids can be undefined if the player has not yet joined the game.
    * If any id is not set, the game cannot be started and moves will be rejected.
    */
-  readonly players: ColorMap<string | undefined>
+  readonly players: Partial<ColorMap<string>>
 
   /**
    * Remaining time for each player.
