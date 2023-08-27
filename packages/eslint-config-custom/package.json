@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "index.js",
   "author": "Henrik Thoroe",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "private": true,
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.4.1",

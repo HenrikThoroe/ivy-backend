@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "author": "Henrik Thoroe",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
     "build:dev": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=cjs",
