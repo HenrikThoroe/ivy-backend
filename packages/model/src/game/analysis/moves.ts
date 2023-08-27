@@ -81,7 +81,7 @@ function pawnMoves(board: Board, index: number) {
       }
 
       //? Cannot jump over piece in front
-      if (rowDiff == 2) {
+      if (rowDiff === 2) {
         const diff = target - index
         const mid = index + diff / 2
 
@@ -249,8 +249,6 @@ export function movesWithReplacement(board: Board, index: number, replace: Piece
   try {
     board.positions[index].piece = replace
     available = moves(board, index)
-  } catch (e) {
-    throw e
   } finally {
     board.positions[index].piece = current
   }

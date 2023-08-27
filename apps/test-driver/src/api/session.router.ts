@@ -7,7 +7,7 @@ import { SessionManager } from '../service/SessionManager'
  * Router for test session related requests.
  */
 export const sessionRouter = router(api.testing.http.sessionsRoute, {
-  all: async ({}, success, _) => {
+  all: async (_, success, __) => {
     const sessions = SessionManager.shared.all.map((s) => ({
       id: s.id,
       remaining: s.remainingGames,

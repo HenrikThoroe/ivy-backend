@@ -118,8 +118,6 @@ export class RedisSetField extends RedisField implements SetField {
   }
 
   public async write(value: Set<string>): Promise<void> {
-    const client = await this.client()
-
     await this.erase()
 
     for (const item of value) {

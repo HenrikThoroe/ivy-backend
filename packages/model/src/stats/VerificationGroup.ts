@@ -34,36 +34,6 @@ export interface VerificationGroup {
 }
 
 /**
- * The state of a `VerificationGroup`.
- */
-export interface VerificationGroupState {
-  /**
-   * Whether the verification group has a result.
-   */
-  hasResult: boolean
-
-  /**
-   * The state of each node.
-   */
-  nodes: NodeState[]
-}
-
-/**
- * The result of a `VerificationGroup`.
- */
-export interface VerificationResult {
-  /**
-   * The id of the verification group.
-   */
-  group: string
-
-  /**
-   * The results for each node.
-   */
-  results: NodeResult[]
-}
-
-/**
  * The state of a node.
  */
 export interface NodeState {
@@ -76,6 +46,21 @@ export interface NodeState {
    * The progress of the node until a result will be availble.
    */
   progress: number
+}
+
+/**
+ * The state of a `VerificationGroup`.
+ */
+export interface VerificationGroupState {
+  /**
+   * Whether the verification group has a result.
+   */
+  hasResult: boolean
+
+  /**
+   * The state of each node.
+   */
+  nodes: NodeState[]
 }
 
 /**
@@ -145,4 +130,19 @@ export interface NodeResult {
      */
     accumulated: Performance
   }
+}
+
+/**
+ * The result of a `VerificationGroup`.
+ */
+export interface VerificationResult {
+  /**
+   * The id of the verification group.
+   */
+  group: string
+
+  /**
+   * The results for each node.
+   */
+  results: NodeResult[]
 }

@@ -1,46 +1,10 @@
 /**
- * An engine variation is a specific version of an engine
- * with a set of flavours. A flavour defines which
- * systems can run the engine.
- */
-export interface EngineVariation {
-  /**
-   * The version of the engine.
-   */
-  version: EngineVersion
-
-  /**
-   * Available flavours of the engine.
-   */
-  flavours: EngineFlavour[]
-}
-
-/**
  * Semantic versioning of an engine.
  */
 export interface EngineVersion {
   major: number
   minor: number
   patch: number
-}
-
-/**
- * Configuration for an engine.
- * An engine is identified by a unique name.
- * Each engine can have multiple variations.
- *
- * @see {@link EngineVariation}
- */
-export interface EngineConfig {
-  /**
-   * The unique id of the engine.
-   */
-  name: string
-
-  /**
-   * A list of available variations.
-   */
-  variations: EngineVariation[]
 }
 
 /**
@@ -72,6 +36,42 @@ export interface EngineFlavour {
    * It should be bound to the engine, version and flavour.
    */
   id: string
+}
+
+/**
+ * An engine variation is a specific version of an engine
+ * with a set of flavours. A flavour defines which
+ * systems can run the engine.
+ */
+export interface EngineVariation {
+  /**
+   * The version of the engine.
+   */
+  version: EngineVersion
+
+  /**
+   * Available flavours of the engine.
+   */
+  flavours: EngineFlavour[]
+}
+
+/**
+ * Configuration for an engine.
+ * An engine is identified by a unique name.
+ * Each engine can have multiple variations.
+ *
+ * @see {@link EngineVariation}
+ */
+export interface EngineConfig {
+  /**
+   * The unique id of the engine.
+   */
+  name: string
+
+  /**
+   * A list of available variations.
+   */
+  variations: EngineVariation[]
 }
 
 /**

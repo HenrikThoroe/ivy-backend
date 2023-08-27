@@ -16,8 +16,6 @@ export class SessionManager {
 
   private readonly invalid: Map<Session, NodeJS.Timeout> = new Map()
 
-  private constructor() {}
-
   /**
    * All active sessions.
    */

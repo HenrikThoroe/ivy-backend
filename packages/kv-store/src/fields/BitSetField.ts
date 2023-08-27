@@ -8,7 +8,11 @@ type Encoding = `i${Length}`
  * The configuration for a {@link BitSetField}.
  */
 export class BitSetFieldConfig {
-  constructor(public length: Length) {}
+  public length: Length
+
+  constructor(length: Length) {
+    this.length = length
+  }
 }
 
 /**
@@ -104,7 +108,7 @@ export class MemBitSetField extends MemoryField<number[]> implements BitSetField
 
     for (let i = start; i < end; i++) {
       const val = await this.read(i)
-      sum += val ? val : 0
+      sum += val ?? 0
     }
 
     return sum
@@ -179,7 +183,7 @@ export class RedisBitSetField extends RedisField implements BitSetField {
 
     for (let i = start; i < end; i++) {
       const val = await this.read(i)
-      sum += val ? val : 0
+      sum += val ?? 0
     }
 
     return sum

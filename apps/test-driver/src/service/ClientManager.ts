@@ -13,8 +13,6 @@ export class ClientManager {
 
   private readonly clients: Set<Client> = new Set()
 
-  private constructor() {}
-
   //* API
 
   /**

@@ -98,7 +98,7 @@ function performMove(board: Board, move: Move) {
 function validateTime(game: Game) {
   const arrival = Date.now()
   const color = game.board.next
-  let delta = game.lastRequest > 0 ? arrival - game.lastRequest : 0
+  const delta = game.lastRequest > 0 ? arrival - game.lastRequest : 0
   const enemy = getEnemy(game.board)
 
   game.time[color] -= delta

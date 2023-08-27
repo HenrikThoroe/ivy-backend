@@ -43,38 +43,6 @@ interface FailureResult<E> {
 }
 
 /**
- * A generic handler for an endpoint.
- * Defines the call signature of handlers that take the checked and valid input of a request.
- */
-interface GenericHandler<
-  Query extends z.ZodType,
-  Body extends z.ZodType,
-  Params extends z.ZodType,
-  Files extends string,
-  Success extends z.ZodType,
-  Failure extends z.ZodType,
-> {
-  /**
-   * The call signature of the handler.
-   *
-   * @param args The checked and valid input of the request.
-   * @param success A function to call if the request was successful.
-   * @param failure A function to call if the request failed.
-   * @returns A promise that resolves to the result of the request.
-   */
-  (
-    args: {
-      query: z.infer<Query>
-      body: z.infer<Body>
-      params: z.infer<Params>
-      files: Record<Files, Buffer>
-    },
-    success: SuccessHandler<z.infer<Success>>,
-    failure: FailureHandler<z.infer<Failure>>,
-  ): Promise<Result<boolean, z.infer<Success>, z.infer<Failure>>>
-}
-
-/**
  * The result of a request.
  * Either a `SuccessResult` or a `FailureResult`.
  * The `OK` type parameter determines which one.
@@ -108,6 +76,38 @@ export type FailureHandler<Failure> = (
   error: Failure,
   code?: number,
 ) => Result<false, never, Failure>
+
+/**
+ * A generic handler for an endpoint.
+ * Defines the call signature of handlers that take the checked and valid input of a request.
+ */
+interface GenericHandler<
+  Query extends z.ZodType,
+  Body extends z.ZodType,
+  Params extends z.ZodType,
+  Files extends string,
+  Success extends z.ZodType,
+  Failure extends z.ZodType,
+> {
+  /**
+   * The call signature of the handler.
+   *
+   * @param args The checked and valid input of the request.
+   * @param success A function to call if the request was successful.
+   * @param failure A function to call if the request failed.
+   * @returns A promise that resolves to the result of the request.
+   */
+  (
+    args: {
+      query: z.infer<Query>
+      body: z.infer<Body>
+      params: z.infer<Params>
+      files: Record<Files, Buffer>
+    },
+    success: SuccessHandler<z.infer<Success>>,
+    failure: FailureHandler<z.infer<Failure>>,
+  ): Promise<Result<boolean, z.infer<Success>, z.infer<Failure>>>
+}
 
 /**
  * The call signature of a handler for a specific endpoint.

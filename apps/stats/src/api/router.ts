@@ -9,7 +9,7 @@ const manager = new VerificationManager()
  * The router for the verification service.
  */
 export const verificationRouter = router(api.stats.verification.verificationRoute, {
-  all: async ({}, success, _) => {
+  all: async (_, success, __) => {
     const verifications = await manager.all()
     return success(verifications.map((v) => v.group))
   },

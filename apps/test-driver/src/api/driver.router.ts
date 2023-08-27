@@ -6,7 +6,7 @@ import { ClientManager } from '../service/ClientManager'
  * Router for test driver related requests.
  */
 export const driverRouter = router(api.testing.http.driverRoute, {
-  all: async ({}, success, _) => {
+  all: async (_, success, __) => {
     const clients = ClientManager.shared.all
     const drivers = clients.map((c) => c.driver)
 

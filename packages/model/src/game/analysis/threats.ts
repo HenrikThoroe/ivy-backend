@@ -62,7 +62,7 @@ export function hasThreat(board: Board, color: Color, index: number) {
 
   //? Check for threats by the knight
   const horse: Piece = { color, type: 'knight' }
-  let knightThreats = movesWithReplacement(board, index, horse)
+  const knightThreats = movesWithReplacement(board, index, horse)
 
   for (const threat of knightThreats) {
     const piece = board.positions[threat].piece

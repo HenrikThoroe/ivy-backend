@@ -167,9 +167,9 @@ export function parseFENBoard(fen: string): Position[] {
       if (piece) {
         positions[idx] = {
           color: color(col, row),
-          piece: piece,
-          row,
           column: col,
+          piece,
+          row,
         }
       } else {
         positions[idx] = {

@@ -212,7 +212,7 @@ export class GameValidation {
       const move: MoveInfo = {
         move: { ...game.history[i] },
         fen: this.fenHistory[i],
-        details: details,
+        details,
       }
 
       history.push(shared.replay.moveInfoSchema.parse(move))

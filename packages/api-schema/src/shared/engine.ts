@@ -15,7 +15,7 @@ import * as z from 'zod'
  */
 export const engineNameSchema = z
   .string()
-  .regex(/^[a-zA-Z0-9\-]+$/)
+  .regex(/^[a-zA-Z0-9-]+$/)
   .min(1)
   .max(100)
 

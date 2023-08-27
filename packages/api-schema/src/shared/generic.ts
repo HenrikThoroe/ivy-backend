@@ -14,7 +14,7 @@ export const withIdSchema = z.object({
  */
 export const nameSchema = z
   .string()
-  .regex(/^[a-zA-Z]+[a-zA-Z0-9\- \.]+$/)
+  .regex(/^[a-zA-Z]+[a-zA-Z0-9- .]+$/)
   .min(1)
   .max(100)
 

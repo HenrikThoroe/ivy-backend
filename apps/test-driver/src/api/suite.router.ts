@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
  * Router for test suite related requests.
  */
 export const suiteRouter = router(api.testing.http.testSuitesRoute, {
-  all: async ({}, success, _) => {
+  all: async (_, success, __) => {
     const ids = await store.take('testing').take('suites').keys()
     return success(ids)
   },

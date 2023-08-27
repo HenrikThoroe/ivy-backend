@@ -24,7 +24,7 @@ export function create(config: GameConfig): Game {
     lastRequest: -1,
     history: [],
     state: 'waiting',
-    board: board,
+    board,
     positionHistory: [hash(board)],
     timeback: { white: config.timeback, black: config.timeback },
   }

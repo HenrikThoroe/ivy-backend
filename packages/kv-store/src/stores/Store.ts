@@ -40,7 +40,7 @@ export type Schema = {
  */
 export type Value<T extends FieldType> = T extends 'string'
   ? StringField
-  : T extends z.ZodType<infer U>
+  : T extends z.ZodType
   ? JSONField<T>
   : T extends DynamicStore<infer U>
   ? DynamicStore<U>

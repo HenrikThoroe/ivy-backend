@@ -6,7 +6,7 @@ import { EngineStore } from '../service/EngineStore'
  * Router for the engine version control API.
  */
 export const engineRouter = router(api.evc.engineVersioningRoute, {
-  all: async ({}, success, _) => {
+  all: async (_, success, __) => {
     const ids = await EngineStore.all()
     const configs = await Promise.all(ids.map((id) => new EngineStore(id).config()))
 

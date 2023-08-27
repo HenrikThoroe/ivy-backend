@@ -138,7 +138,7 @@ export function decode(fen: string): Board {
 
   const [boardFEN, colorFEN, castleFEN, enPassantFEN, halfMovesFEN, fullMovesFEN] = components
   const positions = parseFENBoard(boardFEN)
-  let next = parseFENColor(colorFEN)
+  const next = parseFENColor(colorFEN)
   let enPassant: number | undefined
   const halfMoveCounter = parseFloat(halfMovesFEN)
   const fullMoveCounter = parseFloat(fullMovesFEN)
