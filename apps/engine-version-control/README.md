@@ -23,4 +23,4 @@ could have three flavours:
 ## API
 
 For a definition of the exposed API take a look
-at [the schema](https://github.com/HenrikThoroe/ivy-backend/tree/dev/docs/packages/api-schema/src/schema/evc).
+at [the schema](https://github.com/HenrikThoroe/ivy-backend/tree/main/packages/api-schema/src/schema/evc).
