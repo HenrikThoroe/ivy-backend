@@ -96,17 +96,29 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
       const sink = this.buildSink(ws)
       const state = await this.buildState(sink)
 
-      ws.on('close', () => this.handleError('close', () => this.handleClose(ws, state)))
+      ws.on('close', () =>
+        this.handleError('close', sink, state, () => this.handleClose(ws, state)),
+      )
+
       ws.on('message', (message) =>
-        this.handleError('message', () => this.handleMessage(sink, state, message)),
+        this.handleError('message', sink, state, () => this.handleMessage(sink, state, message)),
       )
     })
   }
 
-  private async handleError(event: string, action: () => Promise<void>) {
+  private async handleError(
+    event: string,
+    sink: Sink<Out>,
+    state: State<ClientState, ServerState>,
+    action: () => Promise<void>,
+  ) {
     try {
       await action()
     } catch (e) {
+      try {
+        await this.impl.onError?.call(null, sink, state, e)
+      } catch {}
+
       console.error(event, e)
     }
   }

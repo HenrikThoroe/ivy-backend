@@ -40,6 +40,15 @@ export type Impl<In extends InSchema, Out extends OutSchema, Client, Server> = {
   onClose: (state: State<Client, Server>) => Promise<void>
 
   /**
+   * Called when a handler throws an error.
+   *
+   * @param sink A {@link Sink} to send messages to the client.
+   * @param state The current {@link State}.
+   * @param error The error that was thrown.
+   */
+  onError?: (sink: Sink<Out>, state: State<Client, Server>, error: any) => Promise<void>
+
+  /**
    * Handlers for incoming messages.
    */
   handlers: {
