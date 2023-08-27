@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "yarn build --watch",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "lint": "eslint ."
   },
   "dependencies": {
     "zod": "^3.22.0",
@@ -21,7 +22,8 @@
   },
   "devDependencies": {
     "tsup": "^7.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "eslint-config-custom": "*"
   },
   "publishConfig": {
     "access": "public"

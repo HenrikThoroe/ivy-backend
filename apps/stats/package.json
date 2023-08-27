@@ -9,7 +9,8 @@
     "build:dev": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=cjs",
     "build": "esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/index-prod.js --format=cjs",
     "start": "yarn build:dev && node ./dist/index.js",
-    "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json"
+    "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@ivy-chess/api-schema": "*",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "esbuild": "^0.19.2",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "eslint-config-custom": "*"
   }
 }
