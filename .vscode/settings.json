@@ -1,12 +1,14 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
   "conventionalCommits.scopes": [
     "tsconfig",
     "global",
     "evc",
     "env-util",
-    "express-util",
     "model",
     "gm",
     "wss",
@@ -14,6 +16,8 @@
     "test-driver",
     "com",
     "replays",
-    "stats"
+    "stats",
+    "schema",
+    "rest"
   ]
 }

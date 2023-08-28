@@ -10,6 +10,13 @@ const fenPieceMapping: Map<string, PieceType> = new Map([
   ['p', 'pawn'],
 ])
 
+/**
+ * Takes a FEN encoded move string and parses the source and target
+ * indecies. Accepts '0000' as a nullmove.
+ *
+ * @param move The FEN encoded move.
+ * @returns The source and target index or 'nullmove' if the move is '0000'.
+ */
 export function parseFENMove(move: string): [number, number] | 'nullmove' {
   if (move.length !== 4) {
     throw Error(`A FEN move has to be encoded using 4 digits.`)
@@ -25,6 +32,13 @@ export function parseFENMove(move: string): [number, number] | 'nullmove' {
   return [source, target]
 }
 
+/**
+ * Parses a FEN encoded position aka 'rowcol' into an index.
+ *
+ * @param move The FEN encoded position.
+ * @returns The index of the position.
+ * @throws If the move is not a valid position.
+ */
 export function parseFENTarget(move: string): number {
   if (!/^[a-h]{1}[1-8]{1}$/.test(move)) {
     throw Error(`The move code has to be a valid position.`)
@@ -43,6 +57,15 @@ export function parseFENTarget(move: string): number {
   return index
 }
 
+/**
+ * Parses a FEN encoded piece.
+ * A piece is encoded as a single character.
+ * Lowercase characters represent black pieces, uppercase characters represent white pieces.
+ *
+ * @param char The FEN encoded piece.
+ * @returns The piece.
+ * @throws If the piece is not a valid FEN piece encoding.
+ */
 export function parseFENPiece(char: string): Piece {
   const normal = char.toLowerCase()
   const color: Color = normal === char ? 'black' : 'white'
@@ -55,6 +78,13 @@ export function parseFENPiece(char: string): Piece {
   throw Error(`${char} is not a valid FEN piece encoding.`)
 }
 
+/**
+ * Converts a FEN encoded color to a color.
+ *
+ * @param fen The FEN encoded color (w or b)
+ * @returns The color.
+ * @throws If the color is not a valid FEN color encoding.
+ */
 export function parseFENColor(fen: string): Color {
   if (fen === 'w') {
     return 'white'
@@ -65,6 +95,13 @@ export function parseFENColor(fen: string): Color {
   }
 }
 
+/**
+ * Converts FEN encoded castle rights to `CastleRights`.
+ *
+ * @param fen The FEN encoded castle rights.
+ * @returns The castle rights.
+ * @throws If the castle rights are not a valid FEN castle rights encoding.
+ */
 export function parseFENCastle(fen: string): ColorMap<CastleRights> {
   const castle: ColorMap<CastleRights> = {
     white: 'none',
@@ -109,6 +146,13 @@ export function parseFENCastle(fen: string): ColorMap<CastleRights> {
   return castle
 }
 
+/**
+ * Takes the FEN notation for the board and creates a `Position` arrays from it.
+ *
+ * @param fen The FEN board notation
+ * @returns A 64 length array of positions as read from the FEN
+ * @throws If the FEN string is misformatted
+ */
 export function parseFENBoard(fen: string): Position[] {
   const positions: Position[] = []
   let index = 0
@@ -123,9 +167,9 @@ export function parseFENBoard(fen: string): Position[] {
       if (piece) {
         positions[idx] = {
           color: color(col, row),
-          piece: piece,
-          row,
           column: col,
+          piece,
+          row,
         }
       } else {
         positions[idx] = {

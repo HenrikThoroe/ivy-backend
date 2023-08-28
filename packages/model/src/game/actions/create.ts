@@ -5,6 +5,12 @@ import { Game } from '../model/Game'
 
 const standardPreset = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
+/**
+ * Creates a new standard chess game.
+ *
+ * @param config The configuration of the game.
+ * @returns The created game.
+ */
 export function create(config: GameConfig): Game {
   const id = v4()
   const now = Date.now()
@@ -18,7 +24,7 @@ export function create(config: GameConfig): Game {
     lastRequest: -1,
     history: [],
     state: 'waiting',
-    board: board,
+    board,
     positionHistory: [hash(board)],
     timeback: { white: config.timeback, black: config.timeback },
   }

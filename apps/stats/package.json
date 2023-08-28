@@ -3,12 +3,17 @@
   "version": "0.0.0",
   "main": "src/index.ts",
   "author": "Henrik Thoroe",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./src/index.ts"
+    "build:dev": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=cjs",
+    "build": "esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/index-prod.js --format=cjs",
+    "start": "yarn build:dev && node ./dist/index.js",
+    "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json",
+    "lint": "eslint ."
   },
   "dependencies": {
+    "@ivy-chess/api-schema": "*",
     "@ivy-chess/model": "*",
     "bullmq": "^4.6.0",
     "com": "*",
@@ -18,11 +23,14 @@
     "express-util": "*",
     "helmet": "^7.0.0",
     "kv-store": "*",
+    "rest": "*",
     "runtypes": "^6.7.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.19.2",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "eslint-config-custom": "*"
   }
 }

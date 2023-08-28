@@ -2,8 +2,18 @@ import { Color } from '../../game/model/Game'
 import { Replay } from '../model/Replay'
 import { PerformanceStats } from '../model/ReplayStats'
 
+/**
+ * The score given for mate.
+ */
 export const mateScore = 2147483647
 
+/**
+ * Creates stats for the given replay.
+ *
+ * @param replay The replay to analyze.
+ * @returns The stats for the given replay.
+ * @see {@link PerformanceStats}
+ */
 export function plotPerformance(replay: Replay): PerformanceStats {
   let max = -mateScore
   const stats: PerformanceStats = {
@@ -35,7 +45,7 @@ export function plotPerformance(replay: Replay): PerformanceStats {
 
   for (const color of ['white', 'black'] as const) {
     stats.normalized[color] = stats.centipawn[color]?.map((val) =>
-      Math.abs(val) === mateScore ? Math.sign(val) : (val * 0.9) / max
+      Math.abs(val) === mateScore ? Math.sign(val) : (val * 0.9) / max,
     )
   }
 

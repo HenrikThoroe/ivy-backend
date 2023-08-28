@@ -2,18 +2,19 @@
   "name": "ivy-backend",
   "version": "0.0.0",
   "private": true,
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "lint": "turbo run lint -- --ext .ts"
   },
   "devDependencies": {
-    "prettier": "latest",
-    "turbo": "latest"
+    "prettier": "^3.0.2",
+    "turbo": "^1.10.12"
   },
   "engines": {
     "node": ">=14.0.0"

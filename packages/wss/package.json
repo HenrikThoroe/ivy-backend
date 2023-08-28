@@ -4,13 +4,20 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "author": "Henrik Thoroe",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
   "devDependencies": {
+    "@types/ws": "^8.5.5",
+    "eslint-config-custom": "*",
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@ivy-chess/api-schema": "*",
     "http": "^0.0.1-security",
-    "ws": "^8.13.0"
+    "ws": "^8.13.0",
+    "zod": "^3.22.0"
   }
 }

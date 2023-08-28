@@ -1,0 +1,19 @@
+{
+  "name": "rest",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "author": "Henrik Thoroe",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@ivy-chess/api-schema": "*",
+    "express": "^4.18.2",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "eslint-config-custom": "*"
+  }
+}

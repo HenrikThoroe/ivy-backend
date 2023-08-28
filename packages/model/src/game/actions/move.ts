@@ -1,7 +1,7 @@
 import { gameResult, isChecked } from '../analysis/end'
 import { isValidMove } from '../analysis/moves'
 import { parseFENMove, parseFENPiece } from '../coding/fen_parsing'
-import { Board, hash, Piece } from '../model/Board'
+import { Board, Piece, hash } from '../model/Board'
 import { Game, Move } from '../model/Game'
 
 function getEnemy(board: Board) {
@@ -98,7 +98,7 @@ function performMove(board: Board, move: Move) {
 function validateTime(game: Game) {
   const arrival = Date.now()
   const color = game.board.next
-  let delta = game.lastRequest > 0 ? arrival - game.lastRequest : 0
+  const delta = game.lastRequest > 0 ? arrival - game.lastRequest : 0
   const enemy = getEnemy(game.board)
 
   game.time[color] -= delta
@@ -116,7 +116,7 @@ function validateTime(game: Game) {
 
 function validateMove(game: Game, move: Move) {
   const enemy = getEnemy(game.board)
-  const { source, target } = move
+  const { source, target, promotion } = move
   const valid = isValidMove(game.board, source, target)
   const isInvalidPromotionTarget = move.promotion && !(target >= 56 || target <= 7)
   const isInvalidPromotionPiece = move.promotion?.type === 'king' || move.promotion?.type === 'pawn'
@@ -130,7 +130,7 @@ function validateMove(game: Game, move: Move) {
 
   performMove(game.board, move)
 
-  game.history.push({ source, target })
+  game.history.push({ source, target, promotion })
   game.positionHistory.push(hash(game.board))
 
   return true
@@ -162,6 +162,23 @@ function hasRepitition(game: Game) {
   return history.filter((h) => h === current).length >= 3
 }
 
+/**
+ * Parses the given FEN move and applies it to the game.
+ * The move is checked for validity before being applied.
+ * If the move results in a game termination, the game state will be
+ * adjusted accordingly.
+ *
+ * The game is also validated for outside factors like time
+ * constraints on the current player. The remaining time will be updated
+ * after the move has been successfully applied.
+ *
+ * The move function takes the context of the game into account,
+ * to detect termination reasons like 3-fold-repetition or 50-move-draw.
+ *
+ * @param game The game to apply the move to.
+ * @param code The FEN encoded move.
+ * @throws If the move is not valid or the game is not active.
+ */
 export function move(game: Game, code: string) {
   if (game.state !== 'active') {
     throw Error(`Cannot perform move on inactive game.`)
