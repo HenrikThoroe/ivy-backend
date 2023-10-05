@@ -1,5 +1,6 @@
 import { Route, RouteConfig, shared } from '@ivy-chess/api-schema'
 import { Router as ExpressRouter, Request, Response } from 'express'
+import { HTTPLogger, HTTPMethod } from 'metrics'
 import stream from 'stream'
 import * as z from 'zod'
 import { Result, RouteImpl } from './types'
@@ -75,6 +76,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
   private readonly impl: Impl
   private readonly router: ExpressRouter
   private readonly schema: Route<T>
+  private logger?: HTTPLogger
 
   constructor(schema: Route<T>, impl: Impl) {
     this.schema = schema
@@ -89,9 +91,11 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
    * Attaches the router to an express router.
    *
    * @param router The express router to attach to.
+   * @param logger A logger instance which will receive data for each request.
    * @returns The express router.
    */
-  public mount(router: ExpressRouter) {
+  public mount(router: ExpressRouter, logger?: HTTPLogger) {
+    this.logger = logger
     return router.use(this.schema.path, this.router)
   }
 
@@ -102,41 +106,58 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
       const handler = this.impl[key]
       const endpoint = this.schema.get(key)
       const expressHandler = this.buildExpressHandler(endpoint, handler)
-      const errorHandler = this.buildErrorHandler(expressHandler)
+      const pathHandler = this.buildPathHandler(expressHandler)
 
       switch (endpoint.method) {
         case 'GET':
-          this.router.get(endpoint.path, errorHandler(expressHandler))
+          this.router.get(endpoint.path, pathHandler)
           break
         case 'POST':
-          this.router.post(endpoint.path, errorHandler(expressHandler))
+          this.router.post(endpoint.path, pathHandler)
           break
         case 'PUT':
-          this.router.put(endpoint.path, errorHandler(expressHandler))
+          this.router.put(endpoint.path, pathHandler)
           break
         case 'DELETE':
-          this.router.delete(endpoint.path, errorHandler(expressHandler))
+          this.router.delete(endpoint.path, pathHandler)
           break
       }
     }
   }
 
-  private buildErrorHandler(handler: (req: Request, res: Response) => Promise<void>) {
-    return (handler: (req: Request, res: Response) => Promise<void>) => {
-      return async (req: Request, res: Response) => {
-        try {
-          await handler(req, res)
-        } catch (e) {
-          console.error(`Failed to handle request to '${req.path}'`)
-          console.error(e)
-          if (e instanceof z.ZodError) {
-            res.status(500).json({ message: e.message })
-          } else if (e instanceof Error) {
-            res.status(500).json({ message: e.message })
-          } else {
-            res.status(500).json({ message: 'Unknown Server Error' })
-          }
+  private buildPathHandler(handler: (req: Request, res: Response) => Promise<void>) {
+    return async (req: Request, res: Response) => {
+      const start = performance.now()
+      try {
+        await handler(req, res)
+      } catch (e) {
+        let message: string
+        if (e instanceof z.ZodError) {
+          message = e.message
+        } else if (e instanceof Error) {
+          message = e.message
+        } else {
+          message = 'Unknown Server Error'
         }
+
+        res.status(500).json({ message })
+        this.logger?.error({
+          path: req.path,
+          method: req.method as HTTPMethod,
+          error: message,
+        })
+      } finally {
+        const end = performance.now()
+        const duration = (end - start) / 1000
+        const size = res.get('Content-Length')
+
+        this.logger?.info({
+          code: res.statusCode,
+          method: req.method as HTTPMethod,
+          size: size ? parseInt(size) : 0,
+          duration,
+          path: req.path,
+        })
       }
     }
   }

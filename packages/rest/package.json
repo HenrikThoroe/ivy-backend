@@ -11,6 +11,7 @@
   "dependencies": {
     "@ivy-chess/api-schema": "*",
     "express": "^4.18.2",
+    "metrics": "*",
     "zod": "^3.22.0"
   },
   "devDependencies": {
