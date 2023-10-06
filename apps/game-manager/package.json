@@ -21,6 +21,7 @@
     "helmet": "^6.0.1",
     "kv-store": "*",
     "rest": "*",
+    "metrics": "*",
     "uuid": "^9.0.0",
     "wss": "*"
   },

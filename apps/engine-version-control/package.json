@@ -24,6 +24,7 @@
     "helmet": "^6.0.1",
     "rest": "*",
     "runtypes": "^6.6.0",
+    "metrics": "*",
     "zod": "^3.22.0"
   },
   "devDependencies": {
