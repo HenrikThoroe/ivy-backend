@@ -42,7 +42,7 @@ export class HTTPLogger extends Logger<HTTPData> {
 
     if (level === 'info') {
       const data = payload as HTTPData['info']
-      const duration = this.formatDuration(Math.floor(data.duration * 1000) * 1000 * 1000)
+      const duration = this.formatDuration(Math.ceil(data.duration * 1000) * 1000 * 1000)
       const size = this.formatMemSize(data.size)
       const code = this.colorizer.colorize(this.statusColor(data.code), data.code.toString())
       const coloredDuration = this.colorizer.colorize(this.durationColor(data.duration), duration)
