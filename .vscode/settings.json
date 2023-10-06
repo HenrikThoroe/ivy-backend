@@ -18,6 +18,7 @@
     "replays",
     "stats",
     "schema",
-    "rest"
+    "rest",
+    "metrics"
   ]
 }
