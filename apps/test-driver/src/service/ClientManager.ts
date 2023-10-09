@@ -74,7 +74,7 @@ export class ClientManager {
     }
 
     if (min > this.clients.size) {
-      return []
+      throw new Error('Not enough free clients')
     }
 
     for (const client of this.clients) {
