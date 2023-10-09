@@ -10,7 +10,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint -- --ext .ts"
+    "lint": "turbo run lint -- --ext .ts",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "prettier": "^3.0.2",
