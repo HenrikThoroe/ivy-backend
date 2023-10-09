@@ -42,7 +42,17 @@ export const sessionRouter = router(api.testing.http.sessionsRoute, {
 
     const session = SessionManager.shared.create(suite, body.driver)
 
-    await session.start()
+    try {
+      await session.start()
+    } catch (e) {
+      SessionManager.shared.invalidate(session)
+
+      if (e instanceof Error) {
+        return failure({ message: e.message }, 500)
+      }
+
+      return failure({ message: 'Unknown error.' }, 500)
+    }
 
     return success({
       id: session.id,

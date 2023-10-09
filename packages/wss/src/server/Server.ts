@@ -1,5 +1,6 @@
 import { IOSchema, InSchema, OutSchema } from '@ivy-chess/api-schema'
 import { Server as HTTPServer, createServer } from 'http'
+import { WSSLogger } from 'metrics'
 import WebSocket, { RawData, WebSocketServer } from 'ws'
 import { Impl, Sink, State } from './types'
 
@@ -58,6 +59,8 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
 
   private readonly state: ServerState
 
+  private logger?: WSSLogger
+
   constructor(
     schema: IOSchema<In, Out>,
     state: ServerState,
@@ -89,6 +92,16 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
     this.wss.close()
   }
 
+  /**
+   * Attaches a {@link Logger logger} instance used to
+   * forward in and outgoing messages.
+   *
+   * @param logger A {@link WSSLogger} instance.
+   */
+  public use(logger: WSSLogger) {
+    this.logger = logger
+  }
+
   //* Private Methods
 
   private attach() {
@@ -114,12 +127,16 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
   ) {
     try {
       await action()
-    } catch (e) {
+    } catch (e: any) {
       try {
         await this.impl.onError?.call(null, sink, state, e)
       } catch {}
 
-      console.error(event, e)
+      if ('message' in e && typeof e.message === 'string') {
+        this.logger?.error(e.message)
+      } else {
+        this.logger?.error('Unknown Error')
+      }
     }
   }
 
@@ -128,6 +145,7 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
     state: State<ClientState, ServerState>,
     message: RawData,
   ) {
+    const start = performance.now()
     const json = JSON.parse(message.toString())
 
     for (const key in this.impl.handlers) {
@@ -136,9 +154,17 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
       if (val.success) {
         const handler = this.impl.handlers[key]
         await handler(sink, state, val.data)
+        this.logger?.info({
+          key,
+          type: 'receive',
+          data: val.data,
+          duration: (performance.now() - start) / 1000,
+        })
         return
       }
     }
+
+    this.logger?.warn({ message: json })
   }
 
   private async handleClose(ws: WebSocket, state: State<ClientState, ServerState>) {
@@ -155,10 +181,20 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
   private buildSink(ws: WebSocket): Sink<Out> {
     return {
       send: async (event, data) => {
+        const start = performance.now()
         const val = this.schema.output[event].safeParse(data)
 
         if (val.success) {
-          ws.send(JSON.stringify(val.data))
+          const json = JSON.stringify(val.data)
+          const end = performance.now()
+          ws.send(json)
+
+          this.logger?.info({
+            key: event,
+            type: 'send',
+            data: val.data,
+            duration: (end - start) / 1000,
+          })
         }
       },
     }

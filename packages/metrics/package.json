@@ -1,5 +1,5 @@
 {
-  "name": "rest",
+  "name": "metrics",
   "version": "0.0.0",
   "main": "src/index.ts",
   "author": "Henrik Thoroe",
@@ -9,12 +9,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@ivy-chess/api-schema": "*",
     "express": "^4.18.2",
-    "metrics": "*",
-    "zod": "^3.22.0"
-  },
-  "devDependencies": {
-    "eslint-config-custom": "*"
+    "prom-client": "^14.2.0",
+    "winston-daily-rotate-file": "^4.7.1"
   }
 }
