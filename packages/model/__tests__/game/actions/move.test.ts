@@ -11,7 +11,7 @@ const validateMove = (
   expected: string,
   mv: string,
   options?: { ruleViolation: boolean },
-  validation?: (game: Game) => void
+  validation?: (game: Game) => void,
 ) => {
   const board = decode(start)
   const game = create({ timeout: 1000, timeback: 0 })
@@ -122,52 +122,52 @@ describe('Game Move Action', () => {
     validateMove(
       'r3k2r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2P1/PPPQ1N2/R3KB1R b KQkq - 0 14',
       '2kr3r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2P1/PPPQ1N2/R3KB1R w KQ - 1 15',
-      'e8c8'
+      'e8c8',
     )
 
     validateMove(
       '1k1r3r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2PB/PPPQ1N2/R3K2R w KQ - 3 16',
       '1k1r3r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2PB/PPPQ1N2/R4RK1 b - - 4 16',
-      'e1g1'
+      'e1g1',
     )
 
     validateMove(
       '2kr3r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2P1/PPPQ1N2/R3KB1R w KQ - 1 15',
       '2kr3r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2P1/PPPQ1N2/R3KB1R w KQ - 1 15',
       'e1g1',
-      { ruleViolation: true }
+      { ruleViolation: true },
     )
 
     validateMove(
       'r3k2r/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2P1/PPPQ1N2/R3KB1R b KQkq - 0 14',
       'r3k1r1/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2P1/PPPQ1N2/R3KB1R w KQq - 1 15',
-      'h8g8'
+      'h8g8',
     )
 
     validateMove(
       'r3k1r1/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2PB/PPPQ1N2/R3K2R b KQq - 2 15',
       'r3k1r1/ppqn1pp1/2p2n2/4p2p/3pPP1P/3P2PB/PPPQ1N2/R3K2R b KQq - 2 15',
       'e8g8',
-      { ruleViolation: true }
+      { ruleViolation: true },
     )
 
     validateMove(
       'r3k1r1/1pqn1p2/p1p2np1/4p2p/3pPP1P/3P2PB/PPPQ1N2/1R2K2R w Kq - 0 17',
       'r3k1r1/1pqn1p2/p1p2np1/4p2p/3pPP1P/3P2PB/PPPQ1N2/1R2K2R w Kq - 0 17',
       'e1c1',
-      { ruleViolation: true }
+      { ruleViolation: true },
     )
 
     validateMove(
       'r3k1r1/ppqn1p2/2p2np1/4p2p/3pPP1P/3P2PB/PPPQ1N2/R3K2R w KQq - 0 16',
       'r3k1r1/ppqn1p2/2p2np1/4p2p/3pPP1P/3P2PB/PPPQ1N2/1R2K2R b Kq - 1 16',
-      'a1b1'
+      'a1b1',
     )
 
     validateMove(
       'r3k1r1/ppqn1p2/5np1/2p1p2p/3pPP1P/3P2PB/PPPQ1N2/1R2K2R w Kq - 0 17',
       'r3k1r1/ppqn1p2/5np1/2p1p2p/3pPP1P/3P2PB/PPPQ1N1R/1R2K3 b q - 1 17',
-      'h1h2'
+      'h1h2',
     )
   })
 
@@ -195,20 +195,20 @@ describe('Game Move Action', () => {
     validateMove(
       'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 1 1',
-      '0000'
+      '0000',
     )
 
     validateMove(
       'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 1 1',
       'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 2 2',
-      '0000'
+      '0000',
     )
 
     validateMove(
       '8/1k1Q4/2p5/p1p5/P1Pp4/1P1P4/7P/6K1 b - - 4 47',
       '8/1k1Q4/2p5/p1p5/P1Pp4/1P1P4/7P/6K1 b - - 4 47',
       '0000',
-      { ruleViolation: true }
+      { ruleViolation: true },
     )
   })
 
