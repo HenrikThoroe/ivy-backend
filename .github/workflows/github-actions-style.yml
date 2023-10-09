@@ -1,5 +1,6 @@
 name: 'Enforce Code Style & Quality'
 author: 'Henrik Thorøe'
+on: [workflow_dispatch]
 jobs:
   eslint:
     runs-on: ubuntu-latest
