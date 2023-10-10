@@ -18,7 +18,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "yarn build --watch",
     "prepublish": "yarn build",
-    "lint": "eslint ."
+    "lint": "eslint --ext .ts ."
   },
   "dependencies": {
     "@ivy-chess/model": "*",

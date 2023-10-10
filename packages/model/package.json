@@ -20,12 +20,13 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "yarn build --watch",
     "prepublish": "yarn build",
-    "lint": "eslint ."
+    "lint": "eslint --ext .ts ."
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.21.0",
     "@types/jest": "^29.4.0",
     "@types/uuid": "^9.0.1",
+    "eslint": "^8.51.0",
     "eslint-config-custom": "*",
     "jest": "^29.5.0",
     "ts-jest": "^29.0.5",

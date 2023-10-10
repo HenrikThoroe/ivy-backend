@@ -10,7 +10,7 @@
     "build": "esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/index-prod.js --format=cjs",
     "start": "yarn build:dev && node ./dist/index.js",
     "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json",
-    "lint": "eslint ."
+    "lint": "eslint --ext .ts ."
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.282.0",
