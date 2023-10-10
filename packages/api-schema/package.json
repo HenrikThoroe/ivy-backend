@@ -1,12 +1,11 @@
 {
   "name": "@ivy-chess/api-schema",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.mjs",
   "author": "Henrik Thoroe",
   "license": "GPTv3",
-  "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/HenrikThoroe/ivy-backend.git",
@@ -22,13 +21,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "zod": "^3.22.0",
-    "@ivy-chess/model": "*"
+    "@ivy-chess/model": "*",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
+    "eslint-config-custom": "*",
     "tsup": "^7.2.0",
-    "typescript": "^5.1.6",
-    "eslint-config-custom": "*"
+    "typescript": "^5.1.6"
   },
   "publishConfig": {
     "access": "public"

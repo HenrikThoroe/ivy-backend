@@ -16,11 +16,11 @@
     "@types/cors": "^2.8.13",
     "@types/uuid": "^9.0.1",
     "esbuild": "^0.19.2",
+    "eslint-config-custom": "*",
+    "metrics": "*",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4",
-    "metrics": "*",
-    "eslint-config-custom": "*"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@ivy-chess/api-schema": "*",

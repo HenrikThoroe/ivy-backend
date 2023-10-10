@@ -17,8 +17,8 @@
   "dependencies": {
     "@ivy-chess/api-schema": "*",
     "http": "^0.0.1-security",
-    "ws": "^8.13.0",
     "metrics": "*",
+    "ws": "^8.13.0",
     "zod": "^3.22.0"
   }
 }

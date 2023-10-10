@@ -9,12 +9,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ivy-chess/api-schema": "*",
     "@ivy-chess/model": "*",
     "bullmq": "^4.7.2",
     "env-util": "*",
     "uuid": "^9.0.0",
-    "zod": "^3.22.1",
-    "@ivy-chess/api-schema": "*"
+    "zod": "^3.22.1"
   },
   "devDependencies": {
     "eslint-config-custom": "*"

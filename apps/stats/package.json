@@ -23,15 +23,15 @@
     "express-util": "*",
     "helmet": "^7.0.0",
     "kv-store": "*",
+    "metrics": "*",
     "rest": "*",
     "runtypes": "^6.7.0",
-    "uuid": "^9.0.0",
-    "metrics": "*"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.19.2",
+    "eslint-config-custom": "*",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1",
-    "eslint-config-custom": "*"
+    "ts-node": "^10.9.1"
   }
 }

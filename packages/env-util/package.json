@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "typescript": "^4.9.5",
-    "eslint-config-custom": "*"
+    "eslint-config-custom": "*",
+    "typescript": "^4.9.5"
   }
 }
