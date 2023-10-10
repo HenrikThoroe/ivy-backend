@@ -2,10 +2,12 @@
     <img src="./docs/assets/cover.png" alt="Ivy Backend Cover" />
 </p>
 
-<p>
-    <img alt="GitHub" src="https://img.shields.io/github/license/HenrikThoroe/ivy-backend?style=for-the-badge">
-    <img alt="ESLint" src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=for-the-badge">
-    <img alt="Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge"></a>
+<p align="center">
+    <img alt="GitHub" style="padding: 10px" src="https://img.shields.io/github/license/HenrikThoroe/ivy-backend?style=for-the-badge">
+    <img alt="ESLint" style="padding: 10px" src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=for-the-badge">
+    <img alt="Prettier" style="padding: 10px" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge">
+    <img alt="Code Quality" style="padding: 10px" src="https://img.shields.io/github/actions/workflow/status/HenrikThoroe/ivy-backend/github-actions-style.yml?style=for-the-badge&logo=eslint&label=Code%20Quality">
+    <img alt="Tests" style="padding: 10px" src="https://img.shields.io/github/actions/workflow/status/HenrikThoroe/ivy-backend/github-actions-integrity.yml?style=for-the-badge&logo=jest&label=Tests">
 </p>
 
 # Ivy - Backend
