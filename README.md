@@ -45,8 +45,8 @@ there routers for REST APIs, web socket servers or listeners on internal message
 ### Install Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop/)
-- [NodeJS](https://nodejs.org/en/download)
-- [Yarn](https://classic.yarnpkg.com/en/)
+- [NodeJS](https://nodejs.org/en/download) (v18.12+, recommended v20+)
+- [Yarn](https://yarnpkg.com/getting-started/install) (v4+ is required. Use `yarn set version canary`)
 
 ### Setup Dev Environment
 
