@@ -7,7 +7,7 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint --ext .ts ."
   },
   "devDependencies": {
     "@types/ws": "^8.5.5",
@@ -17,8 +17,8 @@
   "dependencies": {
     "@ivy-chess/api-schema": "*",
     "http": "^0.0.1-security",
-    "ws": "^8.13.0",
     "metrics": "*",
+    "ws": "^8.13.0",
     "zod": "^3.22.0"
   }
 }

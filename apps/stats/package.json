@@ -10,7 +10,7 @@
     "build": "esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/index-prod.js --format=cjs",
     "start": "yarn build:dev && node ./dist/index.js",
     "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json",
-    "lint": "eslint ."
+    "lint": "eslint --ext .ts ."
   },
   "dependencies": {
     "@ivy-chess/api-schema": "*",
@@ -23,15 +23,15 @@
     "express-util": "*",
     "helmet": "^7.0.0",
     "kv-store": "*",
+    "metrics": "*",
     "rest": "*",
     "runtypes": "^6.7.0",
-    "uuid": "^9.0.0",
-    "metrics": "*"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.19.2",
+    "eslint-config-custom": "*",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1",
-    "eslint-config-custom": "*"
+    "ts-node": "^10.9.1"
   }
 }

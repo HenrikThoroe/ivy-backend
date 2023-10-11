@@ -14,7 +14,9 @@ describe('FEN', () => {
       const moves = ['-', 'abcd', 'g3h6', 'a9', 'i8', 'xeebu', '%$', 'A7']
 
       moves.forEach((move) =>
-        expect(() => parseFENTarget(move)).toThrowError(`The move code has to be a valid position.`)
+        expect(() => parseFENTarget(move)).toThrowError(
+          `The move code has to be a valid position.`,
+        ),
       )
     })
 

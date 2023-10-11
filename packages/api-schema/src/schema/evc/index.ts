@@ -17,7 +17,7 @@ const transformVersion = (arg: string, ctx: z.RefinementCtx) => {
   }
 }
 
-const createSchema = z.object({
+export const createSchema = z.object({
   name: engineNameSchema,
   version: z.string().transform(transformVersion),
   os: z.string().nonempty(),

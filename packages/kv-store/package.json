@@ -7,16 +7,16 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint --ext .ts ."
   },
   "devDependencies": {
-    "typescript": "^4.9.5",
-    "eslint-config-custom": "*"
+    "eslint-config-custom": "*",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@ivy-chess/api-schema": "*",
     "env-util": "*",
     "redis": "^4.6.6",
-    "zod": "^3.22.0",
-    "@ivy-chess/api-schema": "*"
+    "zod": "^3.22.0"
   }
 }

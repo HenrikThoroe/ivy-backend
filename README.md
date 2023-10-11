@@ -2,10 +2,12 @@
     <img src="./docs/assets/cover.png" alt="Ivy Backend Cover" />
 </p>
 
-<p>
-    <img alt="GitHub" src="https://img.shields.io/github/license/HenrikThoroe/ivy-backend?style=for-the-badge">
-    <img alt="ESLint" src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=for-the-badge">
-    <img alt="Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge"></a>
+<p align="center">
+    <img alt="GitHub" style="padding: 10px" src="https://img.shields.io/github/license/HenrikThoroe/ivy-backend?style=for-the-badge">
+    <img alt="ESLint" style="padding: 10px" src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=for-the-badge">
+    <img alt="Prettier" style="padding: 10px" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge">
+    <img alt="Code Quality" style="padding: 10px" src="https://img.shields.io/github/actions/workflow/status/HenrikThoroe/ivy-backend/github-actions-style.yml?style=for-the-badge&logo=eslint&label=Code%20Quality">
+    <img alt="Tests" style="padding: 10px" src="https://img.shields.io/github/actions/workflow/status/HenrikThoroe/ivy-backend/github-actions-integrity.yml?style=for-the-badge&logo=jest&label=Tests">
 </p>
 
 # Ivy - Backend
@@ -43,8 +45,8 @@ there routers for REST APIs, web socket servers or listeners on internal message
 ### Install Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop/)
-- [NodeJS](https://nodejs.org/en/download)
-- [Yarn](https://classic.yarnpkg.com/en/)
+- [NodeJS](https://nodejs.org/en/download) (v18.12+, recommended v20+)
+- [Yarn](https://yarnpkg.com/getting-started/install) (v4+ is required. Use `yarn set version canary`)
 
 ### Setup Dev Environment
 
