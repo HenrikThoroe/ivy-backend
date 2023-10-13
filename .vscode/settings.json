@@ -19,6 +19,7 @@
     "stats",
     "schema",
     "rest",
-    "metrics"
+    "metrics",
+    "auth"
   ]
 }
