@@ -24,6 +24,7 @@
     "metrics": "*",
     "moment": "^2.29.4",
     "rest": "*",
+    "auth": "*",
     "zod": "^3.22.0"
   },
   "devDependencies": {

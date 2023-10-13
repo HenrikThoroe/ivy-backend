@@ -22,6 +22,7 @@
     "kv-store": "*",
     "metrics": "*",
     "rest": "*",
+    "auth": "*",
     "uuid": "^9.0.0",
     "wss": "*"
   },
