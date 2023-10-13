@@ -1,3 +1,4 @@
+export * as auth from './authentication'
 export * as evc from './evc'
 export * as games from './games'
 export * as replay from './replay'
