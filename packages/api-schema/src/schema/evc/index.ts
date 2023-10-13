@@ -32,12 +32,13 @@ export const createSchema = z.object({
  * Schema for the engine version control API.
  */
 export const engineVersioningRoute = route('/engines', {
-  all: endpoint('/', 'GET').success(z.array(engineConfigSchema)),
+  all: endpoint('/', 'GET').unprotected().success(z.array(engineConfigSchema)),
   create: endpoint('/', 'POST').body(createSchema).files(['engine']).success(engineConfigSchema),
   get: endpoint('/:id', 'GET')
     .params(z.object({ id: z.string().nonempty() }))
     .success(engineConfigSchema),
   download: endpoint('/bin/:engine/:id', 'GET')
+    .unprotected()
     .params(z.object({ engine: engineNameSchema, id: z.string().nonempty() }))
     .success(downloadSchema),
   delete: endpoint('/:engine/:id', 'DELETE')
