@@ -34,6 +34,7 @@ const defaultFailureSchema = z.object({
  * Creates a new endpoint with default input and output schemas.
  * The default input schema expects an empty query, an undefined body and empty params.
  * The default output schema expects an undefined success response and a failure response with a message property.
+ * An endpoint requires authentication by default.
  *
  * @example
  * ```ts
@@ -71,13 +72,14 @@ export function endpoint(path: string, method: Method) {
       success: z.undefined({ invalid_type_error: 'Expected undefined success response' }),
       failure: defaultFailureSchema,
     },
+    true,
   )
 }
 
 /**
  * An endpoint represents the schema of a single API endpoint.
  * It defines which input the endpoint accepts and which output it returns.
- * The input consists of query parameters, a body, attached files, and path parameters aka params.
+ * The input consists of query parameters, a body, attached files, authentication data and path parameters aka params.
  * Each input and output is defined by a Zod schema and can be validated at runtime
  * when data is received over an untrusted network.
  */
@@ -87,6 +89,7 @@ export class Endpoint<
   P extends z.ZodType,
   U extends string,
   S extends z.ZodType,
+  A extends boolean,
   F extends z.ZodType = typeof defaultFailureSchema,
 > {
   /**
@@ -101,6 +104,11 @@ export class Endpoint<
   public readonly method: Method
 
   /**
+   * Whether the endpoint requires authentication.
+   */
+  public readonly authenticated: A
+
+  /**
    * The input schema of the endpoint.
    */
   protected readonly input: Input<Q, B, P, U>
@@ -110,11 +118,36 @@ export class Endpoint<
    */
   protected readonly output: Output<S, F>
 
-  constructor(path: string, method: Method, input: Input<Q, B, P, U>, output: Output<S, F>) {
+  constructor(
+    path: string,
+    method: Method,
+    input: Input<Q, B, P, U>,
+    output: Output<S, F>,
+    authenticated: A,
+  ) {
     this.path = path
     this.method = method
     this.input = input
     this.output = output
+    this.authenticated = authenticated
+  }
+
+  /**
+   * Creates a new endpoint with the same path and method but requires authentication.
+   *
+   * @returns A new endpoint with updated authentication requirement.
+   */
+  public protected(): Endpoint<Q, B, P, U, S, true, F> {
+    return new Endpoint(this.path, this.method, this.input, this.output, true)
+  }
+
+  /**
+   * Creates a new endpoint with the same path and method but does not require authentication.
+   *
+   * @returns A new endpoint with updated authentication requirement.
+   */
+  public unprotected(): Endpoint<Q, B, P, U, S, false, F> {
+    return new Endpoint(this.path, this.method, this.input, this.output, false)
   }
 
   /**
@@ -123,8 +156,14 @@ export class Endpoint<
    * @param query The new query schema.
    * @returns A new endpoint with updated query schema.
    */
-  public query<T extends z.ZodType>(query: T): Endpoint<T, B, P, U, S, F> {
-    return new Endpoint(this.path, this.method, { ...this.input, query }, this.output)
+  public query<T extends z.ZodType>(query: T): Endpoint<T, B, P, U, S, A, F> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      { ...this.input, query },
+      this.output,
+      this.authenticated,
+    )
   }
 
   /**
@@ -133,8 +172,14 @@ export class Endpoint<
    * @param body The new body schema.
    * @returns A new endpoint with updated body schema.
    */
-  public body<T extends z.ZodType>(body: T): Endpoint<Q, T, P, U, S, F> {
-    return new Endpoint(this.path, this.method, { ...this.input, body }, this.output)
+  public body<T extends z.ZodType>(body: T): Endpoint<Q, T, P, U, S, A, F> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      { ...this.input, body },
+      this.output,
+      this.authenticated,
+    )
   }
 
   /**
@@ -143,8 +188,14 @@ export class Endpoint<
    * @param params The new params schema.
    * @returns A new endpoint with updated params schema.
    */
-  public params<T extends z.ZodType>(params: T): Endpoint<Q, B, T, U, S, F> {
-    return new Endpoint(this.path, this.method, { ...this.input, params }, this.output)
+  public params<T extends z.ZodType>(params: T): Endpoint<Q, B, T, U, S, A, F> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      { ...this.input, params },
+      this.output,
+      this.authenticated,
+    )
   }
 
   /**
@@ -153,8 +204,14 @@ export class Endpoint<
    * @param files The new files list of expected files.
    * @returns A new endpoint with updated files list.
    */
-  public files<T extends string>(files: T[]): Endpoint<Q, B, P, T, S, F> {
-    return new Endpoint(this.path, this.method, { ...this.input, files }, this.output)
+  public files<T extends string>(files: T[]): Endpoint<Q, B, P, T, S, A, F> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      { ...this.input, files },
+      this.output,
+      this.authenticated,
+    )
   }
 
   /**
@@ -163,8 +220,14 @@ export class Endpoint<
    * @param success The new success schema.
    * @returns A new endpoint with updated success schema.
    */
-  public success<T extends z.ZodType>(success: T): Endpoint<Q, B, P, U, T, F> {
-    return new Endpoint(this.path, this.method, this.input, { ...this.output, success })
+  public success<T extends z.ZodType>(success: T): Endpoint<Q, B, P, U, T, A, F> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      this.input,
+      { ...this.output, success },
+      this.authenticated,
+    )
   }
 
   /**
@@ -173,8 +236,14 @@ export class Endpoint<
    * @param failure The new failure schema.
    * @returns A new endpoint with updated failure schema.
    */
-  public failure<T extends z.ZodType>(failure: T): Endpoint<Q, B, P, U, S, T> {
-    return new Endpoint(this.path, this.method, this.input, { ...this.output, failure })
+  public failure<T extends z.ZodType>(failure: T): Endpoint<Q, B, P, U, S, A, T> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      this.input,
+      { ...this.output, failure },
+      this.authenticated,
+    )
   }
 
   /**

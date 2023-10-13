@@ -5,7 +5,7 @@ import { Endpoint } from './endpoint'
  * used to define a {@link Route}.
  */
 export interface RouteConfig {
-  [key: string]: Endpoint<any, any, any, any, any>
+  [key: string]: Endpoint<any, any, any, any, any, boolean>
 }
 
 /**
