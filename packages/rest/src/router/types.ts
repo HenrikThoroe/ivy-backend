@@ -2,6 +2,12 @@ import { Endpoint, RouteConfig } from '@ivy-chess/api-schema'
 import * as z from 'zod'
 
 /**
+ * The data of an authenticated request if authentication is enabled.
+ * Otherwise `undefined`.
+ */
+type AuthData<A extends boolean> = A extends true ? { session: string; user: string } : undefined
+
+/**
  * The result of a successful request.
  * The return value of the handler is stored as `value`.
  */
@@ -88,6 +94,7 @@ interface GenericHandler<
   Files extends string,
   Success extends z.ZodType,
   Failure extends z.ZodType,
+  Auth extends boolean,
 > {
   /**
    * The call signature of the handler.
@@ -103,6 +110,7 @@ interface GenericHandler<
       body: z.infer<Body>
       params: z.infer<Params>
       files: Record<Files, Buffer>
+      auth: AuthData<Auth>
     },
     success: SuccessHandler<z.infer<Success>>,
     failure: FailureHandler<z.infer<Failure>>,
@@ -123,9 +131,10 @@ export type Handler<EP> = EP extends Endpoint<
   infer Params,
   infer Files,
   infer Success,
+  infer Auth,
   infer Failure
 >
-  ? GenericHandler<Query, Body, Params, Files, Success, Failure>
+  ? GenericHandler<Query, Body, Params, Files, Success, Failure, Auth>
   : never
 
 /**

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ivy-chess/api-schema": "*",
+    "auth": "*",
     "express": "^4.18.2",
     "metrics": "*",
     "zod": "^3.22.0"
