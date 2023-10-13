@@ -1,5 +1,4 @@
 import { SetOptions } from 'redis'
-import { SaveOptions } from '../RedisScope'
 import { safeClient } from '../redis/client'
 
 /**
@@ -79,7 +78,7 @@ export abstract class RedisField extends Field {
    * @param opts The options to use when saving.
    * @returns The options for a Redis SET command.
    */
-  protected createSetOptions(opts?: Partial<SaveOptions>): SetOptions {
+  protected createSetOptions(opts?: Partial<FieldSaveOptions>): SetOptions {
     const ttl = opts?.expiration
     const keepTTL = opts?.expiration ? undefined : (true as const)
     const res: SetOptions = {}
