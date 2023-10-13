@@ -18,5 +18,6 @@ declare namespace NodeJS {
     readonly REDIS_HOST: string
     readonly REPLAYS_PORT: string
     readonly STATS_PORT: string
+    readonly AUTH_PORT: string
   }
 }
