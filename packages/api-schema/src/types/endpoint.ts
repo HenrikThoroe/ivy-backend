@@ -73,6 +73,7 @@ export function endpoint(path: string, method: Method) {
       failure: defaultFailureSchema,
     },
     true,
+    new Set(),
   )
 }
 
@@ -118,18 +119,25 @@ export class Endpoint<
    */
   protected readonly output: Output<S, F>
 
+  /**
+   * The accepted access roles of the endpoint.
+   */
+  protected readonly accessRoles: Set<string>
+
   constructor(
     path: string,
     method: Method,
     input: Input<Q, B, P, U>,
     output: Output<S, F>,
     authenticated: A,
+    accessRoles: Set<string>,
   ) {
     this.path = path
     this.method = method
     this.input = input
     this.output = output
     this.authenticated = authenticated
+    this.accessRoles = new Set(accessRoles)
   }
 
   /**
@@ -138,7 +146,7 @@ export class Endpoint<
    * @returns A new endpoint with updated authentication requirement.
    */
   public protected(): Endpoint<Q, B, P, U, S, true, F> {
-    return new Endpoint(this.path, this.method, this.input, this.output, true)
+    return new Endpoint(this.path, this.method, this.input, this.output, true, this.accessRoles)
   }
 
   /**
@@ -147,7 +155,7 @@ export class Endpoint<
    * @returns A new endpoint with updated authentication requirement.
    */
   public unprotected(): Endpoint<Q, B, P, U, S, false, F> {
-    return new Endpoint(this.path, this.method, this.input, this.output, false)
+    return new Endpoint(this.path, this.method, this.input, this.output, false, this.accessRoles)
   }
 
   /**
@@ -163,6 +171,7 @@ export class Endpoint<
       { ...this.input, query },
       this.output,
       this.authenticated,
+      this.accessRoles,
     )
   }
 
@@ -179,6 +188,7 @@ export class Endpoint<
       { ...this.input, body },
       this.output,
       this.authenticated,
+      this.accessRoles,
     )
   }
 
@@ -195,6 +205,7 @@ export class Endpoint<
       { ...this.input, params },
       this.output,
       this.authenticated,
+      this.accessRoles,
     )
   }
 
@@ -211,6 +222,7 @@ export class Endpoint<
       { ...this.input, files },
       this.output,
       this.authenticated,
+      this.accessRoles,
     )
   }
 
@@ -227,6 +239,7 @@ export class Endpoint<
       this.input,
       { ...this.output, success },
       this.authenticated,
+      this.accessRoles,
     )
   }
 
@@ -243,7 +256,36 @@ export class Endpoint<
       this.input,
       { ...this.output, failure },
       this.authenticated,
+      this.accessRoles,
     )
+  }
+
+  /**
+   * Creates a new endpoint with the same path and method but different access roles.
+   * These roles are used to check if a user is authorized to the endpoint.
+   *
+   * @param roles Accepted roles for the endpoint.
+   * @returns A new endpoint with updated access roles.
+   */
+  public access(...roles: string[]): Endpoint<Q, B, P, U, S, A, F> {
+    return new Endpoint(
+      this.path,
+      this.method,
+      this.input,
+      this.output,
+      this.authenticated,
+      new Set(roles),
+    )
+  }
+
+  /**
+   * Checks if the given role is accepted by the endpoint.
+   *
+   * @param role The role to check.
+   * @returns Whether the role is accepted by the endpoint.
+   */
+  public hasAccess(role: string): boolean {
+    return this.accessRoles.has(role)
   }
 
   /**
