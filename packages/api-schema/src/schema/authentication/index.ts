@@ -39,6 +39,8 @@ export const authenticationRoute = route('/auth', {
         user: userSchema,
       }),
     ),
-  refresh: endpoint('/refresh', 'POST').body(credentialsSchema).success(credentialsSchema),
+  refresh: endpoint('/refresh', 'POST')
+    .body(credentialsSchema.omit({ jwt: true }))
+    .success(credentialsSchema),
   profile: endpoint('/profile', 'GET').success(userSchema),
 })
