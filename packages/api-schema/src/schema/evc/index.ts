@@ -35,6 +35,7 @@ export const engineVersioningRoute = route('/engines', {
   all: endpoint('/', 'GET').unprotected().success(z.array(engineConfigSchema)),
   create: endpoint('/', 'POST').body(createSchema).files(['engine']).success(engineConfigSchema),
   get: endpoint('/:id', 'GET')
+    .unprotected()
     .params(z.object({ id: z.string().nonempty() }))
     .success(engineConfigSchema),
   download: endpoint('/bin/:engine/:id', 'GET')
