@@ -208,6 +208,17 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
         if (auth.success) {
           user = auth.user
           session = auth.session
+
+          const authorized = await this.authHandler.isAuthorized(user, endpoint)
+
+          if (!authorized) {
+            res.status(403).json({
+              message: `No authorization to access '${req.method.toUpperCase()} ${req.baseUrl}${
+                req.path
+              }'`,
+            })
+            return
+          }
         } else {
           const { code, message } = auth
           const payload = endpoint.validateFailure({ message })
