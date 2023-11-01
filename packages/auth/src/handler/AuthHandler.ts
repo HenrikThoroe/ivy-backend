@@ -1,4 +1,6 @@
+import { Endpoint } from '@ivy-chess/api-schema'
 import { Request } from 'express'
+import { store } from 'kv-store'
 import { JWTPayload, JWTVerifier } from '../verification/JWTVerifier'
 
 interface Token {
@@ -68,6 +70,29 @@ export class AuthHandler {
     }
 
     return { ...verification, success: true }
+  }
+
+  /**
+   * Checks if a user is authorized to access an endpoint.
+   *
+   * Looks up the user in the database and checks if the user's role
+   * is allowed to access the endpoint.
+   *
+   * @param userId The id of the user to check.
+   * @param endpoint The endpoint the user wants to access.
+   * @returns Whether the user is authorized to access the endpoint.
+   */
+  public async isAuthorized<E extends Endpoint<any, any, any, any, any, any>>(
+    userId: string,
+    endpoint: E,
+  ) {
+    const user = await store.take('auth').take('users').take(userId).read()
+
+    if (!user) {
+      return false
+    }
+
+    return endpoint.hasAccess(user.role)
   }
 
   //* Private Methods

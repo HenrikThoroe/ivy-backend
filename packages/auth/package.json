@@ -14,6 +14,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@ivy-chess/api-schema": "*",
     "@supabase/supabase-js": "^2.38.0",
     "express": "^4.18.2",
     "jose": "^4.15.2",
