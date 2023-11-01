@@ -1,5 +1,5 @@
-import { EngineInstance } from '../configs/EngineConfig'
 import crypto from 'crypto'
+import { EngineInstance } from '../configs/EngineConfig'
 
 /**
  * An engine test configuration is extends an {@link EngineInstance} with
