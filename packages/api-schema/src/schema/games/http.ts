@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { withIdSchema } from '../../shared/generic'
+import { contributorRoles } from '../../shared/user'
 import { endpoint } from '../../types/endpoint'
 import { route } from '../../types/route'
 
@@ -19,5 +20,8 @@ export const createSchema = z.object({
  * Schema for the game management API.
  */
 export const gamesRoute = route('/games', {
-  create: endpoint('/', 'POST').body(createSchema).success(withIdSchema),
+  create: endpoint('/', 'POST')
+    .access(...contributorRoles)
+    .body(createSchema)
+    .success(withIdSchema),
 })

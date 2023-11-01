@@ -2,6 +2,7 @@ import { decodeVersion } from '@ivy-chess/model'
 import { z } from 'zod'
 import { engineConfigSchema, engineNameSchema, engineVariationSchema } from '../../shared/engine'
 import { downloadSchema } from '../../shared/generic'
+import { contributorRoles } from '../../shared/user'
 import { endpoint } from '../../types/endpoint'
 import { route } from '../../types/route'
 
@@ -33,7 +34,11 @@ export const createSchema = z.object({
  */
 export const engineVersioningRoute = route('/engines', {
   all: endpoint('/', 'GET').unprotected().success(z.array(engineConfigSchema)),
-  create: endpoint('/', 'POST').body(createSchema).files(['engine']).success(engineConfigSchema),
+  create: endpoint('/', 'POST')
+    .access(...contributorRoles)
+    .body(createSchema)
+    .files(['engine'])
+    .success(engineConfigSchema),
   get: endpoint('/:id', 'GET')
     .unprotected()
     .params(z.object({ id: z.string().nonempty() }))
@@ -43,6 +48,7 @@ export const engineVersioningRoute = route('/engines', {
     .params(z.object({ engine: engineNameSchema, id: z.string().nonempty() }))
     .success(downloadSchema),
   delete: endpoint('/:engine/:id', 'DELETE')
+    .access(...contributorRoles)
     .params(
       z.object({
         engine: engineNameSchema,
@@ -51,6 +57,7 @@ export const engineVersioningRoute = route('/engines', {
     )
     .success(z.object({ success: z.boolean() })),
   getVersion: endpoint('/:name/:version', 'GET')
+    .unprotected()
     .params(
       z.object({
         name: engineNameSchema,

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { userSchema } from '../../shared/user'
+import { userSchema, visitorRoles } from '../../shared/user'
 import { endpoint } from '../../types/endpoint'
 import { route } from '../../types/route'
 
@@ -40,7 +40,10 @@ export const authenticationRoute = route('/auth', {
       }),
     ),
   refresh: endpoint('/refresh', 'POST')
+    .access(...visitorRoles)
     .body(credentialsSchema.omit({ jwt: true }))
     .success(credentialsSchema),
-  profile: endpoint('/profile', 'GET').success(userSchema),
+  profile: endpoint('/profile', 'GET')
+    .access(...visitorRoles)
+    .success(userSchema),
 })

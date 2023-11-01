@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { replayLogSchema, replaySchema, replayStatsSchema } from '../../shared/replay'
+import { visitorRoles } from '../../shared/user'
 import { endpoint } from '../../types/endpoint'
 import { route } from '../../types/route'
-import { replayLogSchema, replaySchema, replayStatsSchema } from '../../shared/replay'
 
 /**
  * Schema for filter options.
@@ -21,14 +22,20 @@ export const filterOptionsSchema = z.object({
  * Schema for the replay API.
  */
 export const replayRoute = route('/replays', {
-  all: endpoint('/', 'GET').query(filterOptionsSchema).success(z.array(z.string())),
+  all: endpoint('/', 'GET')
+    .access(...visitorRoles)
+    .query(filterOptionsSchema)
+    .success(z.array(z.string())),
   get: endpoint('/:id', 'GET')
+    .access(...visitorRoles)
     .params(z.object({ id: z.string() }))
     .success(replaySchema),
   analysis: endpoint('/:id/analysis', 'GET')
+    .access(...visitorRoles)
     .params(z.object({ id: z.string() }))
     .success(replayStatsSchema),
   logs: endpoint('/:id/logs', 'GET')
+    .access(...visitorRoles)
     .params(z.object({ id: z.string() }))
     .success(replayLogSchema),
 })
