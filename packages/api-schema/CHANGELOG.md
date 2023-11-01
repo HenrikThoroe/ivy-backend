@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.4.0
+
+### Minor Changes
+
+- Added support for authorization management
+
 ## 0.3.0
 
 ### Minor Changes
