@@ -39,6 +39,9 @@ export const authenticationRoute = route('/auth', {
         user: userSchema,
       }),
     ),
+  signOut: endpoint('/signout', 'POST')
+    .access(...visitorRoles)
+    .success(z.object({ success: z.boolean() })),
   refresh: endpoint('/refresh', 'POST')
     .access(...visitorRoles)
     .body(credentialsSchema.omit({ jwt: true }))
