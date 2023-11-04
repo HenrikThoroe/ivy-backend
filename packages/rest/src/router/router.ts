@@ -196,6 +196,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
 
       let user: string | undefined
       let session: string | undefined
+      let token: string | undefined
 
       if (endpoint.authenticated) {
         if (!this.authHandler) {
@@ -208,6 +209,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
         if (auth.success) {
           user = auth.user
           session = auth.session
+          token = auth.token
 
           const authorized = await this.authHandler.isAuthorized(user, endpoint)
 
@@ -233,7 +235,9 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
       const body = endpoint.validateBody(b)
       const params = endpoint.validateParams(p)
       const files = endpoint.validateFiles(parseFiles())
-      const auth = endpoint.authenticated ? { user: user!, session: session! } : undefined
+      const auth = endpoint.authenticated
+        ? { user: user!, session: session!, token: token! }
+        : undefined
       const result = await handler({ query, body, params, files, auth }, success, failure)
 
       if (result.ok) {

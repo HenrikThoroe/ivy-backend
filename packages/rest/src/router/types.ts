@@ -5,7 +5,9 @@ import * as z from 'zod'
  * The data of an authenticated request if authentication is enabled.
  * Otherwise `undefined`.
  */
-type AuthData<A extends boolean> = A extends true ? { session: string; user: string } : undefined
+type AuthData<A extends boolean> = A extends true
+  ? { session: string; user: string; token: string }
+  : undefined
 
 /**
  * The result of a successful request.
