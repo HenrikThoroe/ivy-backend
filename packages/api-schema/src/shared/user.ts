@@ -1,6 +1,9 @@
 import { z } from 'zod'
 
-const userRoleSchema = z.enum(['manager', 'contributor', 'visitor'])
+/**
+ * The roles that a user can have.
+ */
+export const userRoleSchema = z.enum(['manager', 'contributor', 'visitor'])
 
 /**
  * The roles that are accepted when an endpoint is
