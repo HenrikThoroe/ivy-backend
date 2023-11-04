@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.6.0
+
+### Minor Changes
+
+- Added endpoints, that allow users to be removed, updated and fetched.
+
 ## 0.5.0
 
 ### Minor Changes
