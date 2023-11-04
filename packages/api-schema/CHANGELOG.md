@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.5.0
+
+### Minor Changes
+
+- add `signOut` endpoint to auth router
+
 ## 0.4.0
 
 ### Minor Changes
