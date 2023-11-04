@@ -48,4 +48,13 @@ export abstract class AuthProvider {
    * @param token The refresh token.
    */
   public abstract refresh(token: string): Promise<SessionData>
+
+  /**
+   * Signs out a user with the given JWT.
+   * Will remove all refresh tokens. The JWT itself will
+   * stay valid until it expires.
+   *
+   * @param jwt The JWT of the user.
+   */
+  public abstract signOut(jwt: string): Promise<void>
 }

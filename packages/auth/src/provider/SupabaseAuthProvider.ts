@@ -74,4 +74,8 @@ export class SupabaseAuthProvider extends AuthProvider {
 
     throw new Error('Failed to retrieve refreshed session.')
   }
+
+  public async signOut(jwt: string): Promise<void> {
+    await this.client.auth.admin.signOut(jwt)
+  }
 }
