@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { userSchema, visitorRoles } from '../../shared/user'
+import { managerRoles, userRoleSchema, userSchema, visitorRoles } from '../../shared/user'
 import { endpoint } from '../../types/endpoint'
 import { route } from '../../types/route'
 
@@ -9,6 +9,16 @@ import { route } from '../../types/route'
 export const credentialsSchema = z.object({
   jwt: z.string().nonempty(),
   refreshToken: z.string().nonempty(),
+})
+
+/**
+ * Schema for the user filter parameters.
+ */
+export const userFilterOptionsSchema = z.object({
+  role: userRoleSchema.optional(),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  limit: z.number().int().positive().optional(),
 })
 
 /**
@@ -49,4 +59,19 @@ export const authenticationRoute = route('/auth', {
   profile: endpoint('/profile', 'GET')
     .access(...visitorRoles)
     .success(userSchema),
+  delete: endpoint('/delete', 'DELETE')
+    .access(...visitorRoles)
+    .success(z.object({ success: z.boolean() })),
+  remove: endpoint('/remove', 'DELETE')
+    .access(...managerRoles)
+    .body(z.object({ user: z.string().uuid() }))
+    .success(z.object({ success: z.boolean() })),
+  update: endpoint('/update', 'PUT')
+    .access(...managerRoles)
+    .body(z.object({ user: userSchema.pick({ role: true }) }))
+    .success(userSchema),
+  list: endpoint('/list', 'GET')
+    .access(...managerRoles)
+    .params(userFilterOptionsSchema)
+    .success(z.array(userSchema)),
 })
