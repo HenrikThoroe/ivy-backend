@@ -11,7 +11,7 @@ interface Token {
 type AuthErrorReason = 'no-auth-header' | 'invalid-token-type' | 'invalid-token'
 
 type ValidationResult<T extends boolean> = T extends true
-  ? { success: T } & JWTPayload
+  ? { success: T; token: string } & JWTPayload
   : { success: T; reason: AuthErrorReason; message: string; code: number }
 
 /**
@@ -69,7 +69,7 @@ export class AuthHandler {
       }
     }
 
-    return { ...verification, success: true }
+    return { ...verification, token: token.value, success: true }
   }
 
   /**
