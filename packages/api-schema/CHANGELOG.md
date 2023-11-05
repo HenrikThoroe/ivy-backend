@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.6.1
+
+### Patch Changes
+
+- Fix issue, where params was used instead of query
+
 ## 0.6.0
 
 ### Minor Changes
