@@ -72,6 +72,6 @@ export const authenticationRoute = route('/auth', {
     .success(userSchema),
   list: endpoint('/list', 'GET')
     .access(...managerRoles)
-    .params(userFilterOptionsSchema)
+    .query(userFilterOptionsSchema)
     .success(z.array(userSchema)),
 })
