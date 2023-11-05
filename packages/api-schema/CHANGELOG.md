@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.6.2
+
+### Patch Changes
+
+- Add id to params for remove and update endpoints
+
 ## 0.6.1
 
 ### Patch Changes
