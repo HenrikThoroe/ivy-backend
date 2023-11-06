@@ -3974,10 +3974,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "auth@workspace:packages/auth"
   dependencies:
+    "@ivy-chess/api-schema": "npm:*"
     "@supabase/supabase-js": "npm:^2.38.0"
     eslint-config-custom: "npm:*"
     express: "npm:^4.18.2"
     jose: "npm:^4.15.2"
+    kv-store: "npm:*"
     moment: "npm:^2.29.4"
     typescript: "npm:^4.9.5"
   languageName: unknown
@@ -3988,8 +3990,6 @@ __metadata:
   resolution: "authentication@workspace:apps/authentication"
   dependencies:
     "@ivy-chess/api-schema": "npm:*"
-    "@ivy-chess/model": "npm:*"
-    "@supabase/supabase-js": "npm:^2.38.0"
     auth: "npm:*"
     com: "npm:*"
     cors: "npm:^2.8.5"
@@ -4001,6 +4001,7 @@ __metadata:
     metrics: "npm:*"
     nodemon: "npm:^3.0.1"
     rest: "npm:*"
+    zod: "npm:^3.22.0"
   languageName: unknown
   linkType: soft
 
@@ -5022,6 +5023,7 @@ __metadata:
     "@types/express": "npm:^4.17.17"
     "@types/express-fileupload": "npm:^1.4.1"
     "@types/helmet": "npm:^4.0.0"
+    auth: "npm:*"
     cors: "npm:^2.8.5"
     env-util: "npm:*"
     esbuild: "npm:^0.19.2"
@@ -6284,6 +6286,7 @@ __metadata:
     "@ivy-chess/api-schema": "npm:*"
     "@ivy-chess/model": "npm:*"
     "@types/uuid": "npm:^9.0.1"
+    auth: "npm:*"
     env-util: "npm:*"
     esbuild: "npm:^0.19.4"
     eslint-config-custom: "npm:*"
@@ -9216,6 +9219,7 @@ __metadata:
   dependencies:
     "@ivy-chess/api-schema": "npm:*"
     "@ivy-chess/model": "npm:*"
+    auth: "npm:*"
     bullmq: "npm:^4.0.0"
     com: "npm:*"
     cors: "npm:^2.8.5"
@@ -9820,6 +9824,7 @@ __metadata:
   dependencies:
     "@ivy-chess/api-schema": "npm:*"
     "@ivy-chess/model": "npm:*"
+    auth: "npm:*"
     bullmq: "npm:^4.6.0"
     com: "npm:*"
     cors: "npm:^2.8.5"
@@ -10130,6 +10135,7 @@ __metadata:
     "@ivy-chess/model": "npm:*"
     "@types/cors": "npm:^2.8.13"
     "@types/uuid": "npm:^9.0.1"
+    auth: "npm:*"
     bullmq: "npm:^4.1.0"
     com: "npm:*"
     cors: "npm:^2.8.5"
