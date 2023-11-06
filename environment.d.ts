@@ -19,5 +19,8 @@ declare namespace NodeJS {
     readonly REPLAYS_PORT: string
     readonly STATS_PORT: string
     readonly AUTH_PORT: string
+
+    readonly ADMIN_EMAIL: string
+    readonly ADMIN_PASSWORD: string
   }
 }
