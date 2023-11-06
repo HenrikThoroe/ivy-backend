@@ -20,6 +20,7 @@
     "schema",
     "rest",
     "metrics",
-    "auth"
+    "auth",
+    "auth-app"
   ]
 }
