@@ -1,5 +1,5 @@
 import { Session, SupabaseClient, User } from '@supabase/supabase-js'
-import { AuthProvider, SignUpResult } from './AuthProvider'
+import { AuthProvider, SignUpResult, UserData } from './AuthProvider'
 
 /**
  * {@link AuthProvider} implementation for Supabase.
@@ -76,6 +76,28 @@ export class SupabaseAuthProvider extends AuthProvider {
   }
 
   public async signOut(jwt: string): Promise<void> {
-    await this.client.auth.admin.signOut(jwt)
+    const res = await this.client.auth.admin.signOut(jwt)
+
+    if (res.error) {
+      throw res.error
+    }
+  }
+
+  public async remove(id: string): Promise<void> {
+    const res = await this.client.auth.admin.deleteUser(id)
+
+    if (res.error) {
+      throw res.error
+    }
+  }
+
+  public async list(): Promise<UserData[]> {
+    const res = await this.client.auth.admin.listUsers()
+
+    if (res.error) {
+      throw res.error
+    }
+
+    return res.data.users
   }
 }

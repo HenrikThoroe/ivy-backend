@@ -1,4 +1,11 @@
-interface UserData {
+/**
+ * The minimum data of a user as stored
+ * by the external authentication provider.
+ */
+export interface UserData {
+  /**
+   * The ID of the user.
+   */
   id: string
 }
 
@@ -57,4 +64,18 @@ export abstract class AuthProvider {
    * @param jwt The JWT of the user.
    */
   public abstract signOut(jwt: string): Promise<void>
+
+  /**
+   * Removes a user with the given ID.
+   *
+   * @param id The ID of the user.
+   */
+  public abstract remove(id: string): Promise<void>
+
+  /**
+   * Fecthes the data of all users.
+   *
+   * @returns A list of users.
+   */
+  public abstract list(): Promise<UserData[]>
 }
