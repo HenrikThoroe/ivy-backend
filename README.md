@@ -46,7 +46,7 @@ there routers for REST APIs, web socket servers or listeners on internal message
 
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [NodeJS](https://nodejs.org/en/download) (v18.12+, recommended v20+)
-- [Yarn](https://yarnpkg.com/getting-started/install) (v4+ is required. Use `yarn set version canary`)
+- [Yarn](https://yarnpkg.com/getting-started/install) (v4+ is required. Use `yarn set version stable`)
 
 ### Setup Dev Environment
 
