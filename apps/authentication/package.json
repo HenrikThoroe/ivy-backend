@@ -1,0 +1,32 @@
+{
+  "name": "authentication",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "author": "Henrik Thoroe",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "scripts": {
+    "build:dev": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=cjs",
+    "build": "esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/index-prod.js --format=cjs",
+    "start": "yarn build:dev && node ./dist/index.js",
+    "dev": "nodemon -x 'yarn start' -w package.json -w tsconfig.json -w src -e ts,json",
+    "lint": "eslint --ext .ts ."
+  },
+  "dependencies": {
+    "@ivy-chess/api-schema": "*",
+    "auth": "*",
+    "com": "*",
+    "cors": "^2.8.5",
+    "env-utils": "*",
+    "helmet": "^7.0.0",
+    "kv-store": "*",
+    "metrics": "*",
+    "rest": "*",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.2",
+    "eslint-config-custom": "*",
+    "nodemon": "^3.0.1"
+  }
+}
