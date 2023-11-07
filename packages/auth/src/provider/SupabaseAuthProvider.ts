@@ -1,5 +1,5 @@
 import { Session, SupabaseClient, User } from '@supabase/supabase-js'
-import { AuthProvider, SignUpResult, UserData } from './AuthProvider'
+import { AuthProvider, SignUpResult, UserData, UserKey } from './AuthProvider'
 
 /**
  * {@link AuthProvider} implementation for Supabase.
@@ -99,5 +99,22 @@ export class SupabaseAuthProvider extends AuthProvider {
     }
 
     return res.data.users
+  }
+
+  public async has(key: UserKey): Promise<boolean> {
+    if ('id' in key) {
+      const res = await this.client.auth.admin.getUserById(key.id)
+
+      if (res.data) {
+        return true
+      }
+    }
+
+    if ('email' in key) {
+      const users = await this.client.auth.admin.listUsers()
+      return users.data?.users.some((user) => user.email === key.email)
+    }
+
+    return false
   }
 }

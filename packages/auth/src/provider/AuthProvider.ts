@@ -18,6 +18,11 @@ interface SessionData {
 }
 
 /**
+ * A key, which can uniquely identify a user.
+ */
+export type UserKey = { id: string } | { email: string }
+
+/**
  * The result of a sign up request.
  * If the user was confirmed, the session data is returned.
  * Otherwise, the user data is returned.
@@ -78,4 +83,12 @@ export abstract class AuthProvider {
    * @returns A list of users.
    */
   public abstract list(): Promise<UserData[]>
+
+  /**
+   * Checks if a user with the given key exists.
+   *
+   * @param ket The key of the user.
+   * @returns True if the user exists, false otherwise.
+   */
+  public abstract has(key: UserKey): Promise<boolean>
 }
