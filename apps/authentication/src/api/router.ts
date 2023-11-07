@@ -93,7 +93,17 @@ export const authRouter = router(api.auth.authenticationRoute, {
     return failure({ message: res.message }, res.code)
   },
 
-  update: async ({}, _, failure) => failure({ message: 'Not implemented' }, 501),
+  update: async ({ params, body }, success, failure) => {
+    const { id } = params
+    const { role } = body.user
+    const updated = await manager.update({ id, role })
+
+    if (!updated) {
+      return failure({ message: 'User not found' }, 404)
+    }
+
+    return success(updated)
+  },
 
   list: async ({ query, auth }, success, _) => {
     const users = await manager.query({ filter: query, prune: true, actor: auth.user })
