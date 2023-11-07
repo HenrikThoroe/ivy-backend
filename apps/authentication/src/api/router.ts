@@ -28,9 +28,22 @@ export const authRouter = router(api.auth.authenticationRoute, {
     })
   },
 
-  signUp: async ({ body }, success, _) => {
+  signUp: async ({ body }, success, failure) => {
     const result = await manager.add(body.email, body.username, body.password)
-    return success(result)
+
+    if (result.success) {
+      return success({ user: result.user, credentials: result.credentials })
+    }
+
+    if (result.reason === 'user-exists') {
+      return failure({ message: 'User already exists' }, 409)
+    }
+
+    if (result.reason === 'invalid-credentials') {
+      return failure({ message: 'Invalid credentials' }, 403)
+    }
+
+    return failure({ message: 'Unknown error' }, 500)
   },
 
   signOut: async ({ auth }, success, failure) => {
