@@ -1,4 +1,5 @@
 import { StaticStore } from '../stores'
+import { authenticationStore } from './authentication'
 import { gamesStore } from './games'
 import { replayStore } from './replays'
 import { statsStore } from './stats'
@@ -13,4 +14,5 @@ export const store = StaticStore.redis('store', {
   stats: statsStore,
   testing: testStore,
   games: gamesStore,
+  auth: authenticationStore,
 })

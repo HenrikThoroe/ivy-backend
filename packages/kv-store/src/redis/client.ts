@@ -16,7 +16,7 @@ const client = createClient({
  * @returns A redis client.
  */
 export async function safeClient() {
-  if (!client.isReady) {
+  if (!client.isReady && !client.isOpen) {
     await client.connect()
   }
 

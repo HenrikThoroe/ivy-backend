@@ -19,6 +19,8 @@
     "stats",
     "schema",
     "rest",
-    "metrics"
+    "metrics",
+    "auth",
+    "auth-app"
   ]
 }

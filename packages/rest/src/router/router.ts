@@ -1,4 +1,5 @@
 import { Route, RouteConfig, shared } from '@ivy-chess/api-schema'
+import { AuthHandler } from 'auth'
 import { Router as ExpressRouter, Request, Response } from 'express'
 import { HTTPLogger, HTTPMethod } from 'metrics'
 import stream from 'stream'
@@ -39,7 +40,7 @@ function failure<T>(error: T, code: number = 500): Result<false, never, T> {
  * @example
  * ```ts
  * const myRouter = router(mySchema, {
- *   foo: async ({ body, query, params }, success, failure) => {
+ *   foo: async ({ body, query, params, auth }, success, failure) => {
  *     const data = doSomething(body, query, params)
  *
  *     if (data.flag) {
@@ -76,6 +77,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
   private readonly impl: Impl
   private readonly router: ExpressRouter
   private readonly schema: Route<T>
+  private authHandler?: AuthHandler
   private logger?: HTTPLogger
 
   constructor(schema: Route<T>, impl: Impl) {
@@ -92,10 +94,12 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
    *
    * @param router The express router to attach to.
    * @param logger A logger instance which will receive data for each request.
+   * @param auth An auth handler to verify authentication.
    * @returns The express router.
    */
-  public mount(router: ExpressRouter, logger?: HTTPLogger) {
+  public mount(router: ExpressRouter, logger?: HTTPLogger, auth?: AuthHandler) {
     this.logger = logger
+    this.authHandler = auth
     return router.use(this.schema.path, this.router)
   }
 
@@ -128,6 +132,7 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
   private buildPathHandler(handler: (req: Request, res: Response) => Promise<void>) {
     return async (req: Request, res: Response) => {
       const start = performance.now()
+
       try {
         await handler(req, res)
       } catch (e) {
@@ -189,12 +194,51 @@ export class Router<T extends RouteConfig, Impl extends RouteImpl<T>> {
         return files
       }
 
+      let user: string | undefined
+      let session: string | undefined
+      let token: string | undefined
+
+      if (endpoint.authenticated) {
+        if (!this.authHandler) {
+          res.status(500).json({ message: 'Failed to validate request authentication.' })
+          return
+        }
+
+        const auth = await this.authHandler.isAuthenticated(req)
+
+        if (auth.success) {
+          user = auth.user
+          session = auth.session
+          token = auth.token
+
+          const authorized = await this.authHandler.isAuthorized(user, endpoint)
+
+          if (!authorized) {
+            res.status(403).json({
+              message: `No authorization to access '${req.method.toUpperCase()} ${req.baseUrl}${
+                req.path
+              }'`,
+            })
+            return
+          }
+        } else {
+          const { code, message } = auth
+          const payload = endpoint.validateFailure({ message })
+
+          res.status(code).json(payload)
+
+          return
+        }
+      }
+
       const query = endpoint.validateQuery(q)
       const body = endpoint.validateBody(b)
       const params = endpoint.validateParams(p)
       const files = endpoint.validateFiles(parseFiles())
-
-      const result = await handler({ query, body, params, files }, success, failure)
+      const auth = endpoint.authenticated
+        ? { user: user!, session: session!, token: token! }
+        : undefined
+      const result = await handler({ query, body, params, files, auth }, success, failure)
 
       if (result.ok) {
         const { code, value } = result

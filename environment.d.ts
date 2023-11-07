@@ -1,6 +1,10 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
     readonly NODE_ENV: 'production' | 'test' | 'development'
+    readonly JWT_SECRET: string
+    readonly JWT_ISSUER: string
+    readonly SUPABASE_URL: string
+    readonly SUPABASE_KEY: string
     readonly EVC_PORT: string
     readonly GM_PORT: string
     readonly GM_WSS_PORT: string
@@ -14,5 +18,9 @@ declare namespace NodeJS {
     readonly REDIS_HOST: string
     readonly REPLAYS_PORT: string
     readonly STATS_PORT: string
+    readonly AUTH_PORT: string
+
+    readonly ADMIN_EMAIL: string
+    readonly ADMIN_PASSWORD: string
   }
 }

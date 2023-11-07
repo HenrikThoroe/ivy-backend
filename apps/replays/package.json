@@ -15,6 +15,7 @@
   "dependencies": {
     "@ivy-chess/api-schema": "*",
     "@ivy-chess/model": "*",
+    "auth": "*",
     "bullmq": "^4.0.0",
     "com": "*",
     "cors": "^2.8.5",
