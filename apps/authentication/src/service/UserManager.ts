@@ -4,14 +4,15 @@ import { store } from 'kv-store'
 import { StandardLogger } from 'metrics'
 import { z } from 'zod'
 
+type Credentials = z.infer<typeof api.auth.credentialsSchema>
+
 type RemoveResult<T extends boolean = boolean> = T extends true
   ? { success: T }
   : { success: T; message: string; code: number }
 
-interface AddResult {
-  user: User
-  credentials?: z.infer<typeof api.auth.credentialsSchema>
-}
+type AddResult<T extends boolean = boolean> = T extends true
+  ? { success: T; user: User; credentials?: Credentials }
+  : { success: T; reason: 'user-exists' | 'invalid-credentials' }
 
 type User = z.infer<typeof shared.user.userSchema>
 
@@ -74,8 +75,20 @@ export class UserManager {
    * @returns The user and credentials, if the user can already be logged in.
    */
   public async add(email: string, name: string, password: string): Promise<AddResult> {
-    // TODO: Check if user provides default manager credentials.
-    // TODO: Check if user is already registered.
+    if (await this.authProvider.has({ email })) {
+      return { success: false, reason: 'user-exists' }
+    }
+
+    let role: User['role'] = 'visitor'
+
+    if (email === process.env.ADMIN_EMAIL) {
+      if (password !== process.env.ADMIN_PASSWORD) {
+        return { success: false, reason: 'invalid-credentials' }
+      }
+
+      role = 'manager'
+    }
+
     const result = await this.authProvider.signUp(email, password)
 
     if (result.confirmed) {
@@ -84,11 +97,12 @@ export class UserManager {
         id: result.session.user.id,
         email: email,
         name: name,
-        role: 'visitor',
+        role,
       })
 
       return {
         user,
+        success: true,
         credentials: {
           jwt: result.session.access_token,
           refreshToken: result.session.refresh_token,
@@ -101,10 +115,10 @@ export class UserManager {
       id: result.user.id,
       email: email,
       name: name,
-      role: 'visitor',
+      role,
     })
 
-    return { user }
+    return { user, success: true }
   }
 
   /**
