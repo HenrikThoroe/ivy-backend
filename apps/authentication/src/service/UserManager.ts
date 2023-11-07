@@ -49,6 +49,39 @@ export class UserManager {
   //* API
 
   /**
+   * Updates a user in the system.
+   * Will update the user in the local database and
+   * request the external authentication provider to update the user
+   * if necessary.
+   *
+   * @param user The new user data. ID is neccessary to identify the user.
+   * @returns The updated user.
+   */
+  public async update(user: Pick<User, 'id'> & Partial<User>): Promise<User | undefined> {
+    const original = await this.userDb.take(user.id).read()
+
+    if (!original) {
+      return undefined
+    }
+
+    let updated: User | undefined = original
+
+    if (user.role) {
+      updated = await this.userDb.take(user.id).update(() => ({ role: user.role }))
+
+      if (user.role === 'manager') {
+        await this.managerDb.add(user.id)
+      }
+
+      if (original.role === 'manager' && user.role !== 'manager') {
+        await this.managerDb.remove(user.id)
+      }
+    }
+
+    return updated
+  }
+
+  /**
    * Gets a user by their ID.
    * If the user does not exist, `undefined` is returned.
    *
@@ -90,35 +123,31 @@ export class UserManager {
     }
 
     const result = await this.authProvider.signUp(email, password)
-
-    if (result.confirmed) {
-      const entry = this.userDb.take(result.session.user.id)
-      const user = await entry.write({
-        id: result.session.user.id,
-        email: email,
-        name: name,
-        role,
-      })
-
-      return {
-        user,
-        success: true,
-        credentials: {
+    const id = result.confirmed ? result.session.user.id : result.user.id
+    const credentials = result.confirmed
+      ? {
           jwt: result.session.access_token,
           refreshToken: result.session.refresh_token,
-        },
-      }
-    }
+        }
+      : undefined
 
-    const entry = this.userDb.take(result.user.id)
+    const entry = this.userDb.take(id)
     const user = await entry.write({
-      id: result.user.id,
-      email: email,
-      name: name,
+      id,
+      email,
+      name,
       role,
     })
 
-    return { user, success: true }
+    if (role === 'manager') {
+      await this.managerDb.add(id)
+    }
+
+    return {
+      success: true,
+      credentials,
+      user,
+    }
   }
 
   /**
