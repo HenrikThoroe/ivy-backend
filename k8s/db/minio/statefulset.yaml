@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: minio
 spec:
-  serviceName: s3
+  serviceName: s3-svc
   replicas: 1
   selector:
     matchLabels:

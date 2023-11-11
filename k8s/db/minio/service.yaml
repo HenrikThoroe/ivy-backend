@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: minio
-  name: s3
+  name: s3-svc
 spec:
   clusterIP: None
   ports:
