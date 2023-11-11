@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: minio
+  name: s3
+spec:
+  clusterIP: None
+  ports:
+    - port: 9001
+      name: s3-admin
+    - port: 9009
+      name: s3-data
+  selector:
+    app: minio
