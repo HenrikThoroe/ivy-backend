@@ -36,3 +36,10 @@ spec:
                 name: auth-svc
                 port:
                   number: 4507
+          - path: /replays(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: replays-svc
+                port:
+                  number: 4505
