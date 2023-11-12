@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supabase-cfg
+data:
+  JWT_ISSUER: 'https://zsftcecubmldaalbzuzc.supabase.co/auth/v1'
+  SUPABASE_URL: 'https://zsftcecubmldaalbzuzc.supabase.co'
