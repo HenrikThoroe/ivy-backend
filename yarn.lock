@@ -2424,6 +2424,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@next/env@npm:^14.0.2":
+  version: 14.0.2
+  resolution: "@next/env@npm:14.0.2"
+  checksum: ddf2b065e1528123e4d69373b090691ae1930c28eee37ac6f14f9782270f557f9f4465a0038a3f932a6e69d80dd71928f7412389b544cb9ec196bc0e75033f22
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -3993,7 +4000,7 @@ __metadata:
     auth: "npm:*"
     com: "npm:*"
     cors: "npm:^2.8.5"
-    env-utils: "npm:*"
+    env-util: "npm:*"
     esbuild: "npm:^0.19.2"
     eslint-config-custom: "npm:*"
     helmet: "npm:^7.0.0"
@@ -4001,6 +4008,7 @@ __metadata:
     metrics: "npm:*"
     nodemon: "npm:^3.0.1"
     rest: "npm:*"
+    tsconfig: "npm:*"
     zod: "npm:^3.22.0"
   languageName: unknown
   linkType: soft
@@ -5036,6 +5044,7 @@ __metadata:
     rest: "npm:*"
     runtypes: "npm:^6.6.0"
     ts-node: "npm:^10.9.1"
+    tsconfig: "npm:*"
     typescript: "npm:^4.9.5"
     zod: "npm:^3.22.0"
   languageName: unknown
@@ -5062,6 +5071,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "env-util@workspace:packages/env-util"
   dependencies:
+    "@next/env": "npm:^14.0.2"
     eslint-config-custom: "npm:*"
     typescript: "npm:^4.9.5"
   languageName: unknown
@@ -10386,7 +10396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig@workspace:packages/tsconfig":
+"tsconfig@npm:*, tsconfig@workspace:packages/tsconfig":
   version: 0.0.0-use.local
   resolution: "tsconfig@workspace:packages/tsconfig"
   languageName: unknown
