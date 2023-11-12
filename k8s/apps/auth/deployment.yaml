@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - image: heth03/ivy:auth-latest
+          imagePullPolicy: IfNotPresent
+          name: auth
+          envFrom:
+            - secretRef:
+                name: admin-credentials
+            - secretRef:
+                name: supabase-access
+            - configMapRef:
+                name: auth-cfg
+            - configMapRef:
+                name: s3-cfg
+            - configMapRef:
+                name: redis-cfg
+            - configMapRef:
+                name: supabase-cfg

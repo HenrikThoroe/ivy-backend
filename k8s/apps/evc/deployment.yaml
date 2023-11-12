@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: evc
+  name: evc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evc
+  template:
+    metadata:
+      labels:
+        app: evc
+    spec:
+      containers:
+        - image: heth03/ivy:evc-latest
+          imagePullPolicy: IfNotPresent
+          name: evc
+          envFrom:
+            - secretRef:
+                name: minio-access
+            - secretRef:
+                name: supabase-access
+            - configMapRef:
+                name: evc-cfg
+            - configMapRef:
+                name: s3-cfg
+            - configMapRef:
+                name: redis-cfg
+            - configMapRef:
+                name: supabase-cfg
