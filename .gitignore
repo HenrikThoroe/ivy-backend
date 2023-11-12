@@ -42,3 +42,6 @@ dist/
 
 # logs
 log-files
+
+# Deployment secrets 
+k8s/secrets
