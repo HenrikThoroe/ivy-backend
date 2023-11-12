@@ -10,7 +10,7 @@ build () {
     ver=$(version $2)
 
     echo "Building $name@$ver at '$path'"
-    docker build -t heth03/ivy:$name-latest -t heth03/ivy:$name-$ver -f $path/Dockerfile .
+    docker build --platform linux/arm64 -t heth03/ivy:$name-latest -t heth03/ivy:$name-$ver -f $path/Dockerfile .
 }
 
 push () {
