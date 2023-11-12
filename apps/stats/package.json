@@ -1,6 +1,6 @@
 {
   "name": "stats",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "src/index.ts",
   "author": "Henrik Thoroe",
   "license": "GPL-3.0-or-later",
@@ -33,6 +33,7 @@
     "esbuild": "^0.19.2",
     "eslint-config-custom": "*",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "tsconfig": "*"
   }
 }

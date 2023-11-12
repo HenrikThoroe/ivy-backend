@@ -20,7 +20,8 @@
     "metrics": "*",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "tsconfig": "*"
   },
   "dependencies": {
     "@ivy-chess/api-schema": "*",
