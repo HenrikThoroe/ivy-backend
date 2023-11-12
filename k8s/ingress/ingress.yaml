@@ -26,6 +26,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: evc-service
+                name: evc-svc
                 port:
                   number: 4500
