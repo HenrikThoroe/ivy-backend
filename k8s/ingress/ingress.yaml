@@ -29,3 +29,10 @@ spec:
                 name: evc-svc
                 port:
                   number: 4500
+          - path: /auth(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: auth-svc
+                port:
+                  number: 4507
