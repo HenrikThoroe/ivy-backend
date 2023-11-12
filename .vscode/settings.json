@@ -21,6 +21,7 @@
     "rest",
     "metrics",
     "auth",
-    "auth-app"
+    "auth-app",
+    "infra"
   ]
 }
