@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ivy-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: s3.localhost
+      http:
+        paths:
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: s3-svc
+                port:
+                  number: 9001
+    - host: api.localhost
+      http:
+        paths:
+          - path: /evc(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: evc-service
+                port:
+                  number: 4500
