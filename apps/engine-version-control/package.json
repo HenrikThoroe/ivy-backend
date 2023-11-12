@@ -37,6 +37,7 @@
     "eslint-config-custom": "*",
     "nodemon": "^2.0.21",
     "ts-node": "^10.9.1",
+    "tsconfig": "*",
     "typescript": "^4.9.5"
   }
 }
