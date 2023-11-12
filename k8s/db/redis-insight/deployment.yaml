@@ -21,9 +21,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /db
-          env:
-            - name: APP_FOLDER_ABSOLUTE_PATH
-              value: '/db'
           ports:
             - containerPort: 5000
               protocol: TCP
