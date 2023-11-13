@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: stats
+  name: stats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stats
+  template:
+    metadata:
+      labels:
+        app: stats
+    spec:
+      containers:
+        - image: heth03/ivy:stats-latest
+          imagePullPolicy: IfNotPresent
+          name: stats
+          envFrom:
+            - secretRef:
+                name: supabase-access
+            - configMapRef:
+                name: stats-cfg
+            - configMapRef:
+                name: s3-cfg
+            - configMapRef:
+                name: redis-cfg
+            - configMapRef:
+                name: supabase-cfg

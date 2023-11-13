@@ -43,3 +43,38 @@ spec:
                 name: replays-svc
                 port:
                   number: 4505
+          - path: /gm(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gm-svc
+                port:
+                  number: 4501
+          - path: /gm/ws(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gm-svc
+                port:
+                  number: 4502
+          - path: /stats(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: stats-svc
+                port:
+                  number: 4506
+          - path: /test-driver(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: test-driver-svc
+                port:
+                  number: 4503
+          - path: /test-driver/ws(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: test-driver-svc
+                port:
+                  number: 4504

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: test-driver
+  name: test-driver-svc
+spec:
+  ports:
+    - port: 4503
+      protocol: TCP
+      targetPort: 4503
+      name: test-driver-http
+    - port: 4504
+      protocol: TCP
+      targetPort: 4504
+      name: test-driver-ws
+  selector:
+    app: test-driver
+  type: ClusterIP

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: stats
+  name: stats-svc
+spec:
+  ports:
+    - port: 4506
+      protocol: TCP
+      targetPort: 4506
+  selector:
+    app: stats
+  type: ClusterIP
