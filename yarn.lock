@@ -7168,7 +7168,7 @@ __metadata:
     eslint-plugin-n: "npm:^16.0.2"
     eslint-plugin-promise: "npm:^6.1.1"
     eslint-plugin-turbo: "npm:^1.10.15"
-    prettier: "npm:^3.0.2"
+    prettier: "npm:^3.1.0"
     turbo: "npm:^1.10.12"
   languageName: unknown
   linkType: soft
@@ -8942,12 +8942,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "prettier@npm:3.0.2"
+"prettier@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "prettier@npm:3.1.0"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 9d67f6f57be6e12fa82559f37689a47453d4a59334d88c490a0616d53de947215cdf3c145733f944057ba5158ea0e11524a2b24185c606e124474ca621baa73c
+  checksum: e95e8f93c6b9aea2ac1e86bebe329bee90c8c50d9a23d1f593eba8d7f39b33b3641eb28785001505b6723c47895a5322ad12a2fb855b289cb7bae450ffc34425
   languageName: node
   linkType: hard
 
