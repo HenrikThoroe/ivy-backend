@@ -41,16 +41,16 @@ export type Schema = {
 export type Value<T extends FieldType> = T extends 'string'
   ? StringField
   : T extends z.ZodType
-  ? JSONField<T>
-  : T extends DynamicStore<infer U>
-  ? DynamicStore<U>
-  : T extends StaticStore<infer U>
-  ? StaticStore<U>
-  : T extends 'set'
-  ? SetField
-  : T extends BitSetFieldConfig
-  ? BitSetField
-  : never
+    ? JSONField<T>
+    : T extends DynamicStore<infer U>
+      ? DynamicStore<U>
+      : T extends StaticStore<infer U>
+        ? StaticStore<U>
+        : T extends 'set'
+          ? SetField
+          : T extends BitSetFieldConfig
+            ? BitSetField
+            : never
 
 /**
  * A store is an abstract layer above {@link Field}s.
