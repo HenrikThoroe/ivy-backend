@@ -6307,6 +6307,7 @@ __metadata:
     metrics: "npm:*"
     nodemon: "npm:^2.0.21"
     rest: "npm:*"
+    tsconfig: "npm:*"
     typescript: "npm:^4.9.5"
     uuid: "npm:^9.0.0"
     wss: "npm:*"
@@ -9243,6 +9244,7 @@ __metadata:
     nodemon: "npm:^2.0.22"
     rest: "npm:*"
     ts-node: "npm:^10.9.1"
+    tsconfig: "npm:*"
     zod: "npm:^3.22.0"
   languageName: unknown
   linkType: soft
@@ -9850,6 +9852,7 @@ __metadata:
     rest: "npm:*"
     runtypes: "npm:^6.7.0"
     ts-node: "npm:^10.9.1"
+    tsconfig: "npm:*"
     uuid: "npm:^9.0.0"
   languageName: unknown
   linkType: soft
@@ -10159,6 +10162,7 @@ __metadata:
     nodemon: "npm:^2.0.22"
     rest: "npm:*"
     ts-node: "npm:^10.9.1"
+    tsconfig: "npm:*"
     typescript: "npm:^5.0.4"
     uuid: "npm:^9.0.0"
     wss: "npm:*"
