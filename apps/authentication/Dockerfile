@@ -10,7 +10,6 @@ WORKDIR /app
 COPY . .
 COPY ./.docker.yarnrc.yml ./.yarnrc.yml
 RUN corepack enable
-RUN yarn install
 RUN yarn dlx turbo prune authentication --docker
 
 # Add lockfile and package.json's of isolated subworkspace
