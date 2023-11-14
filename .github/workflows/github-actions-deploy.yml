@@ -1,6 +1,8 @@
 name: 'Deploy Application'
 on:
   workflow_dispatch:
+  release:
+    types: [created]
 jobs:
   install:
     runs-on: ubuntu-latest
