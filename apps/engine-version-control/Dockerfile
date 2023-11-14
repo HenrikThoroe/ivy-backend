@@ -9,6 +9,7 @@ RUN apk update
 WORKDIR /app
 COPY . .
 COPY ./.docker.yarnrc.yml ./.yarnrc.yml
+RUN yarn install
 RUN yarn dlx turbo prune engine-version-control --docker
 
 # Add lockfile and package.json's of isolated subworkspace
