@@ -39,7 +39,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
       - name: Install GPG
-        run: apt-get install gpg
+        run: sudo apt-get install gpg
       - name: Decrypt Kubeconfig
         run: gpg --batch --passphrase "$GPG_PASSPHRASE" --output ./kubecfg --decrypt ./chart/kubecfg.sec
       - name: Decrypt Secrets
