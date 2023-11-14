@@ -1,5 +1,15 @@
 #!/bin/bash
 
+exists () {
+    local code=$(curl -s -o /dev/null -w "%{http_code}" "https://hub.docker.com/v2/repositories/heth03/ivy/tags/$1")
+    
+    if [ $code -eq 200 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 version () {
     echo $(cat "$1/package.json" | grep '"version"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
 }
@@ -24,6 +34,16 @@ push () {
 }
 
 package () {
+    local ver=$(version $2)
+    local tag=$1-$ver
+
+    if exists $tag; then
+        echo "Tag $tag already exists"
+        return 0
+    fi
+
+    echo "Packaging $1@$ver at '$2'"
+
     build $1 $2
     push $1 $2
 }
