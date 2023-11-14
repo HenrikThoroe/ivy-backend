@@ -9,6 +9,7 @@ RUN apk update
 WORKDIR /app
 COPY . .
 COPY ./.docker.yarnrc.yml ./.yarnrc.yml
+RUN corepack enable
 RUN yarn install
 RUN yarn dlx turbo prune game-manager --docker
 
