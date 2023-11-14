@@ -45,3 +45,4 @@ log-files
 
 # Deployment secrets 
 k8s/secrets
+chart/secrets.yaml

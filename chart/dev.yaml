@@ -1,0 +1,18 @@
+Env:
+  Ports:
+    evc: 4500
+    auth: 4507
+    replays: 4505
+    gmHttp: 4501
+    gmWs: 4502
+    stats: 4506
+    testHttp: 4503
+    testWs: 4504
+
+Domain:
+  s3: s3.localhost
+  redis: redis.localhost
+  api: api.localhost
+
+TLS:
+  enabled: false
