@@ -4,4 +4,4 @@ metadata:
   name: redis-cnf
 data:
   redis.conf: |-
-    save 60 1
+    save 10 1
