@@ -3,9 +3,6 @@ on:
   workflow_dispatch:
   release:
     types: [created]
-  push:
-    branches:
-      - dev-deployment
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,7 +40,7 @@ jobs:
       - name: Install Chart on Cluster
         run: |
           gpg --batch --passphrase "$GPG_PASSPHRASE" --output ./kubecfg --decrypt ./chart/kubecfg.sec
-          gpg --batch --passphrase $GPG_PASSPHRASE --output ./chart/secrets.yaml --decrypt ./chart/secrets-prod.yaml.sec
+          gpg --batch --passphrase "$GPG_PASSPHRASE" --output ./chart/secrets.yaml --decrypt ./chart/secrets-prod.yaml.sec
           export KUBECONFIG=~/.kube/config:./kubecfg
           kubectl config use-context ivy
           helm upgrade --install ivy --values ./chart/secrets.yaml --values ./chart/prod.yaml ./chart
