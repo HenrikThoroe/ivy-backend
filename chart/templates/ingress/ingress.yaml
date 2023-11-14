@@ -6,10 +6,21 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
+    {{- if .Values.TLS.enabled }} 
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    {{- end }}
 spec:
   ingressClassName: nginx
+  {{- if .Values.TLS.enabled }} 
+  tls:
+  - hosts:
+      - {{ .Values.Domain.s3 }}
+      - {{ .Values.Domain.api }}
+    secretName: ivy-tls
+  {{- end }}
   rules:
-    - host: s3.localhost
+    - host: {{ .Values.Domain.s3 }}
       http:
         paths:
           - path: /()(.*)
@@ -19,7 +30,7 @@ spec:
                 name: s3-svc
                 port:
                   number: 9001
-    - host: api.localhost
+    - host: {{ .Values.Domain.api }}
       http:
         paths:
           - path: /evc(/|$)(.*)
@@ -28,53 +39,53 @@ spec:
               service:
                 name: evc-svc
                 port:
-                  number: 4500
+                  number: {{ .Values.Env.Ports.evc }}
           - path: /auth(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-svc
                 port:
-                  number: 4507
+                  number: {{ .Values.Env.Ports.auth }}
           - path: /replays(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: replays-svc
                 port:
-                  number: 4505
+                  number: {{ .Values.Env.Ports.replays }}
           - path: /gm(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: gm-svc
                 port:
-                  number: 4501
+                  number: {{ .Values.Env.Ports.gmHttp }}
           - path: /gm/ws(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: gm-svc
                 port:
-                  number: 4502
+                  number: {{ .Values.Env.Ports.gmWs }}
           - path: /stats(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: stats-svc
                 port:
-                  number: 4506
+                  number: {{ .Values.Env.Ports.stats }}
           - path: /test-driver(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: test-driver-svc
                 port:
-                  number: 4503
+                  number: {{ .Values.Env.Ports.testHttp }}
           - path: /test-driver/ws(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: test-driver-svc
                 port:
-                  number: 4504
+                  number: {{ .Values.Env.Ports.testWs }}

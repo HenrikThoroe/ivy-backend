@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: test-driver-cfg
-data:
-  TEST_PORT: '4503'
-  TEST_WSS_PORT: '4504'

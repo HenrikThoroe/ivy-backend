@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: evc-cfg
 data:
-  EVC_PORT: '4500'
+  EVC_PORT: {{ .Values.Env.Ports.evc | quote }}

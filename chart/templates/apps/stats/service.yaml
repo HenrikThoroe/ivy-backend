@@ -6,9 +6,9 @@ metadata:
   name: stats-svc
 spec:
   ports:
-    - port: 4506
+    - port: {{ .Values.Env.Ports.stats }}
       protocol: TCP
-      targetPort: 4506
+      targetPort: {{ .Values.Env.Ports.stats }}
   selector:
     app: stats
   type: ClusterIP

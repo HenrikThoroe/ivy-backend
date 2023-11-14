@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gm-cfg
+data:
+  GM_PORT: {{ .Values.Env.Ports.gmHttp | quote }}
+  GM_WSS_PORT: {{ .Values.Env.Ports.gmWs | quote }}

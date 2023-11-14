@@ -6,9 +6,9 @@ metadata:
   name: evc-svc
 spec:
   ports:
-    - port: 4500
+    - port: {{ .Values.Env.Ports.evc }}
       protocol: TCP
-      targetPort: 4500
+      targetPort: {{ .Values.Env.Ports.evc }}
   selector:
     app: evc
   type: ClusterIP

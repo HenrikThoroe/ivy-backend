@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: gm-cfg
-data:
-  GM_PORT: '4501'
-  GM_WSS_PORT: '4502'

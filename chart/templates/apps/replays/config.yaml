@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: replays-cfg
 data:
-  REPLAYS_PORT: '4505'
+  REPLAYS_PORT: {{ .Values.Env.Ports.replays | quote }}

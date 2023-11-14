@@ -6,13 +6,13 @@ metadata:
   name: test-driver-svc
 spec:
   ports:
-    - port: 4503
+    - port: {{ .Values.Env.Ports.testHttp }}
       protocol: TCP
-      targetPort: 4503
+      targetPort: {{ .Values.Env.Ports.testHttp }}
       name: test-driver-http
-    - port: 4504
+    - port: {{ .Values.Env.Ports.testWs }}
       protocol: TCP
-      targetPort: 4504
+      targetPort: {{ .Values.Env.Ports.testWs }}
       name: test-driver-ws
   selector:
     app: test-driver

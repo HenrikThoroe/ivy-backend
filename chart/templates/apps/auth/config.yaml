@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: auth-cfg
 data:
-  AUTH_PORT: '4507'
+  AUTH_PORT: {{ .Values.Env.Ports.auth | quote }}

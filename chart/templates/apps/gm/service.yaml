@@ -6,13 +6,13 @@ metadata:
   name: gm-svc
 spec:
   ports:
-    - port: 4501
+    - port: {{ .Values.Env.Ports.gmHttp }}
       protocol: TCP
-      targetPort: 4501
+      targetPort: {{ .Values.Env.Ports.gmHttp }}
       name: gm-http
-    - port: 4502
+    - port: {{ .Values.Env.Ports.gmWs }}
       protocol: TCP
-      targetPort: 4502
+      targetPort: 
       name: gm-ws
   selector:
     app: gm

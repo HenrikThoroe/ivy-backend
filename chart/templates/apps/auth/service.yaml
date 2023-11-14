@@ -6,9 +6,9 @@ metadata:
   name: auth-svc
 spec:
   ports:
-    - port: 4507
+    - port: {{ .Values.Env.Ports.auth }}
       protocol: TCP
-      targetPort: 4507
+      targetPort: {{ .Values.Env.Ports.auth }}
   selector:
     app: auth
   type: ClusterIP

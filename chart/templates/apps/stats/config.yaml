@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: stats-cfg
 data:
-  STATS_PORT: '4506'
+  STATS_PORT: {{ .Values.Env.Ports.stats | quote }}

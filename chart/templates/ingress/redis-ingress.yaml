@@ -7,10 +7,20 @@ metadata:
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: redis-basic-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    {{- if .Values.TLS.enabled }} 
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    {{- end }}
 spec:
   ingressClassName: nginx
+  {{- if .Values.TLS.enabled }} 
+  tls:
+  - hosts:
+      - {{ .Values.Domain.redis }}
+    secretName: ivy-tls
+  {{- end }}
   rules:
-    - host: redis.localhost
+    - host: {{ .Values.Domain.redis }}
       http:
         paths:
           - path: /

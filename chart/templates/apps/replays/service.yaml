@@ -6,9 +6,9 @@ metadata:
   name: replays-svc
 spec:
   ports:
-    - port: 4505
+    - port: {{ .Values.Env.Ports.replays }}
       protocol: TCP
-      targetPort: 4505
+      targetPort: {{ .Values.Env.Ports.replays }}
   selector:
     app: replays
   type: ClusterIP
