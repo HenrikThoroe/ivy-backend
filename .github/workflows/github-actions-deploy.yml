@@ -1,0 +1,23 @@
+name: 'Deploy Application'
+on: ['workflow_dispatch']
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    env:
+      GPG_PASSPHRASE: ${{ secrets.PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Kubernetes CLI
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+      - name: Install GPG
+        run: apt-get install gpg
+      - name: Decrypt Kubeconfig
+        run: gpg --batch --passphrase $GPG_PASSPHRASE --output ./kubecfg --decrypt ./chart/kubecfg.sec
+      - name: Decrypt Secrets
+        run: gpg --batch --passphrase $GPG_PASSPHRASE --output ./chart/secrets.yaml --decrypt ./chart/secrets.yaml.sec
+      - name: Install Chart on Cluster
+        run: helm upgrade --install ivy --values ./chart/secrets.yaml --values ./chart/prod.yaml ./chart
