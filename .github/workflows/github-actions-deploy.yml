@@ -41,5 +41,7 @@ jobs:
         run: gpg --batch --passphrase "$GPG_PASSPHRASE" --output ./kubecfg --decrypt ./chart/kubecfg.sec
       - name: Decrypt Secrets
         run: gpg --batch --passphrase $GPG_PASSPHRASE --output ./chart/secrets.yaml --decrypt ./chart/secrets.yaml.sec
+      - name: Use Kubeconfig
+        run: mv ./kubecfg ~/.kube/config && kubectl config use-context ivy
       - name: Install Chart on Cluster
         run: helm upgrade --install ivy --values ./chart/secrets.yaml --values ./chart/prod.yaml ./chart
