@@ -6,8 +6,8 @@ Env:
     gmHttp: 4501
     gmWs: 4502
     stats: 4506
-    testDriverHttp: 4503
-    testDriverWs: 4504
+    testHttp: 4503
+    testWs: 4504
 
 Domain:
   s3: s3.ivy-chess.com
