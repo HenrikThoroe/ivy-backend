@@ -1,0 +1,8 @@
+node_modules
+.dev
+dist
+log-files
+k8s
+docs
+.github
+.changeset

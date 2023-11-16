@@ -1,0 +1,13 @@
+compressionLevel: mixed
+
+enableGlobalCache: false
+
+ignorePath: true
+
+nodeLinker: node-modules
+
+npmAlwaysAuth: false
+
+npmPublishAccess: public
+
+yarnPath: .yarn/releases/yarn-4.0.1.cjs

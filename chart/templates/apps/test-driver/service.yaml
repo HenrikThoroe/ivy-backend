@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: test-driver
+  name: test-driver-svc
+spec:
+  ports:
+    - port: {{ .Values.Env.Ports.testHttp }}
+      protocol: TCP
+      targetPort: {{ .Values.Env.Ports.testHttp }}
+      name: test-driver-http
+    - port: {{ .Values.Env.Ports.testWs }}
+      protocol: TCP
+      targetPort: {{ .Values.Env.Ports.testWs }}
+      name: test-driver-ws
+  selector:
+    app: test-driver
+  type: ClusterIP

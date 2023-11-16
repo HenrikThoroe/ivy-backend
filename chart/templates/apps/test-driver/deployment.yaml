@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test-driver
+  name: test-driver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-driver
+  template:
+    metadata:
+      labels:
+        app: test-driver
+    spec:
+      containers:
+        - image: heth03/ivy:test-latest
+          imagePullPolicy: IfNotPresent
+          name: test-driver
+          envFrom:
+            - secretRef:
+                name: supabase-access
+            - configMapRef:
+                name: test-driver-cfg
+            - configMapRef:
+                name: s3-cfg
+            - configMapRef:
+                name: redis-cfg
+            - configMapRef:
+                name: supabase-cfg

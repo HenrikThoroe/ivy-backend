@@ -10,5 +10,6 @@
     "noEmit": true,
     "strict": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "include": ["../../environment.d.ts", "src/**/*.ts"]
 }

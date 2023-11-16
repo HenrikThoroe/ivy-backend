@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: replays
+  name: replays-svc
+spec:
+  ports:
+    - port: {{ .Values.Env.Ports.replays }}
+      protocol: TCP
+      targetPort: {{ .Values.Env.Ports.replays }}
+  selector:
+    app: replays
+  type: ClusterIP

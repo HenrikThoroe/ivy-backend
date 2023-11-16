@@ -68,8 +68,8 @@ export function scanDiagonal(
         ? -1
         : 1
       : direction === 'backward'
-      ? -1
-      : 1
+        ? -1
+        : 1
 
   if (diagonal === 'descending') {
     return scan(board, index, 9 * factor, 'diagonal')

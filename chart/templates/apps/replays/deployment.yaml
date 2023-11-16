@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: replays
+  name: replays
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: replays
+  template:
+    metadata:
+      labels:
+        app: replays
+    spec:
+      containers:
+        - image: heth03/ivy:replays-latest
+          imagePullPolicy: IfNotPresent
+          name: replays
+          envFrom:
+            - secretRef:
+                name: supabase-access
+            - configMapRef:
+                name: replays-cfg
+            - configMapRef:
+                name: s3-cfg
+            - configMapRef:
+                name: redis-cfg
+            - configMapRef:
+                name: supabase-cfg

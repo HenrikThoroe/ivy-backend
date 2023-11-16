@@ -42,3 +42,8 @@ dist/
 
 # logs
 log-files
+
+# Deployment secrets 
+k8s/secrets
+chart/secrets*.yaml
+chart/kubecfg

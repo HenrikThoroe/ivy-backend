@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-cnf
+data:
+  redis.conf: |-
+    save 10 1

@@ -1,0 +1,95 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ivy-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+    nginx.org/websocket-services: "test-driver-svc,gm-svc"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: "test-driver-svc,gm-svc"
+    {{- if .Values.TLS.enabled }} 
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    {{- end }}
+spec:
+  ingressClassName: nginx
+  {{- if .Values.TLS.enabled }} 
+  tls:
+  - hosts:
+      - {{ .Values.Domain.s3 }}
+      - {{ .Values.Domain.api }}
+    secretName: ivy-tls
+  {{- end }}
+  rules:
+    - host: {{ .Values.Domain.s3 }}
+      http:
+        paths:
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: s3-svc
+                port:
+                  number: 9001
+    - host: {{ .Values.Domain.api }}
+      http:
+        paths:
+          - path: /evc(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: evc-svc
+                port:
+                  number: {{ .Values.Env.Ports.evc }}
+          - path: /auth(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: auth-svc
+                port:
+                  number: {{ .Values.Env.Ports.auth }}
+          - path: /replays(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: replays-svc
+                port:
+                  number: {{ .Values.Env.Ports.replays }}
+          - path: /gm(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gm-svc
+                port:
+                  number: {{ .Values.Env.Ports.gmHttp }}
+          - path: /gm/ws(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gm-svc
+                port:
+                  number: {{ .Values.Env.Ports.gmWs }}
+          - path: /stats(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: stats-svc
+                port:
+                  number: {{ .Values.Env.Ports.stats }}
+          - path: /test-driver(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: test-driver-svc
+                port:
+                  number: {{ .Values.Env.Ports.testHttp }}
+          - path: /test-driver/ws(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: test-driver-svc
+                port:
+                  number: {{ .Values.Env.Ports.testWs }}

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-driver-cfg
+data:
+  TEST_PORT: {{ .Values.Env.Ports.testHttp | quote }}
+  TEST_WSS_PORT: {{ .Values.Env.Ports.testWs | quote }}

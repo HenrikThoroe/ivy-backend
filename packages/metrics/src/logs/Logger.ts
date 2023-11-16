@@ -33,9 +33,15 @@ export abstract class Logger<D extends LogData> {
   public readonly scope: string
 
   constructor(scope: string) {
+    const transports: winston.transport[] = [this.consoleTransport]
+
+    if (process.env.NODE_ENV === 'development') {
+      transports.push(this.fileTransport)
+    }
+
     this.scope = scope
     this.logger = winston.createLogger({
-      transports: [this.consoleTransport, this.fileTransport],
+      transports,
       format: winston.format.combine(winston.format.timestamp(), winston.format.metadata()),
     })
   }
