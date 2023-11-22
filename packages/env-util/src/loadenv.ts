@@ -14,5 +14,5 @@ export function loadenv() {
   const projectDir = path.resolve(__dirname, '../../../')
   const env = process.env.NODE_ENV
 
-  loadEnvConfig(projectDir, env !== 'production')
+  loadEnvConfig(projectDir, env === 'development')
 }
