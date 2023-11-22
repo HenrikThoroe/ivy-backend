@@ -5,6 +5,7 @@ import { z } from 'zod'
  * A sink accepts messages to be sent.
  */
 export interface Sink<S extends InSchema> {
+  drain: () => Promise<void>
   send: <K extends Extract<keyof S, string>>(event: K, data: z.infer<S[K]>) => Promise<void>
 }
 

@@ -180,6 +180,7 @@ export class Server<In extends InSchema, Out extends OutSchema, ClientState, Ser
 
   private buildSink(ws: WebSocket): Sink<Out> {
     return {
+      drain: async () => ws.close(),
       send: async (event, data) => {
         const start = performance.now()
         const val = this.schema.output[event].safeParse(data)
