@@ -1,6 +1,7 @@
 export * as engine from './engine'
 export * as game from './game'
 export * as generic from './generic'
+export * as live from './live'
 export * as replay from './replay'
 export * as stats from './stats'
 export * as test from './test'
