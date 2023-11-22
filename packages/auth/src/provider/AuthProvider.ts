@@ -9,12 +9,39 @@ export interface UserData {
   id: string
 }
 
-interface SessionData {
+/**
+ * The data of a session.
+ */
+export interface SessionData {
+  /**
+   * The access token.
+   */
   access_token: string
+
+  /**
+   * The refresh token.
+   */
   refresh_token: string
+
+  /**
+   * The time when the access token expires.
+   */
   expires_at?: number
+
+  /**
+   * The time in seconds until the access token expires.
+   */
   expires_in: number
+
+  /**
+   * The type of the token. Usually `bearer`.
+   */
   token_type: string
+
+  /**
+   * The user data.
+   */
+  user: UserData
 }
 
 /**
