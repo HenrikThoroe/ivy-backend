@@ -1,85 +1,98 @@
 import { api } from '@ivy-chess/api-schema'
+import { StandardLogger } from 'metrics'
 import { wss } from 'wss'
-import { Client } from '../service/Client'
-import { MatchMaker } from '../service/MatchMaker'
+import { PlayerClient } from '../service/state/PlayerClient'
+import { PlayerServerState } from '../service/state/PlayerServerState'
 
 /**
- * WebSocket server for game clients.
+ * WebSocket server for player clients.
  */
-export const gameSocket = wss(api.games.ws.gameInterface, new MatchMaker(), {
-  state: async (sink) => new Client(sink),
+export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerState(), {
+  state: async (sink) => new PlayerClient(sink),
 
   onClose: async (state) => {
-    const id = state.server.id(state.client)
-
-    if (id) {
-      state.server.remove(id)
+    if (state.client.isInitialized) {
+      StandardLogger.default.info(`Client ${state.client.id} disconnected`)
+      state.server.unregister(state.client.id)
     }
   },
 
-  onError: async (sink, _, error) => {
-    if ('message' in error) {
-      await sink.send('error', { key: 'error', message: error.message })
-    }
+  onError: async (_, state) => {
+    state.client.kill()
   },
 
   handlers: {
     checkIn: async (_, state, message) => {
-      const game = await state.server.game(message.game)
+      const id = message.player
 
-      if (game.white !== message.player && game.black !== message.player) {
-        throw new Error('Player is not registered for this game.')
+      state.client.init(id)
+      state.server.register(id, state.client)
+
+      StandardLogger.default.info(`Client ${id} connected`)
+
+      const game = await state.server.games.gameId(id)
+      const transaction = await state.server.games.transaction(game)
+      const next = transaction.next
+      const client = state.server.fetch(next)
+
+      if (client && !transaction.isFinished && state.server.has(...transaction.participants)) {
+        await client.requestMove(transaction.history)
       }
 
-      state.server.add(message.game, message.player, state.client)
+      if (transaction.isFinished) {
+        transaction.participants.map(state.server.fetch).forEach((c) => {
+          c?.kill()
+        })
+      }
     },
 
     move: async (_, state, message) => {
-      const game = await state.server.game(message.game)
-      const opponent = state.server.opponent(message.game, message.player)
+      const id = state.client.id
+      const game = await state.server.games.gameId(id)
+      const transaction = await state.server.games.transaction(game)
 
-      await game.move(message.player, message.move)
-      await state.client.publishState(game)
+      if (transaction.next !== id) {
+        throw new Error(`Received move from ${id} but expecetd from ${transaction.next}`)
+      }
 
-      if (opponent) {
-        await opponent.publishState(game)
+      transaction.move(message.move)
+      await transaction.commit()
 
-        if (game.next) {
-          await opponent.requestMove(game)
+      if (!transaction.isFinished) {
+        const next = transaction.next
+        const client = state.server.fetch(next)
+
+        if (client) {
+          await client.requestMove(transaction.history)
         }
+      } else {
+        transaction.participants.map(state.server.fetch).forEach((c) => {
+          c?.kill()
+        })
       }
     },
 
-    resign: async (_, state, message) => {
-      const game = await state.server.game(message.game)
-      const opponent = state.server.opponent(message.game, message.player)
+    resign: async (_, state) => {
+      const id = state.client.id
+      const game = await state.server.games.gameId(id)
+      const transaction = await state.server.games.transaction(game)
 
-      await game.resign(message.player)
-      await state.client.publishState(game)
-      await opponent?.publishState(game)
-    },
+      transaction.resign(id)
+      await transaction.commit()
 
-    register: async (_, state, message) => {
-      const game = await state.server.game(message.game)
-      const id = await game.register(message.color)
-
-      state.server.add(message.game, id, state.client)
-
-      const white = await state.server.white(message.game)
-      const opponent = state.server.opponent(message.game, id)
-
-      await state.client.confirmRegistration(id, game)
-
-      if (white && opponent) {
-        await white.requestMove(game)
+      if (transaction.isFinished) {
+        transaction.participants.map(state.server.fetch).forEach((c) => {
+          c?.kill()
+        })
       }
     },
 
-    ping: async (sink) => sink.send('pong', { key: 'pong' }),
+    update: async (_, state) => {
+      const id = state.client.id
+      const game = await state.server.games.gameId(id)
+      const transaction = await state.server.games.transaction(game)
 
-    state: async (_, state, message) => {
-      const game = await state.server.game(message.game)
-      await state.client.publishState(game)
+      await state.client.update(transaction.history)
     },
   },
 })
