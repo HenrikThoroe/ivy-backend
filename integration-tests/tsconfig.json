@@ -1,0 +1,4 @@
+{
+  "extends": "tsconfig/base.json",
+  "include": ["../environment.d.ts", "__tests__/**/*.ts", "tools/**/*.ts", "jest.config.ts"]
+}

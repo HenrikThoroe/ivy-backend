@@ -1,0 +1,22 @@
+{
+  "name": "integration-tests",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "author": "Henrik Thoroe",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "scripts": {
+    "test:int": "jest --runInBand",
+    "lint": "eslint --ext .ts ./tools"
+  },
+  "devDependencies": {
+    "@ivy-chess/api-schema": "*",
+    "@types/cookiejar": "^2.1.5",
+    "@types/supertest": "^2.0.16",
+    "env-util": "*",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "kv-store": "*",
+    "zod": "^3.22.0"
+  }
+}
