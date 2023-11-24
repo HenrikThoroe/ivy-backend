@@ -177,7 +177,7 @@ function hasRepitition(game: Game) {
  *
  * @param game The game to apply the move to.
  * @param code The FEN encoded move.
- * @throws If the move is not valid or the game is not active.
+ * @throws If the move is not valid, the game is not active or the time has run out.
  */
 export function move(game: Game, code: string) {
   if (game.state !== 'active') {
@@ -185,7 +185,7 @@ export function move(game: Game, code: string) {
   }
 
   if (!validateTime(game)) {
-    return
+    throw Error(`Cannot perform move after time out.`)
   }
 
   const move = parseMove(game, code)
@@ -195,19 +195,19 @@ export function move(game: Game, code: string) {
       game.state = 'expired'
       game.reason = 'rule-violation'
       game.winner = getEnemy(game.board)
+      throw new Error(`Cannot perform nullmove while checked.`)
     } else {
       game.history.push(move)
       game.board.enPassant = undefined
       game.board.halfMoveCounter += 1
       game.board.fullMoveCounter += game.board.next === 'black' ? 1 : 0
       game.board.next = getEnemy(game.board)
+      return
     }
-
-    return
   }
 
   if (!validateMove(game, move)) {
-    return
+    throw Error(`Invalid move '${code}'.`)
   }
 
   let result = gameResult(game.board)
