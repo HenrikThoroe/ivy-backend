@@ -1,3 +1,4 @@
+import { expect } from '@jest/globals'
 import { ApiTest } from '../ApiTest'
 import { Environment } from '../Environment'
 import { WSApiTest } from '../WSApiTest'
