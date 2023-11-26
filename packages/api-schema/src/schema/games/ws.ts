@@ -45,8 +45,9 @@ export const resignMessage = z.object({
 /**
  * Schema for a state request message.
  */
-export const stateRequestMessage = z.object({
-  key: z.literal('state-req-msg'),
+export const stateSubscriptionMessage = z.object({
+  key: z.literal('subscribe-msg'),
+  id: z.string().nonempty(),
 })
 
 /**
@@ -86,7 +87,7 @@ export const playerInterface = io(
  */
 export const spectatorInterface = io(
   {
-    state: stateRequestMessage,
+    subscribe: stateSubscriptionMessage,
   },
   {
     state: stateMessage,
