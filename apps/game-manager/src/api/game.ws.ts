@@ -36,7 +36,7 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
       const client = state.server.fetch(next)
 
       if (client && !transaction.isFinished && state.server.has(...transaction.participants)) {
-        await client.requestMove(transaction.history)
+        await client.requestMove(transaction.history, transaction.recommendedTime(client.id))
       }
 
       if (transaction.isFinished) {
@@ -63,7 +63,7 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
         const client = state.server.fetch(next)
 
         if (client) {
-          await client.requestMove(transaction.history)
+          await client.requestMove(transaction.history, transaction.recommendedTime(client.id))
         }
       } else {
         transaction.participants.map(state.server.fetch).forEach((c) => {
