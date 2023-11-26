@@ -92,7 +92,7 @@ export class GameStore {
    * @returns The created game.
    */
   public async create(options: CreateOptions): Promise<LiveGame> {
-    const game = create({ timeout: options.time ?? Infinity, timeback: options.timeback ?? 0 })
+    const game = create({ timeout: Number.MAX_SAFE_INTEGER, timeback: 0 })
     const playerIds = {
       white: register(game, 'white'),
       black: register(game, 'black'),
