@@ -4,4 +4,5 @@ metadata:
   name: gm-cfg
 data:
   GM_PORT: {{ .Values.Env.Ports.gmHttp | quote }}
-  GM_WSS_PORT: {{ .Values.Env.Ports.gmWs | quote }}
+  GM_PLAYER_PORT: {{ .Values.Env.Ports.gmPlayerWs | quote }}
+  GM_SPECTATOR_PORT: {{ .Values.Env.Ports.gmSpectatorWs | quote }}

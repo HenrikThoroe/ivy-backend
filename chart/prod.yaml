@@ -4,7 +4,8 @@ Env:
     auth: 4507
     replays: 4505
     gmHttp: 4501
-    gmWs: 4502
+    gmPlayerWs: 4502
+    gmSpectatorWs: 4508
     stats: 4506
     testHttp: 4503
     testWs: 4504
