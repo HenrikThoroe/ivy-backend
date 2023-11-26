@@ -7,7 +7,11 @@ import { sleep } from './sleep'
 
 const playerInterface = api.games.ws.playerInterface
 
+const spectatorInterface = api.games.ws.spectatorInterface
+
 type GMPlayerApi = WSApiTest<typeof playerInterface.input, typeof playerInterface.output>
+
+type GMSpectatorApi = WSApiTest<typeof spectatorInterface.input, typeof spectatorInterface.output>
 
 /**
  * A wrapper around the `WebSocket` class
@@ -49,8 +53,24 @@ export class WSApiTest<I extends InSchema, O extends OutSchema> {
    * @returns A new {@link WSApiTest}.
    */
   public static async gameManagerPlayer(): Promise<GMPlayerApi> {
-    const socket = new WebSocket(`ws://localhost:${process.env.GM_WSS_PORT}`)
+    const socket = new WebSocket(`ws://localhost:${process.env.GM_PLAYER_PORT}`)
     const ws = new WSApiTest(socket, playerInterface)
+
+    return new Promise((resolve) => {
+      socket.once('open', () => {
+        resolve(ws)
+      })
+    })
+  }
+
+  /**
+   * A factory method for creating a new {@link WSApiTest} for the game manager spectator API.
+   *
+   * @returns A new {@link WSApiTest}.
+   */
+  public static async gameManagerSpectator(): Promise<GMSpectatorApi> {
+    const socket = new WebSocket(`ws://localhost:${process.env.GM_SPECTATOR_PORT}`)
+    const ws = new WSApiTest(socket, spectatorInterface)
 
     return new Promise((resolve) => {
       socket.once('open', () => {
