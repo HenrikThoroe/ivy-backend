@@ -61,6 +61,16 @@ export class GameTransaction {
   }
 
   /**
+   * The time the given player should use for the next move.
+   *
+   * @param player The id of the player.
+   * @returns The time the player should use for the next move.
+   */
+  public recommendedTime(player: string): number | undefined {
+    return this.game.players[this.color(player)].time
+  }
+
+  /**
    * Applies a move to the game.
    * This methods will modify the game state
    * and requires a commit to persist the changes.
