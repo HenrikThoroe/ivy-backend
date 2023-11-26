@@ -1,5 +1,11 @@
 # @ivy-chess/model
 
+## 0.2.0
+
+### Minor Changes
+
+- Updated move processing behaviour
+
 ## 0.1.5
 
 ### Patch Changes

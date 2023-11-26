@@ -1,5 +1,16 @@
 # @ivy-chess/api-schema
 
+## 0.7.0
+
+### Minor Changes
+
+- Updated live gameplay API
+
+### Patch Changes
+
+- Updated dependencies
+  - @ivy-chess/model@0.2.0
+
 ## 0.6.2
 
 ### Patch Changes
