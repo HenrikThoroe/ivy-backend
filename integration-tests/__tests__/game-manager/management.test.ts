@@ -23,8 +23,6 @@ describe('Game-Manager Management API', () => {
               type: 'human',
             },
           },
-          time: 100,
-          timeback: 10,
         })
         .success()
 
@@ -40,8 +38,6 @@ describe('Game-Manager Management API', () => {
               type: 'human',
             },
           },
-          time: 100,
-          timeback: 10,
         })
         .fetch()
         .expect(500)
@@ -70,8 +66,6 @@ describe('Game-Manager Management API', () => {
               type: 'human',
             },
           },
-          time: 100,
-          timeback: 10,
         })
         .success()
 
