@@ -1,4 +1,5 @@
 import { Endpoint, Route, RouteConfig, api } from '@ivy-chess/api-schema'
+import { expect } from '@jest/globals'
 import request from 'supertest'
 import { z } from 'zod'
 

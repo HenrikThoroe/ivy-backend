@@ -1,9 +1,10 @@
 import { api } from '@ivy-chess/api-schema'
 import { Color, LiveGame, create, register } from '@ivy-chess/model'
 import { store } from 'kv-store'
+import { z } from 'zod'
 import { GameTransaction } from './GameTransaction'
 
-type CreateOptions = Zod.infer<typeof api.games.http.createSchema>
+type CreateOptions = z.infer<typeof api.games.http.createSchema>
 
 /**
  * A store for live games.

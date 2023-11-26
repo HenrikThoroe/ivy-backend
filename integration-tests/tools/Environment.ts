@@ -15,8 +15,6 @@ export class Environment {
    */
   public static token: string = ''
 
-  private constructor() {}
-
   //* API
 
   /**

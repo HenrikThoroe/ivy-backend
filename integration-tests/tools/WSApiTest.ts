@@ -1,4 +1,5 @@
 import { IOSchema, InSchema, OutSchema, api } from '@ivy-chess/api-schema'
+import { expect } from '@jest/globals'
 import { WebSocket } from 'ws'
 import { z } from 'zod'
 import { Environment } from './Environment'
