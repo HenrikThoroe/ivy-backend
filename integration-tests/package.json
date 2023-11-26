@@ -15,8 +15,8 @@
     "@types/supertest": "^2.0.16",
     "env-util": "*",
     "jest": "^29.7.0",
-    "supertest": "^6.3.3",
     "kv-store": "*",
+    "supertest": "^6.3.3",
     "zod": "^3.22.0"
   }
 }
