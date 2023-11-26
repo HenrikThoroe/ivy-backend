@@ -66,8 +66,9 @@ export class PlayerClient {
    * their history is equal.
    *
    * @param history The history of the game.
+   * @param time The recommended time for the next move.
    */
-  public async requestMove(history: string[]) {
+  public async requestMove(history: string[], time?: number) {
     const hash = history.join('')
     const lastHash = this.lastMoveRequestHistory?.join('')
 
@@ -78,6 +79,7 @@ export class PlayerClient {
     await this.sink.send('move', {
       key: 'move-req-msg',
       history,
+      time,
     })
 
     this.lastMoveRequestHistory = history
