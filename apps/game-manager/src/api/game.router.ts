@@ -2,21 +2,19 @@ import { api } from '@ivy-chess/api-schema'
 import { router } from 'rest'
 import { GameStore } from '../service/games/GameStore'
 
-const store = new GameStore()
-
 /**
  * Router for game management.
  */
 export const gameRouter = router(api.games.http.gamesRoute, {
   create: async ({ body }, success) => {
-    return success(await store.create(body))
+    return success(await GameStore.shared.create(body))
   },
 
   list: async (_, success) => {
-    return success(await store.gameIds())
+    return success(await GameStore.shared.gameIds())
   },
 
   get: async ({ params }, success) => {
-    return success(await store.fetch(params.id))
+    return success(await GameStore.shared.fetch(params.id))
   },
 })

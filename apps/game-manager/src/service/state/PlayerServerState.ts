@@ -12,7 +12,7 @@ import { PlayerClient } from './PlayerClient'
 export class PlayerServerState {
   private readonly clients = new Map<string, PlayerClient>()
 
-  private readonly store = new GameStore()
+  private readonly store = GameStore.shared
 
   constructor() {
     this.fetch = this.fetch.bind(this)

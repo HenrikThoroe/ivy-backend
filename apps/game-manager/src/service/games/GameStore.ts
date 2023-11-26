@@ -1,10 +1,16 @@
 import { api } from '@ivy-chess/api-schema'
 import { Color, LiveGame, create, register } from '@ivy-chess/model'
 import { store } from 'kv-store'
+import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 import { GameTransaction } from './GameTransaction'
 
 type CreateOptions = z.infer<typeof api.games.http.createSchema>
+
+interface Subscription {
+  id: string
+  action: (game: LiveGame) => void
+}
 
 /**
  * A store for live games.
@@ -15,7 +21,49 @@ type CreateOptions = z.infer<typeof api.games.http.createSchema>
 export class GameStore {
   private readonly db = store.take('games').take('live')
 
+  private readonly subscriptions = new Map<string, Subscription[]>()
+
+  /**
+   * The shared instance of the game store.
+   */
+  public static readonly shared = new GameStore()
+
   //* API
+
+  /**
+   * Subscribes to updates of the game with the given id.
+   * The given action will be called whenever the game is updated.
+   *
+   * @param game The id of the game.
+   * @param action The action to be called when the game is updated.
+   * @returns The id of the subscription.
+   */
+  public subscribe(game: string, action: (game: LiveGame) => void) {
+    const subscriptions = this.subscriptions.get(game) ?? []
+    const id = uuid()
+
+    subscriptions.push({ id, action })
+    this.subscriptions.set(game, subscriptions)
+
+    return id
+  }
+
+  /**
+   * Unsubscribes from updates of the game with the given id.
+   *
+   * @param game The id of the game.
+   * @param id The id of the subscription.
+   */
+  public unsubscribe(game: string, id: string) {
+    const subscriptions = this.subscriptions.get(game) ?? []
+    const index = subscriptions.findIndex((subscription) => subscription.id === id)
+
+    if (index !== -1) {
+      subscriptions.splice(index, 1)
+    }
+
+    this.subscriptions.set(game, subscriptions)
+  }
 
   /**
    * Fetches the ids of all games.
@@ -80,6 +128,9 @@ export class GameStore {
 
     return new GameTransaction(game, async (game) => {
       await this.db.take(game.id).write(game)
+
+      const subscriptions = this.subscriptions.get(game.id) ?? []
+      subscriptions.forEach((subscription) => subscription.action(game))
     })
   }
 
