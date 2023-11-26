@@ -8,6 +8,7 @@ import { io } from '../../types/io'
 export const moveRequestMessage = z.object({
   key: z.literal('move-req-msg'),
   history: z.array(z.string().nonempty()),
+  time: z.number().int().positive().optional(),
 })
 
 /**
