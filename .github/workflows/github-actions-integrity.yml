@@ -10,6 +10,18 @@ jobs:
         with:
           node-version: '20.x'
       - run: corepack enable
-      - run: yarn set version canary
       - run: yarn install --immutable
       - run: yarn test
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - run: docker compose -d -f ./integration-tests/docker-compose.yml
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn start:test &
+      - run: yarn test:int
