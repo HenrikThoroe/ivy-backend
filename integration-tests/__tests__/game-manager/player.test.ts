@@ -1,40 +1,7 @@
 import { ApiTest } from '../../tools/ApiTest'
 import { Environment } from '../../tools/Environment'
 import { WSApiTest } from '../../tools/WSApiTest'
-
-const setupGame = async () => {
-  const white = await WSApiTest.gameManagerPlayer()
-  const black = await WSApiTest.gameManagerPlayer()
-  const game = await ApiTest.game('create')
-    .token(Environment.token)
-    .data({
-      players: {
-        white: {
-          type: 'human',
-        },
-        black: {
-          type: 'human',
-        },
-      },
-    })
-    .success()
-
-  white.send('checkIn', {
-    key: 'check-in-msg',
-    player: game.players.white.id,
-  })
-
-  expect(await white.isConnected()).toBe(true)
-
-  black.send('checkIn', {
-    key: 'check-in-msg',
-    player: game.players.black.id,
-  })
-
-  expect(await black.isConnected()).toBe(true)
-
-  return { white, black, game }
-}
+import { setupGame } from '../../tools/testflows/setupGame'
 
 describe('Game-Manager Player API', () => {
   beforeAll(Environment.setUp)
