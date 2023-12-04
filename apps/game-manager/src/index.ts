@@ -1,4 +1,5 @@
 import { AuthFactory } from 'auth'
+import cors from 'cors'
 import { loadenv } from 'env-util'
 import express from 'express'
 import helmet from 'helmet'
@@ -6,8 +7,10 @@ import { HTTPLogger, WSSLogger } from 'metrics'
 import { gameRouter } from './api/game.router'
 import { playerSocket } from './api/player.ws'
 import { spectatorSocket } from './api/spectator.ws'
+import { GameStore } from './service/games/GameStore'
 
 loadenv()
+GameStore.shared.resetConnections()
 
 const app = express()
 const factory = process.env.NODE_ENV === 'test' ? AuthFactory.local : AuthFactory.supabase
@@ -24,6 +27,7 @@ const logger = {
   spectator: new WSSLogger('Spectator'),
 }
 
+app.use(cors())
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
