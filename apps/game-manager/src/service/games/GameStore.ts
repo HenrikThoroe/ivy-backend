@@ -31,6 +31,22 @@ export class GameStore {
   //* API
 
   /**
+   * Resets the connection status of all players.
+   */
+  public async resetConnections() {
+    for (const id of await this.db.keys()) {
+      const game = await this.db.take(id).read()
+
+      if (game) {
+        game.players.white.connected = false
+        game.players.black.connected = false
+
+        await this.db.take(id).write(game)
+      }
+    }
+  }
+
+  /**
    * Subscribes to updates of the game with the given id.
    * The given action will be called whenever the game is updated.
    *
@@ -124,14 +140,16 @@ export class GameStore {
    * @throws If no game is found for the given id.
    */
   public async transaction(id: string): Promise<GameTransaction> {
-    const game = await this.fetch(id)
+    return await GameTransaction.acquire(
+      id,
+      () => this.fetch(id),
+      async (game) => {
+        await this.db.take(game.id).write(game)
 
-    return new GameTransaction(game, async (game) => {
-      await this.db.take(game.id).write(game)
-
-      const subscriptions = this.subscriptions.get(game.id) ?? []
-      subscriptions.forEach((subscription) => subscription.action(game))
-    })
+        const subscriptions = this.subscriptions.get(game.id) ?? []
+        subscriptions.forEach((subscription) => subscription.action(game))
+      },
+    )
   }
 
   /**
