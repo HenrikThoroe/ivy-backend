@@ -8,12 +8,24 @@ import { PlayerServerState } from '../service/state/PlayerServerState'
  * WebSocket server for player clients.
  */
 export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerState(), {
-  state: async (sink) => new PlayerClient(sink),
+  state: async (sink) => {
+    StandardLogger.default.info(`WebSocket player client connected`)
+    return new PlayerClient(sink)
+  },
 
   onClose: async (state) => {
+    StandardLogger.default.info(`WebSocket player client disconnected`)
+
     if (state.client.isInitialized) {
       StandardLogger.default.info(`Client ${state.client.id} disconnected`)
+
+      const transaction = await state.server.games.transaction(
+        await state.server.games.gameId(state.client.id),
+      )
+
       state.server.unregister(state.client.id)
+      transaction.disconnect(state.client.id)
+      await transaction.commit()
     }
   },
 
@@ -24,16 +36,24 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
   handlers: {
     checkIn: async (_, state, message) => {
       const id = message.player
+      const gameID = await state.server.games.gameId(id)
+      const game = await state.server.games.fetch(gameID)
+
+      if (!game.isActive) {
+        throw new Error(`Game ${gameID} is not active.`)
+      }
 
       state.client.init(id)
       state.server.register(id, state.client)
 
       StandardLogger.default.info(`Client ${id} connected`)
 
-      const game = await state.server.games.gameId(id)
-      const transaction = await state.server.games.transaction(game)
+      const transaction = await state.server.games.transaction(gameID)
       const next = transaction.next
       const client = state.server.fetch(next)
+
+      transaction.connect(id)
+      await transaction.commit()
 
       if (client && !transaction.isFinished && state.server.has(...transaction.participants)) {
         await client.requestMove(transaction.history, transaction.recommendedTime(client.id))
@@ -52,6 +72,7 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
       const transaction = await state.server.games.transaction(game)
 
       if (transaction.next !== id) {
+        transaction.cancel()
         throw new Error(`Received move from ${id} but expecetd from ${transaction.next}`)
       }
 
@@ -93,6 +114,7 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
       const transaction = await state.server.games.transaction(game)
 
       await state.client.update(transaction.history)
+      transaction.cancel()
     },
   },
 })
