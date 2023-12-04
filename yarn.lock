@@ -3047,6 +3047,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/async-lock@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@types/async-lock@npm:1.4.2"
+  checksum: d5b18e24bc378ccf7a548720c09bdaa87ad4abf500a96d52b5e64da3b4f26b5ed78f36a04f30769f10b789136efb95428c93493dec9506d2a6b0c96b55187702
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -3830,6 +3837,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async-lock@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "async-lock@npm:1.4.0"
+  checksum: c57d5e741f19bf62a7e77a056b2e3e7d7887972955c6b4fadad7812e0da548b917bc3e0b7ee1cc325e916243f383cbc3c3c72556995dfbb6b5046f9f13aed3b4
+  languageName: node
+  linkType: hard
+
 "async@npm:^3.2.3":
   version: 3.2.5
   resolution: "async@npm:3.2.5"
@@ -3884,6 +3898,13 @@ __metadata:
   version: 1.0.5
   resolution: "available-typed-arrays@npm:1.0.5"
   checksum: 4d4d5e86ea0425696f40717882f66a570647b94ac8d273ddc7549a9b61e5da099e149bf431530ccbd776bd74e02039eb8b5edf426e3e2211ee61af16698a9064
+  languageName: node
+  linkType: hard
+
+"await-lock@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "await-lock@npm:2.2.2"
+  checksum: feb11f36768a8545879ed2d214b46aae484e6564ffa466af9212d5782897203770795cae01f813de04a46f66c0b8ee6bc690a0c435b04e00cad5a18ef0842e25
   languageName: node
   linkType: hard
 
@@ -6040,8 +6061,12 @@ __metadata:
   dependencies:
     "@ivy-chess/api-schema": "npm:*"
     "@ivy-chess/model": "npm:*"
+    "@types/async-lock": "npm:^1.4.2"
     "@types/uuid": "npm:^9.0.1"
+    async-lock: "npm:^1.4.0"
     auth: "npm:*"
+    await-lock: "npm:^2.2.2"
+    cors: "npm:^2.8.5"
     env-util: "npm:*"
     esbuild: "npm:^0.19.4"
     eslint-config-custom: "npm:*"
