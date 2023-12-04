@@ -1,4 +1,9 @@
 import { Color, LiveGame, fenEncode, move, resign } from '@ivy-chess/model'
+import AwaitLock from 'await-lock'
+
+type CommitHandler = (game: LiveGame) => Promise<void>
+
+const locks = new Map<string, AwaitLock>()
 
 /**
  * A game transaction parses a `LiveGame` and
@@ -10,14 +15,38 @@ import { Color, LiveGame, fenEncode, move, resign } from '@ivy-chess/model'
 export class GameTransaction {
   private readonly game: LiveGame
 
-  private readonly onCommit: (game: LiveGame) => Promise<void>
+  private readonly onCommit: CommitHandler
 
-  constructor(game: LiveGame, onCommit: (game: LiveGame) => Promise<void>) {
+  private constructor(game: LiveGame, onCommit: CommitHandler) {
     this.game = game
     this.onCommit = onCommit
   }
 
   //* API
+
+  /**
+   * Acquires a transaction for the game with the given id.
+   * The transaction can be used to modify the game state.
+   * After using the transaction, it must be committed
+   * or canceled using the `commit` or `cancel` method.
+   *
+   * @param id The id of the game.
+   * @param factory A factory to fetch the game data when the transaction has been acquired.
+   * @param onCommit A handler to be called when the transaction is committed. Should persist the changes.
+   * @returns A transaction for the game.
+   */
+  public static async acquire(
+    id: string,
+    factory: () => Promise<LiveGame>,
+    onCommit: CommitHandler,
+  ): Promise<GameTransaction> {
+    if (!locks.has(id)) {
+      locks.set(id, new AwaitLock())
+    }
+
+    await locks.get(id)!.acquireAsync()
+    return new GameTransaction(await factory(), onCommit)
+  }
 
   /**
    * Whether the game is finished or still expects moves.
@@ -61,6 +90,38 @@ export class GameTransaction {
   }
 
   /**
+   * Modifies the game state to indicate that the given player
+   * has connected to the game.
+   *
+   * @param player The id of the player who connected.
+   */
+  public connect(player: string) {
+    this.game.events.push({
+      type: 'connect',
+      message: `Player '${player}' connected.`,
+      timestamp: Date.now(),
+    })
+
+    this.game.players[this.color(player)].connected = true
+  }
+
+  /**
+   * Modifies the game state to indicate that the given player
+   * has disconnected from the game.
+   *
+   * @param player The id of the player who disconnected.
+   */
+  public disconnect(player: string) {
+    this.game.events.push({
+      type: 'disconnect',
+      message: `Player '${player}' disconnected.`,
+      timestamp: Date.now(),
+    })
+
+    this.game.players[this.color(player)].connected = false
+  }
+
+  /**
    * The time the given player should use for the next move.
    *
    * @param player The id of the player.
@@ -78,6 +139,12 @@ export class GameTransaction {
    * @param fen The FEN encoded move.
    */
   public move(fen: string): void {
+    this.game.events.push({
+      type: 'message',
+      message: `Player '${this.next}' (${this.color(this.next)}) performed move '${fen}'.`,
+      timestamp: Date.now(),
+    })
+
     move(this.game.game, fen)
 
     if (this.isFinished) {
@@ -93,6 +160,12 @@ export class GameTransaction {
    * @param player The id of the player who resigns.
    */
   public resign(player: string): void {
+    this.game.events.push({
+      type: 'message',
+      message: `Player '${player}' (${this.color(player)}) resigned.`,
+      timestamp: Date.now(),
+    })
+
     resign(this.game.game, this.color(player))
 
     if (this.isFinished) {
@@ -101,10 +174,21 @@ export class GameTransaction {
   }
 
   /**
-   * Commits the changes to the database.
+   * Commits the changes to the database
+   * and releases the lock on the game.
    */
   public async commit(): Promise<void> {
     await this.onCommit(this.game)
+    this.cancel()
+  }
+
+  /**
+   * Cancels the transaction,
+   * which will release the lock on the game
+   * without persisting the changes.
+   */
+  public cancel() {
+    locks.get(this.game.id)?.release()
   }
 
   //* Private Methods
