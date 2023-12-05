@@ -37,4 +37,8 @@ export const gamesRoute = route('/games', {
     .access(...visitorRoles)
     .params(z.object({ id: z.string() }))
     .success(liveGameSchema),
+  delete: endpoint('/:id', 'DELETE')
+    .access(...contributorRoles)
+    .params(z.object({ id: z.string() }))
+    .success(z.object({ success: z.boolean() })),
 })
