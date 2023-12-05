@@ -16,6 +16,7 @@ export const playerCreateSchema = z.object({
  * Schema for creating a new game.
  */
 export const createSchema = z.object({
+  startingFen: z.string().optional(),
   players: z.object({
     white: playerCreateSchema,
     black: playerCreateSchema,
