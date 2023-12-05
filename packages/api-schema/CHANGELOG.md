@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.8.0
+
+### Minor Changes
+
+- Support deleting games
+
 ## 0.7.0
 
 ### Minor Changes
