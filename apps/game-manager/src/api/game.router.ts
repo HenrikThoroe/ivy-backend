@@ -17,4 +17,9 @@ export const gameRouter = router(api.games.http.gamesRoute, {
   get: async ({ params }, success) => {
     return success(await GameStore.shared.fetch(params.id))
   },
+
+  delete: async ({ params }, success) => {
+    await GameStore.shared.delete(params.id)
+    return success({ success: true })
+  },
 })

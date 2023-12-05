@@ -197,4 +197,25 @@ export class GameStore {
 
     return live
   }
+
+  /**
+   * Deletes the game with the given id.
+   * The game must not have any connected clients.
+   *
+   * @param id The id of the game.
+   * @throws If no game is found for the given id or if the game has connected clients.
+   */
+  public async delete(id: string) {
+    const game = await this.db.take(id).read()
+
+    if (!game) {
+      throw new Error(`No game found for id '${id}'.`)
+    }
+
+    if (game.players.black.connected || game.players.white.connected) {
+      throw new Error(`Game '${id}' has connected clients.`)
+    }
+
+    await this.db.take(id).erase()
+  }
 }
