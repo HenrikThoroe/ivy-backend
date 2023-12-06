@@ -1,5 +1,5 @@
 import { api } from '@ivy-chess/api-schema'
-import { Color, LiveGame, create, register } from '@ivy-chess/model'
+import { Color, LiveGame, create, decode, register } from '@ivy-chess/model'
 import { store } from 'kv-store'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
@@ -175,6 +175,11 @@ export class GameStore {
       time: options.players[color].time,
       type: options.players[color].type,
     })
+
+    if (options.startingFen) {
+      const board = decode(options.startingFen)
+      game.board = board
+    }
 
     const live: LiveGame = {
       game: game,
