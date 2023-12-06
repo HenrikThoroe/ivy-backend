@@ -15,7 +15,9 @@ export const spectatorSocket = wss(api.games.ws.spectatorInterface, GameStore.sh
   state: async (): Promise<ClientState | undefined> => undefined,
 
   onClose: async (state) => {
+    StandardLogger.default.info(`Disconnect spectator client`)
     if (state.client) {
+      StandardLogger.default.info(`Unsubscribing from game ${state.client.game}`)
       state.server.unsubscribe(state.client.game, state.client.subscription)
     }
   },
