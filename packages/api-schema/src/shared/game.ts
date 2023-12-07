@@ -115,4 +115,5 @@ export const gameSchema = z.object({
   state: gameStateSchema,
   lastRequest: z.number(),
   reason: terminationReasonSchema.optional(),
+  startFen: z.string().nonempty(),
 }) satisfies z.ZodSchema<Game>

@@ -9,6 +9,7 @@ export const moveRequestMessage = z.object({
   key: z.literal('move-req-msg'),
   history: z.array(z.string().nonempty()),
   time: z.number().int().positive().optional(),
+  start: z.string().nonempty(),
 })
 
 /**
@@ -24,6 +25,7 @@ export const updateRequestMessage = z.object({
 export const updateMessage = z.object({
   key: z.literal('update-msg'),
   history: z.array(z.string().nonempty()),
+  start: z.string().nonempty(),
 })
 
 /**
