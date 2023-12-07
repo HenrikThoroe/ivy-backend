@@ -1,5 +1,11 @@
 # @ivy-chess/model
 
+## 0.2.2
+
+### Patch Changes
+
+- Support starting board position in game model
+
 ## 0.2.1
 
 ### Patch Changes

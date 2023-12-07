@@ -1,5 +1,13 @@
 # @ivy-chess/api-schema
 
+## 0.8.2
+
+### Patch Changes
+
+- Support starting board position in game model
+- Updated dependencies
+  - @ivy-chess/model@0.2.2
+
 ## 0.8.1
 
 ### Patch Changes
