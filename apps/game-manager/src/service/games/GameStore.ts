@@ -1,5 +1,5 @@
 import { api } from '@ivy-chess/api-schema'
-import { Color, LiveGame, create, decode, register } from '@ivy-chess/model'
+import { Color, LiveGame, create, register } from '@ivy-chess/model'
 import { store } from 'kv-store'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
@@ -162,7 +162,12 @@ export class GameStore {
    * @returns The created game.
    */
   public async create(options: CreateOptions): Promise<LiveGame> {
-    const game = create({ timeout: Number.MAX_SAFE_INTEGER, timeback: 0 })
+    const game = create({
+      timeout: Number.MAX_SAFE_INTEGER,
+      timeback: 0,
+      startFen: options.startingFen,
+    })
+
     const playerIds = {
       white: register(game, 'white'),
       black: register(game, 'black'),
@@ -175,11 +180,6 @@ export class GameStore {
       time: options.players[color].time,
       type: options.players[color].type,
     })
-
-    if (options.startingFen) {
-      const board = decode(options.startingFen)
-      game.board = board
-    }
 
     const live: LiveGame = {
       game: game,

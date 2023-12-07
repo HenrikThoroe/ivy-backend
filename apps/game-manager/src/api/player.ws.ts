@@ -57,7 +57,11 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
       await transaction.commit()
 
       if (client && !transaction.isFinished && state.server.has(...transaction.participants)) {
-        await client.requestMove(transaction.history, transaction.recommendedTime(client.id))
+        await client.requestMove(
+          transaction.history,
+          game.game.startFen,
+          transaction.recommendedTime(client.id),
+        )
       }
 
       if (transaction.isFinished) {
@@ -92,7 +96,11 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
         const client = state.server.fetch(next)
 
         if (client) {
-          await client.requestMove(transaction.history, transaction.recommendedTime(client.id))
+          await client.requestMove(
+            transaction.history,
+            game.game.startFen,
+            transaction.recommendedTime(client.id),
+          )
         }
       } else {
         transaction.participants.map(state.server.fetch).forEach((c) => {
@@ -118,10 +126,11 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
 
     update: async (_, state) => {
       const id = state.client.id
-      const game = await state.server.games.gameId(id)
-      const transaction = await state.server.games.transaction(game)
+      const gameId = await state.server.games.gameId(id)
+      const game = await state.server.games.fetch(gameId)
+      const transaction = await state.server.games.transaction(gameId)
 
-      await state.client.update(transaction.history)
+      await state.client.update(transaction.history, game.game.startFen)
       transaction.cancel()
     },
   },

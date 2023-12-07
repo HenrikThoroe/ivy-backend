@@ -66,9 +66,10 @@ export class PlayerClient {
    * their history is equal.
    *
    * @param history The history of the game.
+   * @param start The start FEN position of the game.
    * @param time The recommended time for the next move.
    */
-  public async requestMove(history: string[], time?: number) {
+  public async requestMove(history: string[], start: string, time?: number) {
     const hash = history.join('')
     const lastHash = this.lastMoveRequestHistory?.join('')
 
@@ -80,6 +81,7 @@ export class PlayerClient {
       key: 'move-req-msg',
       history,
       time,
+      start,
     })
 
     this.lastMoveRequestHistory = history
@@ -90,11 +92,13 @@ export class PlayerClient {
    * The update contains the history of the game.
    *
    * @param history The history of the game.
+   * @param start The FEN start position of the game.
    */
-  public async update(history: string[]) {
+  public async update(history: string[], start: string) {
     await this.sink.send('update', {
       key: 'update-msg',
       history,
+      start,
     })
   }
 }
