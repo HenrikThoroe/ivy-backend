@@ -136,14 +136,19 @@ function validateMove(game: Game, move: Move) {
   return true
 }
 
-function parseMove(game: Game, code: string): Move {
+/**
+ * Parses the given FEN encoded move and returns the corresponding move.
+ *
+ * @param code The FEN encoded move.
+ * @returns The parsed move.
+ */
+export function parseMove(code: string): Move {
   let move: [number, number] | 'nullmove'
   let piece: Piece | undefined
 
   if (code.length === 5) {
     move = parseFENMove(code.substring(0, 4))
     piece = parseFENPiece(code.substring(4))
-    piece.color = game.board.next
   } else {
     move = parseFENMove(code)
   }
@@ -188,7 +193,7 @@ export function move(game: Game, code: string) {
     throw Error(`Cannot perform move after time out.`)
   }
 
-  const move = parseMove(game, code)
+  const move = parseMove(code)
 
   if (move.source === -1 || move.target === -1) {
     if (isChecked(game.board)) {
@@ -220,7 +225,12 @@ export function move(game: Game, code: string) {
     game.state = 'expired'
     game.reason = result
 
-    if (result === 'stalemate' || result === '3-fold-repetition' || result === '50-move-draw') {
+    if (
+      result === 'stalemate' ||
+      result === '3-fold-repetition' ||
+      result === '50-move-draw' ||
+      result === 'insufficient-material'
+    ) {
       game.winner = 'draw'
     } else {
       game.winner = getEnemy(game.board)

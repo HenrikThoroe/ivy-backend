@@ -1,11 +1,17 @@
-import { Board } from '../model/Board'
+import { Board, PieceType } from '../model/Board'
+import { ColorMap } from '../model/Game'
 import { isValidMove, moves } from './moves'
 import { hasThreat } from './threats'
 
 /**
  * The possible results of a game based on valid moves.
  */
-export type GameResult = 'checkmate' | 'stalemate' | '50-move-draw' | '3-fold-repetition'
+export type GameResult =
+  | 'checkmate'
+  | 'stalemate'
+  | '50-move-draw'
+  | '3-fold-repetition'
+  | 'insufficient-material'
 
 function hasMoves(board: Board) {
   const color = board.next
@@ -22,6 +28,30 @@ function hasMoves(board: Board) {
   }
 
   return false
+}
+
+function getMaterial(board: Board): ColorMap<PieceType[]> {
+  const result: ColorMap<PieceType[]> = { white: [], black: [] }
+
+  for (const pos of board.positions) {
+    if (pos.piece) {
+      result[pos.piece.color].push(pos.piece.type)
+    }
+  }
+
+  return result
+}
+
+function hasInsufficientMaterial(board: Board) {
+  const material = getMaterial(board)
+  const pairs: PieceType[][] = [['king'], ['king', 'bishop'], ['king', 'knight']]
+
+  const matches = (material: PieceType[]) =>
+    pairs.some(
+      (pair) => pair.every((type) => material.includes(type)) && material.length === pair.length,
+    )
+
+  return matches(material.white) && matches(material.black)
 }
 
 /**
@@ -58,6 +88,10 @@ export function gameResult(board: Board): GameResult | undefined {
 
   if (board.halfMoveCounter >= 100) {
     return '50-move-draw'
+  }
+
+  if (hasInsufficientMaterial(board)) {
+    return 'insufficient-material'
   }
 
   return undefined

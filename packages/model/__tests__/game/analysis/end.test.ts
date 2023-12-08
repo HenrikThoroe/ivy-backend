@@ -61,4 +61,15 @@ describe('Game End Analysis', () => {
     expect(gameResult(decode('8/8/8/8/7R/1K2k3/3r4/8 b - - 100 118'))).toBe('50-move-draw')
     expect(gameResult(decode('8/8/8/8/5R2/1K2k3/3r4/8 w - - 99 118'))).toBe(undefined)
   })
+
+  it('detects insufficient material', () => {
+    expect(gameResult(decode('8/k7/8/7K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/kn6/8/7K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/kn6/8/N6K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/kb6/8/N6K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/kn6/8/B6K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/k7/8/B6K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/kb6/8/7K/8/8/8/8 w - - 1 1'))).toBe('insufficient-material')
+    expect(gameResult(decode('8/kbb5/8/7K/8/8/8/8 w - - 1 1'))).toBe(undefined)
+  })
 })
