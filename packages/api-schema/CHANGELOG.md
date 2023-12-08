@@ -1,5 +1,11 @@
 # @ivy-chess/api-schema
 
+## 0.8.3
+
+### Patch Changes
+
+- Support insuffficient-material as game termination reason
+
 ## 0.8.2
 
 ### Patch Changes
