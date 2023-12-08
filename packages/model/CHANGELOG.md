@@ -1,5 +1,11 @@
 # @ivy-chess/model
 
+## 0.3.0
+
+### Minor Changes
+
+- Support draw by insufficient material
+
 ## 0.2.2
 
 ### Patch Changes
