@@ -71,6 +71,7 @@ export const terminationReasonSchema = z
   .or(z.literal('checkmate'))
   .or(z.literal('stalemate'))
   .or(z.literal('3-fold-repetition'))
+  .or(z.literal('insufficient-material'))
   .or(z.literal('50-move-draw')) satisfies z.ZodSchema<TerminationReason>
 
 /**
