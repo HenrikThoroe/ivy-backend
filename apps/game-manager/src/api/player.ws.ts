@@ -1,5 +1,5 @@
 import { api } from '@ivy-chess/api-schema'
-import { fenDecode, isValidMove } from '@ivy-chess/model'
+import { isValidMove, parseMove } from '@ivy-chess/model'
 import { StandardLogger } from 'metrics'
 import { wss } from 'wss'
 import { PlayerClient } from '../service/state/PlayerClient'
@@ -75,7 +75,7 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
       const id = state.client.id
       const gameID = await state.server.games.gameId(id)
       const game = await state.server.games.fetch(gameID)
-      const move = fenDecode.parseFENMove(message.move)
+      const move = parseMove(message.move)
       const transaction = await state.server.games.transaction(gameID)
 
       if (transaction.next !== id) {
@@ -83,7 +83,11 @@ export const playerSocket = wss(api.games.ws.playerInterface, new PlayerServerSt
         throw new Error(`Received move from ${id} but expecetd from ${transaction.next}`)
       }
 
-      if (move === 'nullmove' || !isValidMove(game.game.board, move[0], move[1])) {
+      if (
+        move.source === -1 ||
+        move.target === -1 ||
+        !isValidMove(game.game.board, move.source, move.target)
+      ) {
         transaction.cancel()
         throw new Error(`Invalid move '${message.move}' for game ${gameID}.`)
       }

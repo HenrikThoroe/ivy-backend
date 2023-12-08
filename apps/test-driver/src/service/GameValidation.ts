@@ -10,10 +10,10 @@ import {
   create,
   encode,
   move,
+  parseMove,
   register,
 } from '@ivy-chess/model'
 import { encodeMove } from '@ivy-chess/model/src/game/coding/fen_encoding'
-import { parseFENMove } from '@ivy-chess/model/src/game/coding/fen_parsing'
 import { v4 as uuidv4 } from 'uuid'
 import { z } from 'zod'
 
@@ -267,13 +267,13 @@ export class GameValidation {
     }
 
     const engine = this.moves[0].length > 0 ? 0 : 1
-    const move = parseFENMove(this.moves[engine][0].move)
+    const move = parseMove(this.moves[engine][0].move)
 
-    if (move === 'nullmove') {
+    if (move.source === -1 || move.target === -1) {
       throw new Error('Nullmoves are not allowed in test games.')
     }
 
-    const [source, target] = move
+    const { source, target } = move
     const diff = target - source
 
     if (diff < 0) {
