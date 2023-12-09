@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - image: heth03/ivy:gm-latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: gm
           envFrom:
             - secretRef:

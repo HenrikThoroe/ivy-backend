@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - image: heth03/ivy:evc-latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: evc
           envFrom:
             - secretRef:
