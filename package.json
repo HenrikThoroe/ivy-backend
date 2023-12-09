@@ -5,13 +5,16 @@
   "license": "GPL-3.0-or-later",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "integration-tests"
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "NODE_ENV=development turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "start:test": "NODE_ENV=test turbo run start",
+    "test:int": "NODE_ENV=test yarn workspace integration-tests test:int",
     "package": "./package.sh"
   },
   "devDependencies": {

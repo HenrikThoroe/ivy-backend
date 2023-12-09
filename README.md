@@ -60,11 +60,18 @@ yarn install
 # Start dev server in watch mode
 yarn dev
 
-# Run tests
+# Run unit tests
 yarn test
 
 # Run linter
 yarn lint
+
+# Run integration tests
+cd ./integration-tests
+docker compose up -d
+cd ../
+yarn start:test # In seperate terminal, as the call is not detached. Restart manually after changes
+yarn test:int
 ```
 
 ## 🧱 System Structure

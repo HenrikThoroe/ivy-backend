@@ -101,6 +101,11 @@ export interface Game {
   readonly positionHistory: string[]
 
   /**
+   * The start position of the game.
+   */
+  readonly startFen: string
+
+  /**
    * The winner of the game, if any.
    */
   winner?: Color | 'draw'

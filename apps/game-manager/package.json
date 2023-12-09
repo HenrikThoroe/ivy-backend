@@ -1,6 +1,6 @@
 {
   "name": "game-manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "src/index.ts",
   "author": "Henrik Thoroe",
   "license": "GPL-3.0-or-later",
@@ -15,7 +15,10 @@
   "dependencies": {
     "@ivy-chess/api-schema": "*",
     "@ivy-chess/model": "*",
+    "async-lock": "^1.4.0",
     "auth": "*",
+    "await-lock": "^2.2.2",
+    "cors": "^2.8.5",
     "env-util": "*",
     "express": "^4.18.2",
     "express-util": "*",
@@ -27,6 +30,7 @@
     "wss": "*"
   },
   "devDependencies": {
+    "@types/async-lock": "^1.4.2",
     "@types/uuid": "^9.0.1",
     "esbuild": "^0.19.4",
     "eslint-config-custom": "*",

@@ -6,7 +6,8 @@ import { UserManager } from '../service/UserManager'
 
 loadenv()
 
-const { provider } = AuthFactory.supabase({
+const factory = process.env.NODE_ENV === 'test' ? AuthFactory.local : AuthFactory.supabase
+const { provider } = factory({
   url: process.env.SUPABASE_URL!,
   key: process.env.SUPABASE_KEY!,
   secret: process.env.JWT_SECRET!,

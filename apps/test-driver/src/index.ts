@@ -9,9 +9,11 @@ import { driverSocket } from './api/driver.ws'
 import { sessionRouter } from './api/session.router'
 import { suiteRouter } from './api/suite.router'
 
-const app = express()
+loadenv()
 
-const { handler } = AuthFactory.supabase({
+const app = express()
+const factory = process.env.NODE_ENV === 'test' ? AuthFactory.local : AuthFactory.supabase
+const { handler } = factory({
   url: process.env.SUPABASE_URL!,
   key: process.env.SUPABASE_KEY!,
   secret: process.env.JWT_SECRET!,
@@ -24,8 +26,6 @@ const logger = {
   suite: new HTTPLogger('Suites'),
   clients: new WSSLogger('Clients'),
 }
-
-loadenv()
 
 app.use(helmet())
 app.use(cors())

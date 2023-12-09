@@ -136,14 +136,19 @@ function validateMove(game: Game, move: Move) {
   return true
 }
 
-function parseMove(game: Game, code: string): Move {
+/**
+ * Parses the given FEN encoded move and returns the corresponding move.
+ *
+ * @param code The FEN encoded move.
+ * @returns The parsed move.
+ */
+export function parseMove(code: string): Move {
   let move: [number, number] | 'nullmove'
   let piece: Piece | undefined
 
   if (code.length === 5) {
     move = parseFENMove(code.substring(0, 4))
     piece = parseFENPiece(code.substring(4))
-    piece.color = game.board.next
   } else {
     move = parseFENMove(code)
   }
@@ -177,7 +182,7 @@ function hasRepitition(game: Game) {
  *
  * @param game The game to apply the move to.
  * @param code The FEN encoded move.
- * @throws If the move is not valid or the game is not active.
+ * @throws If the move is not valid, the game is not active or the time has run out.
  */
 export function move(game: Game, code: string) {
   if (game.state !== 'active') {
@@ -185,29 +190,29 @@ export function move(game: Game, code: string) {
   }
 
   if (!validateTime(game)) {
-    return
+    throw Error(`Cannot perform move after time out.`)
   }
 
-  const move = parseMove(game, code)
+  const move = parseMove(code)
 
   if (move.source === -1 || move.target === -1) {
     if (isChecked(game.board)) {
       game.state = 'expired'
       game.reason = 'rule-violation'
       game.winner = getEnemy(game.board)
+      throw new Error(`Cannot perform nullmove while checked.`)
     } else {
       game.history.push(move)
       game.board.enPassant = undefined
       game.board.halfMoveCounter += 1
       game.board.fullMoveCounter += game.board.next === 'black' ? 1 : 0
       game.board.next = getEnemy(game.board)
+      return
     }
-
-    return
   }
 
   if (!validateMove(game, move)) {
-    return
+    throw Error(`Invalid move '${code}'.`)
   }
 
   let result = gameResult(game.board)
@@ -220,7 +225,12 @@ export function move(game: Game, code: string) {
     game.state = 'expired'
     game.reason = result
 
-    if (result === 'stalemate' || result === '3-fold-repetition' || result === '50-move-draw') {
+    if (
+      result === 'stalemate' ||
+      result === '3-fold-repetition' ||
+      result === '50-move-draw' ||
+      result === 'insufficient-material'
+    ) {
       game.winner = 'draw'
     } else {
       game.winner = getEnemy(game.board)

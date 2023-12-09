@@ -11,4 +11,9 @@ export interface GameConfig {
    * The timeback in milliseconds for both players.
    */
   timeback: number
+
+  /**
+   * The start position of the game.
+   */
+  startFen?: string
 }

@@ -131,6 +131,7 @@ export const replaySchema = z.object({
       'stalemate',
       '50-move-draw',
       '3-fold-repetition',
+      'insufficient-material',
     ]),
   }),
   history: z.array(moveInfoSchema),

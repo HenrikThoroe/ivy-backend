@@ -65,13 +65,20 @@ spec:
                 name: gm-svc
                 port:
                   number: {{ .Values.Env.Ports.gmHttp }}
-          - path: /gm/ws(/|$)(.*)
+          - path: /gm/player(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: gm-svc
                 port:
-                  number: {{ .Values.Env.Ports.gmWs }}
+                  number: {{ .Values.Env.Ports.gmPlayerWs }}
+          - path: /gm/spectator(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gm-svc
+                port:
+                  number: {{ .Values.Env.Ports.gmSpectatorWs }}
           - path: /stats(/|$)(.*)
             pathType: ImplementationSpecific
             backend:

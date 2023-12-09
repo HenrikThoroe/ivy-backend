@@ -14,10 +14,12 @@ const standardPreset = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 export function create(config: GameConfig): Game {
   const id = v4()
   const now = Date.now()
-  const board = decode(standardPreset)
+  const fen = config.startFen ?? standardPreset
+  const board = decode(fen)
 
   return {
     id,
+    startFen: fen,
     players: { white: undefined, black: undefined },
     time: { white: config.timeout, black: config.timeout },
     start: now,

@@ -7,7 +7,8 @@ declare namespace NodeJS {
     readonly SUPABASE_KEY: string
     readonly EVC_PORT: string
     readonly GM_PORT: string
-    readonly GM_WSS_PORT: string
+    readonly GM_PLAYER_PORT: string
+    readonly GM_SPECTATOR_PORT: string
     readonly S3_SECRET_KEY: string
     readonly S3_ACCESS_ID: string
     readonly S3_ENDPOINT: string

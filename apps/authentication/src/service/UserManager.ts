@@ -1,5 +1,5 @@
 import { api, shared } from '@ivy-chess/api-schema'
-import { SupabaseAuthProvider } from 'auth'
+import { AuthProvider } from 'auth'
 import { store } from 'kv-store'
 import { StandardLogger } from 'metrics'
 import { z } from 'zod'
@@ -40,9 +40,9 @@ export class UserManager {
 
   private readonly managerDb = store.take('auth').take('managers')
 
-  private readonly authProvider: SupabaseAuthProvider
+  private readonly authProvider: AuthProvider
 
-  constructor(authProvider: SupabaseAuthProvider) {
+  constructor(authProvider: AuthProvider) {
     this.authProvider = authProvider
   }
 

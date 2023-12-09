@@ -1,13 +1,20 @@
 import { AuthFactory } from 'auth'
+import cors from 'cors'
+import { loadenv } from 'env-util'
 import express from 'express'
 import helmet from 'helmet'
 import { HTTPLogger, WSSLogger } from 'metrics'
 import { gameRouter } from './api/game.router'
-import { gameSocket } from './api/game.ws'
+import { playerSocket } from './api/player.ws'
+import { spectatorSocket } from './api/spectator.ws'
+import { GameStore } from './service/games/GameStore'
+
+loadenv()
+GameStore.shared.resetConnections()
 
 const app = express()
-
-const { handler } = AuthFactory.supabase({
+const factory = process.env.NODE_ENV === 'test' ? AuthFactory.local : AuthFactory.supabase
+const { handler } = factory({
   url: process.env.SUPABASE_URL!,
   key: process.env.SUPABASE_KEY!,
   secret: process.env.JWT_SECRET!,
@@ -16,13 +23,17 @@ const { handler } = AuthFactory.supabase({
 
 const logger = {
   games: new HTTPLogger('Games'),
-  clients: new WSSLogger('Clients'),
+  player: new WSSLogger('Player'),
+  spectator: new WSSLogger('Spectator'),
 }
 
+app.use(cors())
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 gameRouter.mount(app, logger.games, handler)
-gameSocket.use(logger.clients)
-gameSocket.listen(process.env.GM_WSS_PORT!)
+playerSocket.use(logger.player)
+playerSocket.listen(process.env.GM_PLAYER_PORT!)
+spectatorSocket.use(logger.spectator)
+spectatorSocket.listen(process.env.GM_SPECTATOR_PORT!)
 app.listen(process.env.GM_PORT)

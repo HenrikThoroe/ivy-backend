@@ -21,15 +21,16 @@ const validateMove = (
 
   game.board = board
 
-  expect(() => move(game, mv)).not.toThrow()
-  expect(game.board).toEqual(decode(expected))
-
-  if (options?.ruleViolation === true) {
+  if (options?.ruleViolation) {
+    expect(() => move(game, mv)).toThrow()
+    expect(game.board).toEqual(decode(expected))
     expect(game.state).toBe('expired')
     expect(game.reason).toBe('rule-violation')
     expect(game.winner).not.toBe(undefined)
     expect(game.winner).not.toBe(game.board.next)
   } else {
+    expect(() => move(game, mv)).not.toThrow()
+    expect(game.board).toEqual(decode(expected))
     expect(game.state).toBe('active')
     expect(game.reason).toBe(undefined)
   }
@@ -179,7 +180,7 @@ describe('Game Move Action', () => {
 
     game.lastRequest = Date.now() - 2
 
-    expect(() => move(game, 'a2a3')).not.toThrow()
+    expect(() => move(game, 'a2a3')).toThrow()
     expect(game.state).toBe('expired')
     expect(game.reason).toBe('time')
     expect(game.winner).toBe('black')

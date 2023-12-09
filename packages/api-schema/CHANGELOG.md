@@ -1,5 +1,42 @@
 # @ivy-chess/api-schema
 
+## 0.8.3
+
+### Patch Changes
+
+- Support insuffficient-material as game termination reason
+
+## 0.8.2
+
+### Patch Changes
+
+- Support starting board position in game model
+- Updated dependencies
+  - @ivy-chess/model@0.2.2
+
+## 0.8.1
+
+### Patch Changes
+
+- Support initial board setup
+
+## 0.8.0
+
+### Minor Changes
+
+- Support deleting games
+
+## 0.7.0
+
+### Minor Changes
+
+- Updated live gameplay API
+
+### Patch Changes
+
+- Updated dependencies
+  - @ivy-chess/model@0.2.0
+
 ## 0.6.2
 
 ### Patch Changes

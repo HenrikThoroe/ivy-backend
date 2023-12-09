@@ -1,0 +1,21 @@
+version: '3.9'
+name: ivy-backend-testing
+services:
+  s3:
+    image: 'minio/minio:latest'
+    container_name: 'ivy-minio-s3-host-testing'
+    command: 'server /data --console-address ":9101" --address ":9109"'
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=test
+      - MINIO_ROOT_PASSWORD=password123
+    ports:
+      - '9109:9109'
+      - '9101:9101'
+  redis:
+    image: 'redis:latest'
+    container_name: 'ivy-redis-testing'
+    restart: unless-stopped
+    command: 'redis-server --appendonly no --save "" --port 6380 --loglevel warning --protected-mode no'
+    ports:
+      - '6380:6380'

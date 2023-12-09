@@ -10,10 +10,14 @@ spec:
       protocol: TCP
       targetPort: {{ .Values.Env.Ports.gmHttp }}
       name: gm-http
-    - port: {{ .Values.Env.Ports.gmWs }}
+    - port: {{ .Values.Env.Ports.gmPlayerWs }}
       protocol: TCP
       targetPort: 
-      name: gm-ws
+      name: gm-player-ws
+    - port: {{ .Values.Env.Ports.gmSpectatorWs }}
+      protocol: TCP
+      targetPort: 
+      name: gm-spectator-ws
   selector:
     app: gm
   type: ClusterIP

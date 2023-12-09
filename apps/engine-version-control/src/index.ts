@@ -13,7 +13,8 @@ const app = express()
 const logger = new HTTPLogger('Engines')
 const maxFileSize = 100 * 1024 * 1024
 
-const { handler } = AuthFactory.supabase({
+const factory = process.env.NODE_ENV === 'test' ? AuthFactory.local : AuthFactory.supabase
+const { handler } = factory({
   url: process.env.SUPABASE_URL!,
   key: process.env.SUPABASE_KEY!,
   secret: process.env.JWT_SECRET!,
