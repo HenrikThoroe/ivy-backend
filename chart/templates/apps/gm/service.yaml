@@ -12,11 +12,11 @@ spec:
       name: gm-http
     - port: {{ .Values.Env.Ports.gmPlayerWs }}
       protocol: TCP
-      targetPort: 
+      targetPort: {{ .Values.Env.Ports.gmPlayerWs }}
       name: gm-player-ws
     - port: {{ .Values.Env.Ports.gmSpectatorWs }}
       protocol: TCP
-      targetPort: 
+      targetPort: {{ .Values.Env.Ports.gmSpectatorWs }}
       name: gm-spectator-ws
   selector:
     app: gm
